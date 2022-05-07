@@ -107,12 +107,10 @@
 
 
 % komenda dla pustej strony
-%\newcommand\blankpage{ 
-%	\null
-	%\thispagestyle{empty}
-%	\newpage}
-	
-	
+\newcommand\blankpage{ 
+	\null
+	\thispagestyle{empty}
+	\newpage}
 
 
 
@@ -162,18 +160,4 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%dodane od projektu nm latex
-\newcommand*{\blankpage}{%
-\vspace*{\fill}
-{\centering This page intentionally left blank.\par}
-\vspace{\fill}}
-\makeatletter
-\renewcommand*{\cleardoublepage}{\clearpage\if@twoside \ifodd\c@page\else
-\blankpage
-\thispagestyle{empty}
-\newpage
-\if@twocolumn\hbox{}\newpage\fi\fi\fi}
-\makeatother
-
 \endinput
