@@ -1,0 +1,107 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\part{Modeling, Computers and Error Analysis}
+\label{part:part1}
+
+\section{MOTIVATION}
+\label{cha:cha1}
+What are numerical methods and why should you study them?
+
+
+\textsl{Numerical methods are techniques by which mathematical problems are formulated so
+that they can be solved with arithmetic and logical operations. Because digital computers
+excel at performing such operations, numerical methods are sometimes referred to as computer mathematics.}
+
+
+In the pre–computer era, the time and drudgery of implementing such calculations
+seriously limited their practical use. However, with the advent of fast, inexpensive digital
+computers, the role of numerical methods in engineering and scientific problem solving
+has exploded. Because they figure so prominently in much of our work, I believe that numerical methods should be a part of every engineer’s and scientist’s basic education. Just
+as we all must have solid foundations in the other areas of mathematics and science, we
+should also have a fundamental understanding of numerical methods. In particular, we should
+have a solid appreciation of both their
+capabilities and their limitations.
+Beyond contributing to your overall
+education, there are several additional
+reasons why you should study numerical
+methods:
+
+\begin{enumerate}
+\item Numerical methods greatly expand the
+types of problems you can address. They
+are capable of handling large systems of
+equations, nonlinearities, and complicated geometries that are not uncommon
+in engineering and science and that are
+often impossible to solve analytically
+with standard calculus. As such, they
+greatly enhance your problem-solving
+skills.
+\item Numerical methods allow you to use
+“canned” software with insight. During your career, you will invariably have occasion to use commercially available prepackaged computer programs that involve numerical methods. The intelligent use of these
+programs is greatly enhanced by an understanding of the basic theory underlying the
+methods. In the absence of such understanding, you will be left to treat such packages
+as “black boxes” with little critical insight into their inner workings or the validity of
+the results they produce.
+\item Many problems cannot be approached using canned programs. If you are conversant
+with numerical methods, and are adept at computer programming, you can design
+your own programs to solve problems without having to buy or commission expensive
+software.
+\item Numerical methods are an efficient vehicle for learning to use computers. Because numerical methods are expressly designed for computer implementation, they are ideal for
+illustrating the computer’s powers and limitations. When you successfully implement
+numerical methods on a computer, and then apply them to solve otherwise intractable
+problems, you will be provided with a dramatic demonstration of how computers can
+serve your professional development. At the same time, you will also learn to acknowledge and control the errors of approximation that are part and parcel of large-scale
+numerical calculations.
+\item
+Numerical methods provide a vehicle for you to reinforce your understanding of mathematics. Because one function of numerical methods is to reduce higher mathematics
+to basic arithmetic operations, they get at the “nuts and bolts” of some otherwise
+obscure topics. Enhanced understanding and insight can result from this alternative
+perspective.
+\end{enumerate}
+
+With these reasons as motivation, we can now set out to understand how numerical
+methods and digital computers work in tandem to generate reliable solutions to mathematical problems. The remainder of this book is devoted to this task.
+
+
+
+\bigskip
+\section{PART ORGANIZATION}
+\label{cha:cha2}
+This book is divided into six parts. The latter five parts focus on the major areas of numerical methods. Although it might be tempting to jump right into this material, \textsl{Part One} consists of four chapters dealing with essential background material.
+
+
+\textsl{Chapter 1} provides a concrete example of how a numerical method can be employed
+to solve a real problem. To do this, we develop a \textsl{mathematical model} of a free-falling
+bungee jumper. The model, which is based on Newton’s second law, results in an ordinary
+differential equation. After first using calculus to develop a closed-form solution, we then
+show how a comparable solution can be generated with a simple numerical method. We
+end the chapter with an overview of the major areas of numerical methods that we cover in
+Parts Two through Six.
+
+
+Chapters 2 and 3 provide an introduction to the $\text{MATLAB}^\copyright$ software environment.
+\textsl{Chapter 2} deals with the standard way of operating MATLAB by entering commands one
+at a time in the so-called calculator, or command, mode. This interactive mode provides a
+straightforward means to orient you to the environment and illustrates how it is used for
+common operations such as performing calculations and creating plots.
+
+\textsl{Chapter 3} shows how MATLAB’s programming mode provides a vehicle for assembling individual commands into algorithms. Thus, our intent is to illustrate how MATLAB
+serves as a convenient programming environment to develop your own software.
+
+
+\textsl{Chapter 4} deals with the important topic of error analysis, which must be understood
+for the effective use of numerical methods. The first part of the chapter focuses on the
+\textsl{roundoff errors} that result because digital computers cannot represent some quantities
+exactly. The latter part addresses \textsl{truncation errors} that arise from using an approximation
+in place of an exact mathematical procedure.
+
+
+
+
+
+\blankpage
+
+
+\end{document}

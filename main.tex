@@ -6,12 +6,12 @@
 \usepackage{float}		%pakiet m.in. możliwości lepszego formatowania obrazów
 \graphicspath{ {./images/} }
 \usepackage{wrapfig}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %chapter 7
 \theoremstyle{definition}
 \newtheorem{exmp}{Example}
-
-
+\usepackage{listings}
 \usepackage{courier}    %pakiet z czcionką courier
 \usepackage{amsmath,amsthm,amssymb}
 
@@ -23,7 +23,9 @@
 \usepackage{hyperref}
 \usepackage{amsmath,amsthm,amssymb}
 \usepackage{mathdots}
-\usepackage[svgnames,table,xcdraw]{xcolor}
+\usepackage{multicol} %<
+\usepackage{wrapfig}  %<
+%\usepackage[svgnames,table,xcdraw]{xcolor}
 \usepackage{gettitlestring}
 \usepackage{subfiles}
 \usepackage{caption}
@@ -73,9 +75,15 @@
     \addcontentsline{toc}{section}{Contents}
     \clearpage
 
-
+	\subfile{pre/pre} 	%preface
+	\subfile{pt1/pt1}	%part 1
 	\subfile{ch1/ch1}
     \subfile{ch4/ch4}
+    \subfile{pt2/pt2}	%part 2
+    \subfile{ch5/ch5}
+    \subfile{ch6/ch6}
     \subfile{ch7/ch7}
+    \subfile{ch14/ch14}
+    
 
 \end{document}
