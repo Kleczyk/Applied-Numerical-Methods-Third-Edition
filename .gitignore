@@ -1,5 +1,8 @@
-main.aux
-main.dvi
-main.log
-main.synctex.gz
-main.toc
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.pdf
+*.synctex.gz
+*.toc
