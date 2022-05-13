@@ -508,7 +508,119 @@ As with the previous cases, the "best" values of the coefficients are determined
 \noindent The coefficients yielding the minimum sum of the squares of the residuals are obtained by setting the partial derivatives equal to zero and expressing the result in matrix form as 
 
 \begin{equation} % 366
-...
+	\tag{15.5}
+	\begin{bmatrix}
+		n & \sum x_{1,i} & \sum x_{2,i} \\
+		\sum x_{1,i} & \sum x_{1,i}^2 & \sum x_{1,i} x_{2,i} \\
+		\sum x_{2,i} & \sum x_{1,i} x_{2,i} & \sum x_{2,i}^2
+	\end{bmatrix}
+	\begin{Bmatrix}
+		a_0 \\ a_1 \\ a_2
+	\end{Bmatrix} =
+	\begin{Bmatrix}
+		\sum y_i \\ \sum x_{1,i} y_i \\ \sum x_{2,i} y_i
+	\end{Bmatrix}
+\end{equation}
+
+% TODO EXAMPLE 15.2
+
+The foregoing two-dimensional case can be easily extended to m dimensions, as in
+
+\begin{equation}
+	y = a_0 + a_1 x_1 + a_2 x_2 + \cdots + a_m x_m + e
+\end{equation}
+
+% TODO table 15.2
+
+\noindent where the standard error is formulated as
+\begin{equation}
+	s_{y/x} = \sqrt{\frac{S_r}{n - (m + 1)}}
+\end{equation}
+
+\noindent and the coefficient of determination is computed with Eq. (14.20).
+
+Although there may be certain cases where a variable is linearly related to two or more other variables, multiple linear regression has additional utility in the derivation of powerequations of the general form 
+
+\begin{equation}
+	y = a_0 x_1 ^ {a_1} x_2 ^ {a_2} \cdots x_m ^ {a_m}
+\end{equation}
+
+\noindent Such equations are extremely useful when fitting experimental data. To use multiple linear regression, the equation is transformed by taking its logarithm to yield
+
+\begin{equation}
+	\log y = \log a_0 + a_1 \log x_1 + a_2 \log x_2 + \cdots + a_m \log x_m
+\end{equation}
+
+\label{cha:cha_P_15_3} %367
+\section{GENERAL LINEAR LEAST SQUARES}
+
+\noindent In the preceding pages, we have introduced three types of regression: simple linear, polynomial, and multiple linear. In fact, all three belong to the following general linear least-squares model:
+
+\begin{equation}
+	\tag{15.7}
+	y = a_0 z_0 + a_1 z_1 + a_2 + z_2 + \cdots + a_m z_m + e
+\end{equation}
+
+\noindent where $z_0, z_1, \ldots, z_m$ are $m + 1$ basis functions. It can easily be seen how simple linear and multiple linear regression fall within this model-that is, $z_0 = 1, z_1 = x_1, z_2 = x_2, \ldots, z_m = xm$. Further, polynomial regression is also included if the basis functions are simple monomials as in $z_0 = 1, z_1 = x, z_2 = x^2, \ldots, z_m = x^m$.
+
+Note that the terminology ``linear'' refers only to the model's dependence on its
+parameters-that is, the $a$'s. As in the case of polynomial regression, the functions themselves can be highly nonlinear. For example, the $z$'s can be sinusoids, as in
+
+\begin{equation}
+	y = a_0 + a_1 \cos (\omega x) + a_2 sin (\omega x)
+\end{equation}
+
+\noindent Such a format is the basis of \textit{Fourier analysis}
+
+On the other hand, a simple-looking model such as
+
+\begin{equation}
+	y = a_0 (1- e^{-a_1 x})
+\end{equation}
+
+\noindent is truly nonlinear because it cannot be manipulated into the format of Eq. (15.7).
+
+Equation (15.7) can be expressed in matrix notation as
+
+\begin{equation}
+	\tag{15.8}
+	{y} = [Z] {a} + {e}
+\end{equation}
+
+\noindent where $[Z]$ is a matrix of the calculated values of the basis functions at the measured values of the independent variables:
+
+\begin{equation}
+	\begin{bmatrix}
+		z_{01} & z_{11} & \cdots & z_{m1} \\ 
+		z_{02} & z_{12} & \cdots & z_{m2} \\ 
+		\vdots & \vdots &        & \vdots \\ 
+		z_{0n} & z_{1n} & \cdots & z_{mn}
+	\end{bmatrix}
+\end{equation}
+
+\noindent where $m$ is the number of variables in the model and $n$ is the number of data points. Because $n \geqslant  m + 1$, you should recognize that most of the time, $[Z]$ is not a square matrix.
+
+The column vector ${y}$ contains the observed values of the dependent variable:
+
+\begin{equation}
+	{y}^T = \lfloor y_1 \quad  y_2 \quad \cdots \quad y_n \rfloor 
+\end{equation}
+
+\noindent The column vector ${a}$ contains the unknown coefficients:
+
+\begin{equation}
+	{a}^T = \lfloor a_1 \quad  a_2 \quad \cdots \quad a_m \rfloor 
+\end{equation}
+
+\noindent and the column vector ${e}$ contains the residuals:
+
+\begin{equation}
+	{e}^T = \lfloor e_1 \quad  e_2 \quad \cdots \quad e_n \rfloor 
+\end{equation}
+
+The sum of the squares of the residuals for this model can be defined as
+\begin{equation}
+	S_r = \sum^n_{i=1} {(y_i - \sum^m_{j=0} a_j z_{ji})}^2
 \end{equation}
 
 \end{document}
