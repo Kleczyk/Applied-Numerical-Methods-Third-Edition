@@ -80,7 +80,7 @@ A nice example was developed by Anscombe (1973). As in Fig. 14.12, he came up wi
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1\linewidth]{fig_14_12}
-	\caption{\textsf{Anscombe’s four data sets along with the best-fit line, $y = 3 + 0.5x$.}}
+	\caption{\textsf{Anscombe's four data sets along with the best-fit line, $y = 3 + 0.5x$.}}
 	\label{fig:fig_14_12}
 \end{figure}
 
@@ -102,8 +102,8 @@ One example is the \textit{exponential model}:
 Another example of a nonlinear model is the simple \textit{power equation:}
 
 \begin{equation}
-\tag{14.23}
-y = a_2 x^{\beta_2}
+	\tag{14.23}
+	y = a_2 x^{\beta_2}
 \end{equation}
 
 \noindent where $\alpha_2$ and $\beta_2$ are constant coefficients. This model has wide applicability in all fields of engineering and science. It is very frequently used to fit experimental data when the underlying model is not known. As depicted in Fig. 14.13b, the equation (for $\beta_2 \neq 0$) is nonlinear.
@@ -190,11 +190,9 @@ Such assumptions are relevant to the proper derivation and use of regression. Fo
 \subsection{MATLAB M-file: \texttt{linregr}}
 \noindent An algorithm for linear regression can be easily developed (Fig. 14.15). The required summations are readily computed with MATLAB's \texttt{sum} function. These are then used to compute the slope and the intercept with Eqs. (14.15) and (14.16). The routine displays the intercept and slope, the coefficient of determination, and a plot of the best-fit line along with the measurements.
 
-
 A simple example of the use of this M-file would be to fit the force-velocity data analyzed in Example 14.4:
 
 %TODO EXAMPLE 14.1 349
-
 
 \label{cha:cha_P_14_5_2} %351
 \subsection{MATLAB Functions: \texttt{polyfit} and \texttt{polyval}}
@@ -385,13 +383,13 @@ As a consequence of the last conclusion, some analysts suggest that rather than 
 
 \noindent This chapter takes the concept of fitting a straight line and extends it to (a) fitting a polynomial and (b) fitting a variable that is a linear function of two or more independent variables. We will then show how such applications can be generalized and applied to a broader group of problems. Finally, we will illustrate how optimization techniques can be used to implement nonlinear regression. Specific objectives and topics covered are
 
-\begin{list}{•}{}
+\begin{itemize}
 	\item Knowing how to implement polynomial regression.
 	\item Knowing how to implement multiple linear regression. %why FIXME
 	\item Understanding the formulation of the general linear least-squares model.
 	\item Understanding how the general linear least-squares model can be solved with MATLAB using either the normal equations or left division.
 	\item Understanding how to implement nonlinear regression with optimization techniques.
-\end{list}
+\end{itemize}
 
 
 \label{cha:cha_P_15_1}
@@ -619,9 +617,447 @@ The column vector ${y}$ contains the observed values of the dependent variable:
 \end{equation}
 
 The sum of the squares of the residuals for this model can be defined as
+
 \begin{equation}
+	\tag{15.9}
 	S_r = \sum^n_{i=1} {(y_i - \sum^m_{j=0} a_j z_{ji})}^2
 \end{equation}
 
+\noindent This quantity can be minimized by taking its partial derivative with respect to each of the
+coefficients and setting the resulting equation equal to zero. The outcome of this process is
+the normal equations that can be expressed concisely in matrix form as
+
+\begin{equation}
+	\tag{15.10}
+	[{[Z]}^T [Z]] \{a\} = \{{[Z]}^T \{y\}\}
+\end{equation}
+
+\noindent It can be shown that Eq. (15.10) is, in fact, equivalent to the normal equations developed
+previously for simple linear, polynomial, and multiple linear regression.
+
+The coefficient of determination and the standard error can also be formulated in terms
+of matrix algebra. Recall that $r^2$ is defined as
+
+\begin{equation}
+	r^2 = \frac{S_t - S_r}{S_t} = 1 - \frac{S_r}{S_t}
+\end{equation}
+
+\noindent Substituting the definitions of $S_r$ and $S_t$ gives
+
+\begin{equation}
+	r^2 = 1 - \frac{\sum {(y_i - \hat{y}_i)} ^ 2}{\sum {(y_i - \bar{y}_i)} ^ 2}
+\end{equation}
+
+\noindent where $\hat{y} =$ the prediction of the least-squares fit. The residuals between the best-fit curve and the data, $y_i - \hat{y}$, can be expressed in vector form as
+
+\begin{equation}
+	\{y\} - [Z] \{a\}
+\end{equation}
+
+Matrix algebra can then be used to manipulate this vector to compute both the coefficient of determination and the standard error of the estimate as illustrated in the following example.
+
+% TODO example 15.3 369
+
+Our primary motivation for the foregoing has been to illustrate the unity among the
+three approaches and to show how they can all be expressed simply in the same matrix notation. It also sets the stage for the next section where we will gain some insights into the
+preferred strategies for solving Eq. (15.10). The matrix notation will also have relevance
+when we turn to nonlinear regression in Section 15.5.
+
+\bigskip
+\label{cha:cha_P_15_4} %370
+\section{QR FACTORIZATION AND THE BACKSLASH OPERATOR}
+
+\noindent Generating a best fit by solving the normal equations is widely used and certainly adequate
+for many curve-fitting applications in engineering and science. 
+It must be mentioned, however, that the normal equations can be ill-conditioned and hence sensitive to roundoff errors.
+
+Two more advanced methods, QR \textit{factorization} and \textit{singular value decomposition}, are
+more robust in this regard. Although the description of these methods is beyond the scope
+of this text, we mention them here because they can be implemented with MATLAB.
+
+Further, QR factorization is automatically used in two simple ways within MATLAB.
+First, for cases where you want to fit a polynomial, the built-in \texttt{polyfit} function automatically uses QR factorization to obtain its results.
+
+Second, the general linear least-squares problem can be directly solved with the backslash operator. Recall that the general model is formulated as Eq. (15.8)
+
+\begin{equation}
+	\tag{15.11}
+	\{y\} = [Z] \{a\}
+\end{equation}
+
+In Section 10.4, we used left division with the backslash operator to solve systems of linear algebraic equations where the number of equations equals the number of unknowns $(n = m)$.
+For Eq. (15.8) as derived from general least squares, the number of equations is greater than
+the number of unknowns $(n > m)$. Such systems are said to be \textit{overdetermined}. When
+MATLAB senses that you want to solve such systems with left division, it automatically uses
+QR factorization to obtain the solution. The following example illustrates how this is done.
+
+% TODO example 15.4 370
+
+\bigskip
+\label{cha:cha_P_15_5} %370
+\section{NONLINEAR REGRESSION}
+
+\noindent There are many cases in engineering and science where nonlinear models must be fit to
+data. In the present context, these models are defined as those that have a nonlinear dependence on their parameters. For example,
+
+\begin{equation}
+	\tag{15.12}
+	y = a_0 (1 - e^{-a_1 x}) + e
+\end{equation}
+
+\noindent This equation cannot be manipulated so that it conforms to the general form of Eq. (15.7).
+
+As with linear least squares, nonlinear regression is based on determining the values
+of the parameters that minimize the sum of the squares of the residuals. However, for the
+nonlinear case, the solution must proceed in an iterative fashion.
+
+There are techniques expressly designed for nonlinear regression. For example, the
+Gauss-Newton method uses a Taylor series expansion to express the original nonlinear
+equation in an approximate, linear form. Then least-squares theory can be used to obtain
+new estimates of the parameters that move in the direction of minimizing the residual.
+Details on this approach are provided elsewhere (Chapra and Canale, 2010).
+
+An alternative is to use optimization techniques to directly determine the least-squares
+fit. For example, Eq. (15.12) can be expressed as an objective function to compute the sum
+of the squares:
+
+\begin{equation}
+	\tag{15.13}
+	f(a_0, a_1) = \sum^n_{i=1} {[y_i - a_0 (1 - e ^ {-a_i x_i})]} ^ 2
+\end{equation}
+
+An optimization routine can then be used to determine the values of $a_0$ and $a_1$ that minimize the function.
+
+As described previously in Section 7.3.1, MATLAB's \texttt{fminsearch} function can be used for this purpose. It has the general syntax
+
+\begin{lstlisting}[numbers=none] 
+	[x, fval] = fminsearch(fun,x0,options,p1,p2,...)
+\end{lstlisting}
+
+\noindent where $x = a$ vector of the values of the parameters that minimize the function \texttt{fun, fval} = the value of the function at the minimum, \texttt{x0 = }a vector of the initial guesses for the parameters, \texttt{options} = a structure containing values of the optimization parameters as created with the \texttt{optimset} function (recall Sec. 6.5), and \texttt{p1, p2, }etc. = additional arguments that are passed to the objective function. 
+Note that if \texttt{options} is omitted, MATLAB uses default values that are reasonable for most problems. If you would like to pass additional arguments (\texttt{p1, p2, }\dots), but do not want to set the options, use empty brackets \texttt{[]} as a place holder.
+
+% TODO example 15.5 371
+%TODO 15.6 CASE STUDY FITTING EXPERIMENTAL DATA
+
+\noindent\textbf{Background.} \quad As mentioned at the end of Section 15.2, although there are many cases where a variable is linearly related to two or more other variables, multiple linear regression has additional utility in the derivation of multivariable power equations of the general form
+
+\begin{equation}
+	\tag{15.14}
+	y = a_0 x_1^{a_1} x_2^{a_2} \cdots x_m^{a_m} 
+\end{equation}
+
+\noindent Such equations are extremely useful when fitting experimental data. To do this, the equation is transformed by taking its logarithm to yield
+
+\begin{equation}
+	\tag{15.15}
+	\log y = \log a_0 + a_1 \log x_1 + a_2 \log x_2 \cdots + a_m \log x_m
+\end{equation}
+
+\noindent Thus, the logarithm of the dependent variable is linearly dependent on the logarithms of the independent variables.
+
+A simple example relates to gas transfer in natural waters such as rivers, lakes, and estuaries. In particular, it has been found that the mass-transfer coefficient of dissolved oxygen $K_L$ (m/d) is related to a river's mean water velocity $U$ (m/s) and depth $H$ (m) by
+
+\begin{equation}
+	\tag{15.16}
+	K_L = a_0 U^{a_1} H^{a_2}
+\end{equation}
+
+\noindent Taking the common logarithm yields
+
+\begin{equation}
+	\tag{15.17}
+	\log K_L = \log a_0 + a_1 \log U + a_2 \log H
+\end{equation}
+
+The following data were collected in a laboratory flume at a constant temperature of $20^\circ$C:
+
+%TODO table
+
+\noindent Use these data and general linear least squares to evaluate the constants in Eq. (15.16).
+
+\noindent Solution. In a similar fashion to Example 15.3, we can develop a script to assign the
+data, create the $[Z]$ matrix, and compute the coefficients for the least-squares fit:
+
+\begin{lstlisting}[numbers=none]
+	% Compute best fit of transformed values
+	clc; format short g
+	U=[0.5 2 10 0.5 2 10 0.5 2 10]';
+	H=[0.15 0.15 0.15 0.3 0.3 0.3 0.5 0.5 0.5]';
+	KL=[0.48 3.9 57 0.85 5 77 0.8 9 92]';
+	logU=log10(U);logH=log10(H);logKL=log10(KL);
+	Z=[ones(size(logKL)) logU logH];
+	a=(Z'*Z)\(Z'*logKL)
+\end{lstlisting}
+
+\noindent with the result:
+
+\begin{lstlisting}[numbers=none]
+	a =
+		0.57627
+		1.562
+		0.50742
+\end{lstlisting}
+
+\noindent Therefore, the best-fit model is
+
+\begin{equation}
+	\log K_L = 0.57627 + 1.562 \log U + 0.50742 \log H
+\end{equation}
+
+\noindent or in the untransformed form (note, $a_0 = 10^{0.57627} = 3.7694$),
+
+\begin{equation}
+	K_L = 3.7694 U^{1.560} H ^ {0.5074}
+\end{equation}
+
+\noindent The statistics can also be determined by adding the following lines to the script:
+
+\begin{lstlisting}[numbers=none]
+	% Compute fit statistics
+	Sr=sum((logKL-Z*a).^2)
+	r2=1-Sr/sum((logKL-mean(logKL)).^2)
+	syx=sqrt(Sr/(length(logKL)-length(a)))
+	Sr =
+		0.024171
+	r2 =
+		0.99619
+	syx =
+		0.063471
+\end{lstlisting}
+
+Finally, plots of the fit can be developed. The following statements display the model
+predictions versus the measured values for $K_L$. Subplots are employed to do this for both
+the transformed and untransformed versions.
+
+\begin{lstlisting}[numbers=none]
+	%Generate plots
+	clf
+	KLpred=10^a(1)*U.^a(2).*H.^a(3);
+	KLmin=min(KL);KLmax=max(KL);
+	dKL=(KLmax-KLmin)/100;
+	KLmod=[KLmin:dKL:KLmax];
+	subplot(1,2,1)
+	loglog(KLpred,KL,'ko',KLmod,KLmod,'k-')
+	axis square,title('(a) log-log plot')
+	legend('model prediction','1:1
+	line','Location','NorthWest')
+	xlabel('log(K_L) measured'),ylabel('log(K_L) predicted')
+	subplot(1,2,2)
+	plot(KLpred,KL,'ko',KLmod,KLmod,'k-')
+	axis square,title('(b) untransformed plot')
+	legend('model prediction','1:1
+	line','Location','NorthWest')
+	xlabel('K_L measured'),ylabel('K_L predicted')
+\end{lstlisting}
+
+\noindent The result is shown in Fig. 15.5.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_15_5}
+	\caption{\textsf{Plots of predicted versus measured values of the oxygen mass-transfer coefficient as computed with multiple regression. Results are shown for (a) log transformed and (b) untransformed cases. The 1:1 line, which indicates a perfect correlation, is superimposed on both plots.}}
+	\label{fig:fig_15_5}
+\end{figure}
+
+% TODO PROBLEMS 375
+
+\label{cha:cha_P_16} %380
+\chapter{Fourier Analysis}
+\textbf{CHAPTER OBJECTIVES}
+
+\noindent The primary objective of this chapter is to introduce you to Fourier analysis. The
+subject, which is named after Joseph Fourier, involves identifying cycles or patterns
+within a time series of data. Specific objectives and topics covered in this chapter are
+
+\begin{itemize}
+	\item Understanding sinusoids and how they can be used for curve fitting.
+	\item Knowing how to use least-squares regression to fit a sinusoid to data.
+	\item Knowing how to fit a Fourier series to a periodic function.
+	\item Understanding the relationship between sinusoids and complex exponentials
+	based on Euler's formula.
+	\item Recognizing the benefits of analyzing mathematical function or signals in the frequency domain (i.e., as a function of frequency).
+	\item Understanding how the Fourier integral and transform extend Fourier analysis to aperiodic functions.
+	\item Understanding how the discrete Fourier transform (DFT) extends Fourier analysis
+	to discrete signals.
+	\item Recognizing how discrete sampling affects the ability of the DFT to distinguish
+	frequencies. In particular, know how to compute and interpret the Nyquist
+	frequency.
+	\item Recognizing how the fast Fourier transform (FFT) provides a highly efficient
+	means to compute the DFT for cases where the data record length is a power of 2.
+	\item Knowing how to use the MATLAB function \texttt{fft} to compute a DFT and
+	understand how to interpret the results.
+	\item Knowing how to compute and interpret a power spectrum.
+\end{itemize}
+
+% TODO YOU'VE GOT A PROBLEM
+
+AThen, predict t the beginning in the Chap. equilibrium 13, of we Chap. determined positions 8, we used the of Newton's three same system's bungee second jumpers eigenvalues law and connected force and eigenvectors
+balances by cords.
+to
+in order to identify its resonant frequencies and principal modes of vibration. Although this analysis certainly provided useful results, it required detailed system information including
+knowledge of the underlying model and parameters (i.e., the jumpers' masses and the
+cords' spring constants).
+
+So suppose that you have measurements of the jumpers' positions or velocities at discrete, equally spaced times (recall Fig. 13.1). Such information is referred to as a \textit{time series}. However, suppose further that you do not know the underlying model or the parameters needed to compute the eigenvalues. For such cases, is there any way to use the time
+series to learn something fundamental about the system's dynamics?
+
+In this chapter, we describe such an approach, \textit{Fourier analysis}, which provides a way to accomplish this objective. The approach is based on the premise that more complicated functions (e.g., a time series) can be represented by the sum of simpler trigonometric functions. As a prelude to outlining how this is done, it is useful to explore how data can be fit
+with sinusoidal functions.
+
+\label{cha:cha_P_16_1}
+\section{CURVE FITTING WITH SINUSOIDAL FUNCTIONS}
+
+\noindent A periodic function $f(t)$ is one for which
+
+\begin{equation}
+	\tag{16.1}
+	f(t) = f(t + T)
+\end{equation}
+
+\noindent where T is a constant called the \textit{period} that is the smallest value of time for which Eq. (16.1) holds. Common examples include both artificial and natural signals (Fig. 16.1a).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_16_1}
+	\caption{\textsf{Aside from trigonometric functions such as sines and cosines, periodic functions include
+	idealized waveforms like the square wave depicted in (a). Beyond such artificial forms, periodic
+	signals in nature can be contaminated by noise like the air temperatures shown in (b).}}
+	\label{fig:fig_16_1}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_16_2}
+	\caption{\textsf{(a) A plot of the sinusoidal function $y(t) = A_0 + C_1 \cos(\omega_0 t + \theta)$. For this case, $A_0 = 1.7$, $C_1 = 1$, $\omega_0 = 2 \pi / T = 2 \pi / (1.5 s)$, and $\theta = \pi / 3$ radians $= 1.0472$ ($= 0.25 s$). Other	parameters used to describe the curve are the frequency $f = \omega_0 /(2\pi)$, which or this case is 1 cycle $/ (1.5 s) = 0.6667$ Hz and the period $T = 1.5 s$. (b) An alternative expression of the same curve is $y(t) = A_0 + A_1 \cos(\omega_0 t) + B_1 \sin(\omega_0 t)$. The three components of this function are depicted in (b), where $A_1 = 0.5$ and $B_1 = -0.866$. The summation of the three curves in (b) yields the single curve in (a).}}
+	\label{fig:fig_16_2}
+\end{figure}
+
+The most fundamental are sinusoidal functions. In this discussion, we will use the term \textit{sinusoid} to represent any waveform that can be described as a sine or cosine. There is no clear-cut convention for choosing either function, and in any case, the results will be identical because the two functions are simply offset in time by $\pi/2$ radians. For this chapter, we will use the cosine, which can be expressed generally as
+
+\begin{equation}
+	\tag{16.2}
+	f(t) = A_0 + C_1 \cos (\omega_0 t + \theta)
+\end{equation}
+
+\noindent Inspection of Eq. (16.2) indicates that four parameters serve to uniquely characterize the
+sinusoid (Fig. 16.2a):
+
+\begin{itemize}
+	\item The \textit{mean value} $A_0$ sets the average height above the abscissa.
+	\item The \textit{amplitude} $C_1$ specifies the height of the oscillation.
+	\item The \textit{angular frequency} $\omega_0$ characterizes how often the cycles occur.
+	\item The \textit{phase angle} (or \textit{phase shift}) $\theta$ parameterizes the extent to which the sinusoid is shifted horizontally.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_16_3}
+	\caption{\textsf{Graphical depictions of (a) a lagging phase angle and (b) a leading phase angle. Note that the lagging curve in (a) can be alternatively described as $\cos(\omega_0 t + 3 \pi /2)$. In other words, if a curve lags by an angle of $\alpha$, it can also be represented as leading by $2\pi - \alpha$.}}
+	\label{fig:fig_16_3}
+\end{figure}
+
+Note that the \textit{angular frequency} (in radians/time) is related to the \textit{ordinary frequency} $f$ (in cycles/time) by % TODO CITATION 383
+
+\begin{equation}
+	\tag{16.3}
+	\omega_0 = 2 \pi f
+\end{equation}
+
+\noindent and the ordinary frequency in turn is related to the period $T$ by
+
+\begin{equation}
+	\tag{16.4}
+	f = \frac{1}{T}
+\end{equation}
+
+In addition, the \textit{phase angle} represents the distance in radians from $t = 0$ to the point at which the cosine function begins a new cycle. As depicted in Fig. 16.3a, a negative value is referred to as a \textit{lagging phase angle} because the curve $\cos(\omega_0 t - \theta)$ begins a new cycle $\theta$ radians after $\cos(\omega_0 t)$. Thus, $\cos(\omega_0 t - \theta)$ is said to lag $\cos(\omega_0 t)$. Conversely, as in Fig. 16.3b, a positive value is referred to as a \textit{leading phase angle}.
+
+Although Eq. (16.2) is an adequate mathematical characterization of a sinusoid, it is awkward to work with from the standpoint of curve fitting because the phase shift is included in the argument of the cosine function. This deficiency can be overcome by invoking the trigonometric identity:
+
+\begin{equation}
+	\tag{16.5}
+	C_1 \cos(\omega_0 t + \theta) = C_1 [\cos(\omega_0 t + \theta) \cos(\theta) - \sin(\omega_0 t + \theta) \sin(\theta)]
+\end{equation}
+
+\noindent Substituting Eq. (16.5) into Eq. (16.2) and collecting terms gives (Fig. 16.2b)
+
+\begin{equation}
+	\tag{16.6}
+	f(t) = A_0 + A_1 \cos(\omega_0 t) + B_1 \sin(\omega_0 t)
+\end{equation}
+
+\noindent where
+
+\begin{equation}
+	\tag{16.7}
+	A_1 = C_1 \cos(\theta) \quad \quad B_1 = - C_1 \sin(\theta)
+\end{equation}
+
+\noindent Dividing the two parts of Eq. (16.7) gives
+
+\begin{equation}
+	\tag{16.8}
+	\theta = \arctan (- \frac{B_1}{A_1})
+\end{equation}
+
+\noindent where, if $A_1 < 0$, add $\pi$ to $\theta$. Squaring and summing Eq. (16.7) leads to
+
+\begin{equation}
+	\tag{16.9}
+	C_1 = \sqrt{A^2_1 + B ^2_1}
+\end{equation}
+
+\noindent Thus, Eq. (16.6) represents an alternative formulation of Eq. (16.2) that still requires four parameters but that is cast in the format of a general linear model [recall Eq. (15.7)]. As we will
+discuss in the next section, it can be simply applied as the basis for a least-squares fit.
+
+Before proceeding to the next section, however, we should stress that we could have
+employed a sine rather than a cosine as our fundamental model of Eq. (16.2). For example,
+
+\begin{equation}
+	f(t) = A_0 + C_1 \sin(\omega_0 t + \delta)
+\end{equation}
+
+\noindent could have been used. Simple relationships can be applied to convert between the two forms:
+
+\begin{equation}
+	\sin(\omega_0 t + \delta) = \cos(\omega_0 t + \delta - \frac{\pi}{2})
+\end{equation}
+
+\noindent and
+
+\begin{equation}
+	\tag{16.10}
+	\sin(\omega_0 t + \delta) = \sin(\omega_0 t + \delta + \frac{\pi}{2})
+\end{equation}
+
+\noindent In other words, $\theta = \delta - \pi/2$. The only important consideration is that one or the other format
+should be used consistently. Thus, we will use the cosine version throughout our discussion.
+
+\label{cha:cha_P_16_1_1}
+\subsection{Least-Squares Fit of a Sinusoid}
+
+\noindent Equation (16.6) can be thought of as a linear least-squares model:
+
+\begin{equation}
+	\tag{16.11}
+	y = A_0 + A_1 \cos(\omega_0 t) + B_1 \sin(\omega_0 t) + e
+\end{equation}
+
+\noindent which is just another example of the general model [recall Eq. (15.7)]
+
+\begin{equation}
+	y = a_0 z_0 + a_1 z_1 + a_2 z_2 + \cdots + a_m z_m + e
+\end{equation}
+
+\noindent where $z_0 = 1$, $z_1 = \cos(\omega_0 t)$, $z_2 = sin(\omega_0 t)$, and all other $z$'s = 0. Thus, our goal is to determine coefficient values that minimize
+
+\begin{equation}
+	S_r = \sum ^ N _ {i=1} \{ y_i - [A_0 + A_1 \cos(\omega_0 t) + B_1 \sin(\omega_0 t)]\}^2
+\end{equation}
+
+\noindent The normal equations to accomplish this minimization can be expressed in matrix form as [recall Eq. (15.10)]
+
+% 385
 \end{document}
-% TODO figure references, examples
+% TODO figure references, examples, align left math expressions
