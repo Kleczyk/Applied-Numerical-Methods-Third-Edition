@@ -406,7 +406,7 @@ The least-squares procedure can be readily extended to fit the data to a higher-
 \begin{wrapfigure}{l}{0.25\textwidth}
     \centering
     \includegraphics[width=0.25\textwidth]{fig_15_1}
-   \caption{\textsf{a) Data that are ill-suited for linear least-squares regression. (b) Indication that a parabola is preferable.}}
+   \caption{\textsf{(a) Data that are ill-suited for linear least-squares regression. (b) Indication that a parabola is preferable.}}
    \label{fig:fig_15_1}
 \end{wrapfigure}
 
@@ -1058,6 +1058,446 @@ should be used consistently. Thus, we will use the cosine version throughout our
 
 \noindent The normal equations to accomplish this minimization can be expressed in matrix form as [recall Eq. (15.10)]
 
+\begin{equation}
+	\tag{16.12}
+	\begin{bmatrix}
+		N & \sum \ cos(\omega_0 t) & \sum \sin(\omega_0 t) \\
+		\sum \cos(\omega_0 t) & \sum \cos^2 (\omega_0 t) & \sum \cos (\omega_0 t) \sin (\omega_0 t) \\
+		\sum \sin(\omega_0 t) & \sum \cos (\omega_0 t) \sin (\omega_0 t) & \sin^2 (\omega_0 t)
+	\end{bmatrix}
+	\begin{Bmatrix}
+		A_0 \\ B_1 \\ B_1
+	\end{Bmatrix}
+	=
+	\begin{Bmatrix}
+		\sum y \\ \sum y \cos(\omega_0 t) \\ \sum y \sin(\omega_0 t)
+	\end{Bmatrix}
+\end{equation}
 % 385
+
+These equations can be employed to solve for the unknown coefficients. However,
+rather than do this, we can examine the special case where there are N observations equispaced at intervals of $\Delta t$ and with a total record length of $T = (N - 1)\Delta t$. For this situa-
+tion, the following average values can be determined (see Prob. 16.3):
+
+% TODO eq 16.13
+
+\noindent Thus, for equispaced points the normal equations become
+
+\begin{equation}
+	\begin{bmatrix}
+		N & 0 & 0 \\
+		0 & N/2 & 0 \\
+		0 & 0 & N/2
+	\end{bmatrix}
+	\begin{Bmatrix}
+		A_0 \\ B_1 \\ B_2
+	\end{Bmatrix}
+	=
+	\begin{bmatrix}
+		\sum y \\
+		\sum y \cos(\omega_0 t) \\
+		\sum y \sin(\omega_0 t)
+	\end{bmatrix}
+\end{equation}
+
+\noindent The inverse of a diagonal matrix is merely another diagonal matrix whose elements are the
+reciprocals of the original. Thus, the coefficients can be determined as
+
+\begin{equation}
+	\begin{Bmatrix}
+		A_0 \\ B_1 \\ B_2
+	\end{Bmatrix}
+	=
+	\begin{bmatrix}
+		1/N & 0 & 0 \\
+		0 & 2/N & 0 \\
+		0 & 0 & 2/N
+	\end{bmatrix}
+	\begin{bmatrix}
+		\sum y \\
+		\sum y \cos(\omega_0 t) \\
+		\sum y \sin(\omega_0 t)
+	\end{bmatrix}
+\end{equation}
+
+\noindent or
+
+\begin{equation}
+	\tag{16.14}
+	A_0 = \frac{\sum y}{N}
+\end{equation}
+
+\begin{equation}
+	\tag{16.15}
+	A_1 =\frac{2}{N} \sum y \cos(\omega_0 t)
+\end{equation}
+
+\begin{equation}
+	\tag{16.16}
+	B_1 = \frac{2}{N} \sum y \sin(\omega_0 t)
+\end{equation}
+
+\noindent Notice that the first coefficient represents the function’s average value.
+
+% TODO example 16.1
+
+The foregoing analysis can be extended to the general model
+\begin{equation}
+	f(t) = A_0 + A_1 \cos(\omega_0 t) + B_1 \sin(\omega_0 t) + A_2 \cos(2 \omega_0 t) + B_2 \sin(2 \omega_0 t) + \cdots + A_m \cos(m \omega_0 t) + B_m \sin(m \omega_0 t)
+\end{equation}
+
+\noindent where, for equally spaced data, the coefficients can be evaluated by
+
+\begin{equation}
+	A_0 = \frac{\sum y}{N}
+\end{equation}
+
+\begin{equation}
+	\left.
+		\begin{array}{ll}
+			A_j = \frac{2}{N} \sum y \cos(j \omega_0) t \\
+			B_j = \frac{2}{N} \sum y \sin(j \omega_0 t)
+		\end{array}
+	\right \} j = 1,2, \dotsb , m
+\end{equation}
+
+%387
+Although these relationships can be used to fit data in the regression sense (i.e.,$N  > 2 m + 1$), an alternative application is to employ them for interpolation or collocation - that
+is, to use them for the case where the number of unknowns $2m + 1$ is equal to the number
+of data points $N$. This is the approach used in the continuous Fourier series, as described
+next.
+
+\label{cha:cha_P_16_2}
+\section{CONTINUOUS FOURIER SERIES}
+
+In the course of studying heat-flow problems, Fourier showed that an arbitrary periodic
+function can be represented by an infinite series of sinusoids of harmonically related
+frequencies. For a function with period $T$, a continuous Fourier series can be written
+
+\begin{equation}
+	f(t) a_0 + a_1 \cos(\omega_0 t) + b_1 \sin(\omega_0 t) +  a_2 \cos(2 \omega_0 t) + b_2 \sin(2 \omega_0 t) + \cdots
+\end{equation}
+
+\noindent or more concisely,
+% TODO THIS BREAKS EVERYTHING
+\begin{equation}
+	\tag{16.17}
+	f(t) = a_0 + \sum
+\end{equation}
+
+\noindent where the angular frequency of the first mode $(\omega_0 = 2 \pi /T)$ is called the fundamental
+frequency and its constant multiples $2 \omega_0, 3 \omega_0$, etc., are called harmonics. Thus, Eq. (16.17)
+expresses $f(t)$ as a linear combination of the basis functions: $1, cos( \omega_0 t), sin(\omega_0 t), cos(2 \omega_0 t),
+sin(2 \omega_0 t), \dots$
+
+The coefficients of Eq. (16.17) can be computed via
+
+\begin{equation}
+	\tag{16.18}
+	a_k = \frac{2}{T} \int ^ T _ 0 f(t) \cos (k \omega_0 t) dt
+\end{equation}
+
+\noindent and
+
+\begin{equation}
+	\tag{16.19}
+	b_k = \frac{2}{T} \int ^ T _ 0 f(t) \sin (k \omega_0 t) dt
+\end{equation}
+
+\noindent for $k = 1, 2, \dots$ and
+
+\begin{equation}
+	\tag{16.20}
+	a_0 = \frac{1}{T} \int ^ T _ 0 f(t)dt
+\end{equation}
+
+%TODO example 16.2
+
+Before proceeding, the Fourier series can also be expressed in a more compact form
+using complex notation. This is based on \textit{Euler's formula} (Fig. 16.5):
+
+\begin{equation}
+	\tag{16.21}
+	e^{\pm ix} = \cos x \pm  i \sin x
+\end{equation}
+
+\noindent where $i = \sqrt{-1}$, and $x$ is in radians. Equation (16.21) can be used to express the Fourier
+series concisely as (Chapra and Canale, 2010)
+
+\begin{equation}
+	\tag{16.22}
+	f(t) = \sum _ {k=-\infty} ^ {\infty} \tilde{c}_k e^{i k \omega_0 t} 
+\end{equation}
+
+\noindent where the coefficients are
+
+\begin{equation}
+	\tag{16.23}
+	\tilde{c}_k = \frac{1}{T} \int ^ {T/2} _ {-T/2} f(t) e ^ {-ik \omega_0 t} dt
+\end{equation}
+
+Note that the tildes ~ are included to stress that the coefficients are complex numbers.
+Because it is more concise, we will primarily use the complex form in the rest of the
+chapter. Just remember, that it is identical to the sinusoidal representation.
+
+\begin{figure}[H] % FIXME too huge
+	\centering
+	\includegraphics[width=1\linewidth]{fig_16_5}
+	\caption{\textsf{Graphical depiction of Euler's formula. The rotating vector is called a phasor.}}
+	\label{fig:fig_16_5}
+\end{figure}
+
+\label{cha:cha_P_16_3} %390
+\section{FREQUENCY AND TIME DOMAINS}
+
+\noindent To this point, our discussion of Fourier analysis has been limited to the \textit{time domain}. We
+have done this because most of us are fairly comfortable conceptualizing a function's
+behavior in this dimension. Although it is not as familiar, the \textit{frequency domain} provides an
+alternative perspective for characterizing the behavior of oscillating functions.
+
+Just as amplitude can be plotted versus time, it can also be plotted versus frequency.
+Both types of expression are depicted in Fig. 16.6a, where we have drawn a threedimensional graph of a sinusoidal function:
+
+\begin{equation}
+	f(t) = C_1 \cos(t + \frac{\pi}{2})
+\end{equation} 
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=1\linewidth]{fig_16_6}
+	\caption{\textsf{(a) A depiction of how a sinusoid can be portrayed in the time and the frequency domains. The
+	time projection is reproduced in (b), whereas the amplitude-frequency projection is reproduced in
+	(c). The phase-frequency projection is shown in (d).}}
+	\label{fig:fig_16_6}
+\end{figure}
+
+\noindent In this plot, the magnitude or amplitude of the curve $f(t)$ is the dependent variable, and time $t$
+and frequency $f = \omega_0 / 2 \pi$ are the independent variables. Thus, the amplitude and the time
+axes form a \textit{time plane}, and the amplitude and the frequency axes form a \textit{frequency plane}.
+The sinusoid can, therefore, be conceived of as existing a distance $1/T$ out along the frequency axis and running parallel to the time axes. Consequently, when we speak about the
+behavior of the sinusoid in the time domain, we mean the projection of the curve onto the
+time plane (Fig. 16.6b). Similarly, the behavior in the frequency domain is merely its projection onto the frequency plane.
+
+As in Fig. 16.6c, this projection is a measure of the sinusoid's maximum positive
+amplitude $C_1$. The full peak-to-peak swing is unnecessary because of the symmetry.
+Together with the location $1/T$ along the frequency axis, Fig. 16.6c now defines the
+amplitude and frequency of the sinusoid. This is enough information to reproduce the
+shape and size of the curve in the time domain. However, one more parameter - namely,
+the phase angle - is required to position the curve relative to $t = 0$. Consequently, a
+phase diagram, as shown in Fig. 16.6d, must also be included. The phase angle is determined as the distance (in radians) from zero to the point at which the positive peak
+occurs. If the peak occurs after zero, it is said to be delayed (recall our discussion of lags
+and leads in Sec. 16.1), and by convention, the phase angle is given a negative sign.
+Conversely, a peak before zero is said to be advanced and the phase angle is positive.
+Thus, for Fig. 16.6, the peak leads zero and the phase angle is plotted as $+\pi / 2$. Figure 16.7 depicts some other possibilities.
+
+We can now see that Fig. 16.6c and $d$ provide an alternative way to present or summarize the pertinent features of the sinusoid in Fig. 16.6a. They are referred to as \textit{line spectra}.
+Admittedly, for a single sinusoid they are not very interesting. However, when applied to a
+more complicated situation-say, a Fourier series-their true power and value is revealed.
+For example, Fig. 16.8 shows the amplitude and phase line spectra for the square-wave
+function from Example 16.2.
+
+Such spectra provide information that would not be apparent from the time domain.
+This can be seen by contrasting Fig. 16.4 and Fig. 16.8. Figure 16.4 presents two alternative time domain perspectives. The first, the original square wave, tells us nothing
+about the sinusoids that comprise it. The alternative is to display these sinusoids-that
+is, $(4 / \pi) \cos(\omega_0 t), -(4/3 \pi) \cos(3 \omega_0 t), (4/5 \pi) \cos(5 \omega_0t ),$ etc. This alternative does
+not provide an adequate visualization of the structure of these harmonics. In contrast,
+Fig. 16.8a and b provide a graphic display of this structure. As such, the line spectra
+represent ``fingerprints'' that can help us to characterize and understand a complicated
+waveform. They are particularly valuable for nonidealized cases where they sometimes
+allow us to discern structure in otherwise obscure signals. In the next section, we will
+describe the Fourier transform that will allow us to extend such analyses to nonperiodic
+waveforms.
+
+\label{cha:cha_P_16_4} %391
+\section{FOURIER INTEGRAL AND TRANSFORM}
+
+\noindent Although the Fourier series is a useful tool for investigating periodic functions, there are
+many waveforms that do not repeat themselves regularly. For example, a lightning bolt
+occurs only once (or at least it will be a long time until it occurs again), but it will cause interference with receivers operating on a broad range of frequencies - for example, TVs,
+radios, and shortwave receivers. Such evidence suggests that a nonrecurring signal such as
+that produced by lightning exhibits a continuous frequency spectrum. Because such phenomena are of great interest to engineers, an alternative to the Fourier series would be valuable for analyzing these aperiodic waveforms.
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=1\linewidth]{fig_16_7}
+	\caption{\textsf{Various phases of a sinusoid showing the associated phase line spectra.}}
+	\label{fig:fig_16_7}
+\end{figure}
+
+The \textit{Fourier integral} is the primary tool available for this purpose. It can be derived
+from the exponential form of the Fourier series [Eqs. (16.22) and (16.23)]. The transition
+from a periodic to a nonperiodic function can be effected by allowing the period to approach infinity. In other words, as $T$ becomes infinite, the function never repeats itself and
+thus becomes aperiodic. If this is allowed to occur, it can be demonstrated (e.g., Van
+Valkenburg, 1974; Hayt and Kemmerly, 1986) that the Fourier series reduces to
+
+\begin{equation}
+	\tag{16.24}
+	f(t) = \frac{1}{2 \pi} \int ^ \infty _ {-\infty} F(\omega) e ^ {i \omega t} d \omega
+\end{equation}
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=1\linewidth]{fig_16_8}
+	\caption{\textsf{(a) Amplitude and (b) phase line spectra for the square wave from Fig. 16.4.}}
+	\label{fig:fig_16_8}
+\end{figure}
+
+\noindent and the coefficients become a continuous function of the frequency variable $\omega$, as in
+
+\begin{equation}
+	\tag{16.25}
+	F(\omega) = \int ^ \infty _ {-\infty} f(t)e ^ {-i \omega t} dt
+\end{equation}
+
+The function $F(\omega)$, as defined by Eq. (16.25), is called the \textit{Fourier integral} of $f(t)$. In
+addition, Eqs. (16.24) and (16.25) are collectively referred to as the \textit{Fourier transform}
+pair. Thus, along with being called the Fourier integral, $F(\omega)$ is also called the \textit{Fourier
+transform} of $f(t)$. In the same spirit, $f(t)$, as defined by Eq. (16.24), is referred to as the
+\textit{inverse Fourier transform} of $F(\omega)$. Thus, the pair allows us to transform back and forth
+between the time and the frequency domains for an aperiodic signal.
+
+The distinction between the Fourier series and transform should now be quite clear.
+The major difference is that each applies to a different class of functions-the series to periodic and the transform to nonperiodic waveforms. Beyond this major distinction, the two
+approaches differ in how they move between the time and the frequency domains. The
+Fourier series converts a continuous, periodic time-domain function to frequency-domain
+magnitudes at discrete frequencies. In contrast, the Fourier transform converts a continuous time-domain function to a continuous frequency-domain function. Thus, the discrete
+frequency spectrum generated by the Fourier series is analogous to a continuous frequency
+spectrum generated by the Fourier transform.
+
+Now that we have introduced a way to analyze an aperiodic signal, we will take the
+final step in our development. In the next section, we will acknowledge the fact that a
+signal is rarely characterized as a continuous function of the sort needed to implement
+Eq. (16.25). Rather, the data are invariably in a discrete form. Thus, we will now show how
+to compute a Fourier transform for such discrete measurements.
+
+\label{cha:cha_P_16_5} %394
+\section{DISCRETE FOURIER TRANSFORM (DFT)}
+
+\noindent In engineering, functions are often represented by a finite set of discrete values. Additionally, data are often collected in or converted to such a discrete format. As depicted in
+Fig. 16.9, an interval from 0 to $T$ can be divided into $n$ equispaced subintervals with widths
+of $\Delta t = T /n$. The subscript $j$ is employed to designate the discrete times at which samples
+are taken. Thus, $f_j$ designates a value of the continuous function $f(t)$ taken at $t_j$. Note that the
+data points are specified at $j = 0, 1, 2, \dots , n - 1$. A value is not included at $j = n$. (See
+Ramirez, 1985, for the rationale for excluding $f_n$.)
+
+For the system in Fig. 16.9, a discrete Fourier transform can be written as
+\begin{equation}
+	\tag{16.26}
+	F_k = \sum ^ {n-1} _ {j=0} f_j e ^ {-ik \omega_0 j} \quad \text{for } k=0 \text{ to } n - 1
+\end{equation}
+
+\noindent and the inverse Fourier transform as
+
+\begin{equation}
+	\tag{16.27}
+	F_k = \frac{1}{n} \sum ^ {n-1} _ {k=0} F_k e ^ {ik \omega_0 j} \quad \text{for } j=0 \text{ to } n - 1
+\end{equation}
+
+\noindent where $\omega_0 = 2 \pi / n$.
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=1\linewidth]{fig_16_9}
+	\caption{\textsf{The sampling points of the discrete Fourier series.}}
+	\label{fig:fig_16_9}
+\end{figure}
+
+Equations (16.26) and (16.27) represent the discrete analogs of Eqs. (16.25) and
+(16.24), respectively. As such, they can be employed to compute both a direct and an inverse Fourier transform for discrete data. Note that the factor $1/n$ in Eq. (16.27) is merely
+a scale factor that can be included in either Eq. (16.26) or (16.27), but not both. For example, if it is shifted to Eq. (16.26), the first coefficient $F_0$ (which is the analog of the constant
+$a_0$) is equal to the arithmetic mean of the samples.
+
+Before proceeding, several other aspects of the DFT bear mentioning. The highest frequency that can be measured in a signal, called the \textit{Nyquist frequency}, is half the sampling
+frequency. Periodic variations that occur more rapidly than the shortest sampled time interval cannot be detected. The lowest frequency you can detect is the inverse of the total
+sample length.
+
+As an example, suppose that you take 100 samples of data ($n = 100$ samples) at a
+sample frequency of $f_s = 1000$ Hz (i.e., 1000 samples per second). This means that the
+sample interval is
+
+\begin{equation}
+	\Delta t = \frac{1}{f_s}=\frac{1}{1000 \text{ samples/s}} = 0.01 \text{ s/sample}
+\end{equation}
+
+\noindent The total sample length is 
+
+\begin{equation}
+	t_n = \frac{n}{f_s} = \frac{100 \text{ samples}}{1000 \text{ samples/s}}=0.1 \text{ Hz}
+\end{equation}
+
+\noindent and the frequency increment is
+
+\begin{equation}
+	\Delta f = \frac{f_s}{n} = \frac{1000 \text{ samples/s}}{100 \text{ samples}}=10 \text{ Hz}
+\end{equation}
+
+\noindent The Nyquist frequency is
+
+\begin{equation}
+	f_{\text{max}} = 0.5 f_s = 0.5 (1000 \text{ Hz}) = 500 \text{ Hz}
+\end{equation}
+
+\noindent and the lowest detectable frequency is
+
+\begin{equation}
+	f_{\text{min}} = \frac{1}{0.1 \text{s}} = 10 \text{ Hz}
+\end{equation}
+
+\noindent Thus, for this example, the DFT could detect signals with periods from $1/500 = 0.002 \text{s}$ up
+to $1/10 = 0.1\text{s}$.
+
+\label{cha:cha_P_16_5_1} % 395
+\subsection{Fast Fourier Transform (FFT)}
+
+\noindent Although an algorithm can be developed to compute the DFT based on Eq. (16.26), it is
+computationally burdensome because $n^2$ operations are required. Consequently, for data
+samples of even moderate size, the direct determination of the DFT can be extremely time
+consuming.
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=1\linewidth]{fig_16_10}
+	\caption{\textsf{Plot of number of operations vs. sample size for the standard DFT and the FFT.}}
+	\label{fig:fig_16_10}
+\end{figure}
+
+The \textit{fast Fourier transform}, or \textit{FFT}, is an algorithm that has been developed to com-
+pute the DFT in an extremely economical fashion. Its speed stems from the fact that it
+utilizes the results of previous computations to reduce the number of operations. In particular, it exploits the periodicity and symmetry of trigonometric functions to compute
+the transform with approximately $n \log_2n$ operations (Fig. 16.10). Thus, for $n = 50$ samples, the FFT is about 10 times faster than the standard DFT. For $n = 1000$, it is about
+100 times faster.
+
+The first FFT algorithm was developed by Gauss in the early nineteenth century
+(Heideman et al., 1984). Other major contributions were made by Runge, Danielson,
+Lanczos, and others in the early twentieth century. However, because discrete transforms
+often took days to weeks to calculate by hand, they did not attract broad interest prior to the
+development of the modern digital computer.
+
+In 1965, J. W. Cooley and J. W. Tukey published a key paper in which they outlined an
+algorithm for calculating the FFT. This scheme, which is similar to those of Gauss and
+other earlier investigators, is called the Cooley-Tukey algorithm. Today, there are a host of
+other approaches that are offshoots of this method. As described next, MATLAB offers a
+function called \texttt{fft} that employs such efficient algorithms to compute the DFT.
+
+\label{cha:cha_P_16_5_2} % 396
+\subsection{MATLAB Function: \texttt{fft}}
+
+\noindent MATLAB's \texttt{fft} function provides an efficient way to compute the DFT. A simple representation of its syntax is
+
+\begin{lstlisting}[numbers=none]
+	F = fft(f, n)
+\end{lstlisting}
+
+where \texttt{F =} a vector containing the DFT, and \texttt{f =} a vector containing the signal. The
+parameter \texttt{n}, which is optional, indicates that the user wants to implement an $n$-point FFT.
+If \texttt{f} has less than \texttt{n} points, it is padded with zeros and truncated if it has more.
+
+Note that the elements in \texttt{F} are sequenced in what is called \textit{reverse-wrap-around
+order}. The first half of the values are the positive frequencies (starting with the constant)
+and the second half are the negative frequencies. Thus, if $n = 8$, the order is 0, 1, 2, 3, 4, -3, -2, -1. The following example illustrates the function's use to calculate the DFT of a
+simple sinusoid.
+
+%TODO example 16.3
+
 \end{document}
 % TODO figure references, examples, align left math expressions
