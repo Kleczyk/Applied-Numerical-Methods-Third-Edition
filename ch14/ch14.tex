@@ -35,7 +35,7 @@ The analogy can be extended further for cases where (1) the spread of the points
 \end{equation}
 
 \noindent where $s_{y/x}$ is called the \textit{standard error of the estimate}. The subscript notation ``$y/x$'' designates that the error is for a predicted value of $y$ corresponding to a particular value of $x$.
-Also, notice that we now divide by $n - 2$ because two data-derived estimates - $a_0$ and $a_1$ — were used to compute $S_r$; thus, we have lost two degrees of freedom. As with our discussion of the standard deviation, another justification for dividing by $n - 2$ is that there is no such thing as the ``spread of data'' around a straight line connecting two points. Thus, for the case where $n = 2$, Eq. (14.19) yields a meaningless result of infinity.
+Also, notice that we now divide by $n - 2$ because two data-derived estimates - $a_0$ and $a_1$ - were used to compute $S_r$; thus, we have lost two degrees of freedom. As with our discussion of the standard deviation, another justification for dividing by $n - 2$ is that there is no such thing as the ``spread of data'' around a straight line connecting two points. Thus, for the case where $n = 2$, Eq. (14.19) yields a meaningless result of infinity.
 
 Just as was the case with the standard deviation, the standard error of the estimate quantifies the spread of the data. However, $s_{y/x}$ quantifies the spread \textit{around the regression line} as shown in \ref{fig:fig_14_10b} in contrast to the standard deviation $s_y$ that quantified the \textit{spread around the mean} (\ref{fig:fig_14_10a}).
 
@@ -1499,5 +1499,619 @@ simple sinusoid.
 
 %TODO example 16.3
 
+\label{cha:cha_P_16_6}
+\section{THE POWER SPECTRUM}
+
+\noindent Beyond amplitude and phase spectra, power spectra provide another useful way to discern
+the underlying harmonics of seemingly random signals. As the name implies, it derives
+from the analysis of the power output of electrical systems. In terms of the DFT, a \textit{power
+spectrum} consists of a plot of the power associated with each frequency component versus
+frequency. The power can be computed by summing the squares of the Fourier coefficients:
+
+\begin{equation}
+	P_k = {|\tilde{c}_k|}^2
+\end{equation}
+
+\noindent where $P_k$ is the power associated with each frequency $k \omega_0$.
+
+% TODO example 16.4
+
+% TODO case study 16.7
+
+% TODO problems
+
+\label{cha:cha_P_17} %351
+\chapter{Polynomial Interpolation}
+\textbf{CHAPTER OBJECTIVES}
+
+\noindent The primary objective of this chapter is to introduce you to polynomial interpolation.
+Specific objectives and topics covered are
+
+\begin{itemize}
+	\item Recognizing that evaluating polynomial coefficients with simultaneous equations is an ill-conditioned problem.
+	\item  Knowing how to evaluate polynomial coefficients and interpolate with MATLAB's polyfit and polyval functions.
+	\item  Knowing how to perform an interpolation with Newton's polynomial.
+	\item  Knowing how to perform an interpolation with a Lagrange polynomial.
+	\item  Knowing how to solve an inverse interpolation problem by recasting it as a roots problem.
+	\item  Appreciating the dangers of extrapolation.
+	\item  Recognizing that higher-order polynomials can manifest large oscillations.
+\end{itemize}
+
+% TODO YOU'VE GOT A PROBLEM
+
+If we want to improve the velocity prediction for the free-falling bungee jumper, we might expand our model to account for other factors beyond mass and the drag coefficient can itself be formulated as a function of other factors such as the area of the jumper and characteristics such as the air's density and viscosity.
+
+Air density and viscosity are commonly presented in tabular form as a function of
+temperature. For example, Table 17.1 is reprinted from a popular fluid mechanics textbook
+(White, 1999).
+
+Suppose that you desired the density at a temperature not included in the table. In such
+a case, you would have to interpolate. That is, you would have to estimate the value at the desired temperature based on the densities that bracket it. The simplest approach is to determine the equation for the straight line connecting the two adjacent values and use this
+equation to estimate the density at the desired intermediate temperature. Although such
+\textit{linear interpolation} is perfectly adequate in many cases, error can be introduced when the
+data exhibit significant curvature. In this chapter, we will explore a number of different
+approaches for obtaining adequate estimates for such situations.
+
+%TODO TABLE 17.1
+
+\label{cha:cha_P_17_1} % 406
+\section{INTRODUCTION TO INTERPOLATION}
+
+\noindent You will frequently have occasion to estimate intermediate values between precise data
+points. The most common method used for this purpose is polynomial interpolation. The
+general formula for an $(n - 1)$th-order polynomial can be written as
+
+\begin{equation}
+	\tag{17.1}
+	f(x) = a_1 + a_2 x + a_3 x^2 + \cdots + a_n x^{n-1}
+\end{equation}
+
+For $n$ data points, there is one and only one polynomial of order $(n - 1)$ that passes through
+all the points. For example, there is only one straight line (i.e., a first-order polynomial)
+that connects two points (Fig. 17.1a). Similarly, only one parabola connects a set of three
+points (Fig. 17.1b). \textit{Polynomial interpolation} consists of determining the unique (n - 1)th-order polynomial that fits n data points. This polynomial then provides a formula to
+compute intermediate values.
+
+Before proceeding, we should note that MATLAB represents polynomial coefficients
+in a different manner than Eq. (17.1). Rather than using increasing powers of $x$, it uses decreasing powers as in
+
+\begin{equation}
+	\tag{17.2}
+	f(x) = p_1 x ^ {n-1} + p_2 x ^ {n-2} + \cdots + p_{n-1} x + p_n
+\end{equation}
+
+\noindent To be consistent with MATLAB, we will adopt this scheme in the following section.
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=1\linewidth]{fig_17_1}
+	\caption{\textsf{Examples of interpolating polynomials: (a) first-order (linear) connecting two points,
+	(b) second-order (quadratic or parabolic) connecting three points, and (c) third-order (cubic)
+	connecting four points.}}
+	\label{fig:fig_17_1}
+\end{figure}
+
+\label{cha:cha_P_17_1_1}
+\subsection{Determining Polynomial Coefficients}
+
+\noindent A straightforward way for computing the coefficients of Eq. (17.2) is based on the fact that
+$n$ data points are required to determine the n coefficients. As in the following example, this
+allows us to generate n linear algebraic equations that we can solve simultaneously for the
+coefficients.
+
+% TODO example 17.1
+
+Although the approach in Example 17.1 provides an easy way to perform interpola-
+tion, it has a serious deficiency. To understand this flaw, notice that the coefficient matrix
+in Example 17.1 has a decided structure. This can be seen clearly by expressing it in general terms:
+
+\begin{equation}
+	\tag{17.3}
+	\begin{bmatrix}
+		x ^ 2 _ 1 & x_1 & 1 \\
+		x ^ 2 _ 2 & x_2 & 1 \\
+		x ^ 2 _ 3 & x_3 & 1
+	\end{bmatrix}
+	\begin{Bmatrix}
+		p_1 \\ p_2 \\ p_3
+	\end{Bmatrix}
+	=
+	\begin{Bmatrix}
+		f(x_1) \\
+		f(x_2) \\
+		f(x_3)
+	\end{Bmatrix}
+\end{equation}
+
+Coefficient matrices of this form are referred to as \textit{Vandermonde matrices}. Such matrices are very ill-conditioned. That is, their solutions are very sensitive to round-off errors.
+This can be illustrated by using MATLAB to compute the condition number for the coefficient matrix from Example 17.1 as
+
+\begin{lstlisting}[numbers=none]
+	>> cond(A)
+ans =
+	5.8932e+006
+\end{lstlisting}
+
+This condition number, which is quite large for a $3 \times 3$ matrix, implies that about six digits
+of the solution would be questionable. The ill-conditioning becomes even worse as the
+number of simultaneous equations becomes larger.
+
+As a consequence, there are alternative approaches that do not manifest this shortcoming. In this chapter, we will also describe two alternatives that are well-suited for
+computer implementation: the Newton and the Lagrange polynomials. Before doing this,
+however, we will first briefly review how the coefficients of the interpolating polynomial
+can be estimated directly with MATLAB's built-in functions.
+
+\label{cha:cha_P_17_1_2}
+\subsection{MATLAB Functions: \texttt{polyfit} and \texttt{polyval}}
+
+\noindent Recall from Section 14.5.2, that the \texttt{polyfit} function can be used to perform polynomial
+regression. In such applications, the number of data points is greater than the number of
+coefficients being estimated. Consequently, the least-squares fit line does not necessarily
+pass through any of the points, but rather follows the general trend of the data.
+
+For the case where the number of data points equals the number of coefficients, \texttt{polyfit} performs interpolation. That is, it returns the coefficients of the polynomial that pass
+directly through the data points. For example, it can be used to determine the coefficients
+of the parabola that passes through the last three density values from Table 17.1:
+
+\begin{lstlisting}[numbers=none]
+>> format long
+>> T = [300 400 500];
+>> density = [0.616 0.525 0.457];
+>> p = polyfit(T,density,2)
+p =
+	0.00000115000000
+	-0.00171500000000
+	1.02700000000000
+\end{lstlisting}
+
+\noindent We can then use the \texttt{polyval} function to perform an interpolation as in
+
+\begin{lstlisting}[numbers=none]
+>> d = polyval(p,350)
+d =
+	0.56762500000000
+\end{lstlisting}
+
+\noindent These results agree with those obtained previously in Example 17.1 with simultaneous equations.
+
+\label{cha:cha_P_17_2}
+\section{NEWTON INTERPOLATING POLYNOMIAL}
+
+\noindent There are a variety of alternative forms for expressing an interpolating polynomial beyond
+the familiar format of Eq. (17.2). Newton's interpolating polynomial is among the most
+popular and useful forms. Before presenting the general equation, we will introduce the
+first- and second-order versions because of their simple visual interpretation.
+
+\label{cha:cha_P_17_2_1}
+\subsection{Linear Interpolation}
+
+\noindent The simplest form of interpolation is to connect two data points with a straight line. This
+technique, called \textit{linear interpolation}, is depicted graphically in Fig. 17.2. Using similar
+triangles,
+
+\begin{equation}
+	\tag{17.4}
+	\frac{f_1(x)-f(x_1)}{x - x_1} = \frac{f(x_2) - f(x_1)}{x_2 - x_1}
+\end{equation}
+
+\noindent which can be rearranged to yield
+
+\begin{equation}
+	\tag{17.5}
+	f_1(x) = f(x_1) + \frac{f(x_2) - f(x_1)}{x_2 - x_1} (x - x_1)
+\end{equation}
+
+\noindent which is the \textit{Newton linear-interpolation formula}. The notation $f_1 (x)$ designates that this
+is a first-order interpolating polynomial. Notice that besides representing the slope of the
+line connecting the points, the term $[f(x_2) - f(x_1)]/(x_2 - x_1)$ is a finite-difference approximation of the first derivative [recall Eq. (4.20)]. In general, the smaller the interval
+between the data points, the better the approximation. This is due to the fact that, as the
+interval decreases, a continuous function will be better approximated by a straight line.
+This characteristic is demonstrated in the following example.
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=1\linewidth]{fig_17_2}
+	\caption{\textsf{Graphical depiction of linear interpolation. The shaded areas indicate the similar triangles used
+	to derive the Newton linear-interpolation formula [Eq. (17.5)].}}
+	\label{fig:fig_17_2}
+\end{figure}
+
+% TODO example 17.2
+
+\label{cha:cha_P_17_2_2}
+\subsection{Quadratic Interpolation}
+
+\noindent The error in Example 17.2 resulted from approximating a curve with a straight line. Consequently, a strategy for improving the estimate is to introduce some curvature into the line
+connecting the points. If three data points are available, this can be accomplished with a
+second-order polynomial (also called a quadratic polynomial or a parabola). A particularly
+convenient form for this purpose is
+
+\begin{equation}
+	\tag{17.6}
+	f_2(x) = b_1 + b_2 (x - x_1) + b_3 (x-x_1) (x - x_2)
+\end{equation}
+
+A simple procedure can be used to determine the values of the coefficients. For $b_1$,
+Eq. (17.6) with $x = x_1$ can be used to compute
+
+\begin{equation}
+	\tag{17.7}
+	b_1 = f(x_1)
+\end{equation}
+
+\noindent Equation (17.7) can be substituted into Eq. (17.6), which can be evaluated at $x = x_2$ for
+
+\begin{equation}
+	\tag{17.8}
+	b_2 = \frac{f(x_2) - f(x_1)}{x_2 - x_1}
+\end{equation}
+
+\noindent Finally, Eqs. (17.7) and (17.8) can be substituted into Eq. (17.6), which can be evaluated at
+$x = x_3$ and solved (after some algebraic manipulations) for
+
+\begin{equation}
+	\tag{17.9}
+	b_3 = \frac{
+		\frac{f(x_3) - f(x_2)}{x_3 - x_2} - \frac{f(x_2) - f(x_1)}{x_2 - x_1}
+	}{x_3 - x_1}
+\end{equation}
+
+Notice that, as was the case with linear interpolation, $b_2$ still represents the slope of the
+line connecting points $x_1$ and $x_2$. Thus, the first two terms of Eq. (17.6) are equivalent to
+linear interpolation between $x_1$ and $x_2$, as specified previously in Eq. (17.5). The last term,
+$b_3 (x - x_1 )(x - x_2)$, introduces the second-order curvature into the formula.
+
+Before illustrating how to use Eq. (17.6), we should examine the form of the coefficient $b_3$. It is very similar to the finite-difference approximation of the second derivative
+introduced previously in Eq. (4.27). Thus, Eq. (17.6) is beginning to manifest a structure
+that is very similar to the Taylor series expansion. That is, terms are added sequentially to
+capture increasingly higher-order curvature.
+
+% TODO example 17.3
+
+\label{cha:cha_P_17_2_3} % 413
+\subsection{General Form of Newton's Interpolating Polynomials}
+
+\noindent The preceding analysis can be generalized to fit an $(n - 1)$th-order polynomial to $n$ data
+points. The $(n - 1)$th-order polynomial is
+
+\begin{equation}
+	\tag{17.10}
+	f_{n-1}(x) = b_1 + b_2 (x - x_1) + \cdots + b_n (x - x_1) (x - x_2) \cdots (x - x_{n-1})
+\end{equation}
+
+\noindent As was done previously with linear and quadratic interpolation, data points can be used to
+evaluate the coefficients $b_1 , b_2 , \dots , b_n$. For an $(n - 1)$th-order polynomial, $n$ data points
+are required: $[x_1 , f (x_1)], [x_2 , f (x_2)], \dots , [x_n , f (x_n )]$. We use these data points and the
+following equations to evaluate the coefficients:
+
+\begin{equation}
+	\tag{17.11}
+	b_1 = f(x_1)
+\end{equation}
+
+\begin{equation}
+	\tag{17.12}
+	b_2 = f[x_2,x_1]
+\end{equation}
+
+\begin{equation}
+	\tag{17.13}
+	b_3 = f[x_3, x_2, x_1]
+\end{equation}
+
+\begin{equation}
+	\notag
+	\vdots 
+\end{equation}
+
+\begin{equation}
+	\tag{17.14}
+	b_n = f[x_n, x_{n-1}, \dots, x_1]
+\end{equation}
+
+\noindent where the bracketed function evaluations are finite divided differences. For example, the
+first finite divided difference is represented generally as
+
+\begin{equation}
+	\tag{17.15}
+	f[x_i, x_j] = \frac{f(x_i) - f(x_j)}{x_i - x_j}
+\end{equation}
+
+\noindent The second finite divided difference, which represents the difference of two first divided
+differences, is expressed generally as
+
+\begin{equation}
+	\tag{17.16}
+	f[x_i, x_j, x_k] = \frac{f[x_i, x_j] - f[x_j, x_k]}{x_i - x_k}
+\end{equation}
+
+\noindent Similarly, the $n$th finite divided difference is
+
+\begin{equation}
+	\tag{17.17}
+	f[x_n,x_{n-1}, \dots, x_2, x_1] = \frac{f[x_n,x_{n-1}, \dots, x_2]- f[x_{n-1}, \dots, x_2, x_1]}{x_n - x_1}
+\end{equation}
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=1\linewidth]{fig_17_5}
+	\caption{\textsf{Graphical depiction of the recursive nature of finite divided differences. This representation is
+	referred to as a divided difference table.}}
+	\label{fig:fig_17_5}
+\end{figure}
+
+\noindent These differences can be used to evaluate the coefficients in Eqs. (17.11) through (17.14),
+which can then be substituted into Eq. (17.10) to yield the general form of Newton's inter-
+polating polynomial:
+
+\begin{equation}
+	\tag{17.18}
+	f_{n-1} (x) = f(x_1) + (x - x_1) f[x_2, x_1] + (x - x_1) (x - x_2) f[x_3,x_2,x_1] + \cdots + (x - x_1) (x - x_2) \cdots (x - x_{n-1}) f[x_n, x_{n-1}, \dots,x_2,x_1]
+\end{equation}
+
+We should note that it is not necessary that the data points used in Eq. (17.18) be
+equally spaced or that the abscissa values necessarily be in ascending order, as illustrated
+in the following example. However, the points should be ordered so that they are centered
+around and as close as possible to the unknown. Also, notice how Eqs. (17.15) through
+(17.17) are recursive-that is, higher-order differences are computed by taking differences
+of lower-order differences (Fig. 17.5). This property will be exploited when we develop an
+efficient M-file to implement the method.
+
+% TODO example 17.4
+
+\label{cha:cha_P_17_2_4} % 416
+\subsection{MATLAB M-file: \texttt{Newtint}}
+
+\noindent It is straightforward to develop an M-file to implement Newton interpolation. As in Fig. 17.7,
+the first step is to compute the finite divided differences and store them in an array. The differences are then used in conjunction with Eq. (17.18) to perform the interpolation.
+
+An example of a session using the function would be to duplicate the calculation we
+just performed in Example 17.3:
+
+\begin{lstlisting}[numbers=none]
+>> format long
+>> x = [1 4 6 5]';
+>> y = log(x);
+>> Newtint(x,y,2)
+ans =
+	0.62876857890841
+\end{lstlisting}
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=1\linewidth]{fig_17_7}
+	\caption{\textsf{An M-file to implement Newton interpolation.}}
+	\label{fig:fig_17_7}
+\end{figure}
+
+\label{cha:cha_P_17_3}
+\section{LAGRANGE INTERPOLATING POLYNOMIAL}
+
+\noindent Suppose we formulate a linear interpolating polynomial as the weighted average of the two
+values that we are connecting by a straight line:
+
+\begin{equation}
+	\tag{17.19}
+	f(x) = L_1 f(x_1) L_2 f(x_2)
+\end{equation}
+
+\noindent where the $L$'s are the weighting coefficients. It is logical that the first weighting coefficient
+is the straight line that is equal to 1 at $x_1$ and 0 at $x_2$:
+
+\begin{equation}
+	\notag
+	L_1 = \frac{x - x_2}{x_1 - x_2}
+\end{equation}
+
+\noindent Similarly, the second coefficient is the straight line that is equal to 1 at $x_2$ and 0 at $x_1$:
+
+\begin{equation}
+	\notag
+	L_2 = \frac{x - x_1}{x_2 - x_1}
+\end{equation}
+
+\noindent Substituting these coefficients into Eq. 17.19 yields the straight line that connects the
+points (Fig. 17.8):
+
+\begin{equation}
+	\tag{17.20}
+	f_1(x) = \frac{x - x_2}{x_1 - x_2} f(x_1) + \frac{x - x_1}{x_2 - x_1} f(x_2)
+\end{equation}
+
+\noindent where the nomenclature $f_1(x)$ designates that this is a first-order polynomial. Equation (17.20) is referred to as the \textit{linear Lagrange interpolating polynomial}.
+
+The same strategy can be employed to fit a parabola through three points. For this case
+three parabolas would be used with each one passing through one of the points and equaling zero at the other two. Their sum would then represent the unique parabola that connects
+the three points. Such a second-order Lagrange interpolating polynomial can be written as
+
+\begin{equation}
+	\tag{17.21}
+	f_2(x) = \frac{(x - x_2) (x - x_3)}{(x_1 - x_2)(x_1 - x_3)} f(x_1) + \frac{(x - x_1) (x - x_3)}{(x_2 - x_1) (x_2 - x_3)} f(x_2) + \frac{(x - x_1) (x - x_2)}{(x_3 - x_1) (x_3 - x_2)} f(x_3)
+\end{equation}
+
+\noindent Notice how the first term is equal to $f (x_1 )$ at $x_1$ and is equal to zero at $x_2$ and $x_3$ . The other
+terms work in a similar fashion.
+
+Both the first- and second-order versions as well as higher-order Lagrange polynomials can be represented concisely as
+
+\begin{equation}
+	\tag{17.22}
+	f_{n-1}(x) = \sum ^ n _ {i=1} L_i (x) f(x_i)
+\end{equation}
+
+\noindent where
+
+\begin{equation}
+	\tag{17.23}
+	L_i (x) = \prod ^n _{j=1, j \neq i} \frac{x - x_j}{x_i - x_j}
+\end{equation}
+
+\noindent where $n$ = the number of data points and $\prod$ designates the ``product of.''
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=1\linewidth]{fig_17_8}
+	\caption{\textsf{A visual depiction of the rationale behind Lagrange interpolating polynomials. The figure shows
+	the first-order case. Each of the two terms of Eq. (17.20) passes through one of the points and
+	is zero at the other. The summation of the two terms must, therefore, be the unique straight line
+	that connects the two points.}}
+	\label{fig:fig_17_8}
+\end{figure}
+
+% TODO example 17.5
+
+\label{cha:cha_P_17_3_1} % 419
+\subsection{MATLAB M-file: \texttt{Lagrange}}
+
+\noindent It is straightforward to develop an M-file based on Eqs. (17.22) and (17.23). As in
+Fig. 17.9, the function is passed two vectors containing the independent (\texttt{x}) and the
+dependent (\texttt{y}) variables. It is also passed the value of the independent variable where you
+want to interpolate (\texttt{xx}). The order of the polynomial is based on the length of the \texttt{x} vector
+that is passed. If \texttt{n} values are passed, an $(n - 1)$th order polynomial is fit.
+
+\begin{figure}[H] 
+	\centering
+	\begin{lstlisting}[numbers=none]
+function yint = Lagrange(x,y,xx)
+% Lagrange: Lagrange interpolating polynomial
+% 	yint = Lagrange(x,y,xx): Uses an (n - 1)-order
+% 		Lagrange interpolating polynomial based on n data points
+% 		to determine a value of the dependent variable (yint) at
+% 		a given value of the independent variable, xx.
+% input:
+% 	x = independent variable
+% 	y = dependent variable
+% 	xx = value of independent variable at which the
+% 		interpolation is calculated
+% output:
+% 		yint = interpolated value of dependent variable
+
+n = length(x);
+if length(y)~=n, error('x and y must be same length'); end
+s = 0;
+for i = 1:n
+	product = y(i);
+	for j = 1:n
+		if i ~= j
+			product = product*(xx-x(j))/(x(i)-x(j));
+		end
+	end
+	s = s+product;
+end
+yint = s;
+	\end{lstlisting}
+	\caption{\textsf{An M-file to implement Lagrange interpolation.}}
+	\label{fig:fig_17_9}
+\end{figure}
+
+An example of a session using the function would be to predict the density of air at
+1 atm pressure at a temperature of $15^\circ$C: based on the first four values from Table 17.1.
+Because four values are passed to the function, a third-order polynomial would be implemented by the \texttt{Lagrange} function to give:
+
+\begin{lstlisting}[numbers=none]
+>> format long
+>> T = [-40 0 20 50];
+>> d = [1.52 1.29 1.2 1.09];
+>> density = Lagrange(T,d,15)
+
+density =
+	1.22112847222222
+\end{lstlisting}
+
+\label{cha:cha_P_17_4} % 420
+\section{INVERSE INTERPOLATION}
+
+\noindent As the nomenclature implies, the $f (x)$ and $x$ values in most interpolation contexts are the
+dependent and independent variables, respectively. As a consequence, the values of the $x$'s
+are typically uniformly spaced. A simple example is a table of values derived for the function
+$f (x) = 1/x$:
+
+% TODO table?
+
+Now suppose that you must use the same data, but you are given a value for $f (x)$ and
+must determine the corresponding value of $x$. For instance, for the data above, suppose that
+you were asked to determine the value of $x$ that corresponded to $f (x) = 0.3$. For this case,
+because the function is available and easy to manipulate, the correct answer can be determined directly as $x = 1/0.3 = 3.3333$.
+
+Such a problem is called inverse interpolation. For a more complicated case, you
+might be tempted to switch the $f (x)$ and $x$ values [i.e., merely plot $x$ versus $f (x)$] and use
+an approach like Newton or Lagrange interpolation to determine the result. Unfortunately,
+when you reverse the variables, there is no guarantee that the values along the new abscissa
+[the $f (x)$'s] will be evenly spaced. In fact, in many cases, the values will be ``telescoped.''
+That is, they will have the appearance of a logarithmic scale with some adjacent points
+bunched together and others spread out widely. For example, for $f (x) = 1/x$ the result is
+
+% TODO table
+
+Such nonuniform spacing on the abscissa often leads to oscillations in the resulting interpolating polynomial. This can occur even for lower-order polynomials. An alternative
+strategy is to fit an nth-order interpolating polynomial, $f_n (x)$, to the original data [i.e., with
+$f (x)$ versus $x$]. In most cases, because the $x$'s are evenly spaced, this polynomial will not
+be ill-conditioned. The answer to your problem then amounts to finding the value of $x$ that
+makes this polynomial equal to the given $f (x)$. Thus, the interpolation problem reduces to
+a roots problem!
+
+For example, for the problem just outlined, a simple approach would be to fit a quadratic polynomial to the three points: $(2, 0.5)$, $(3, 0.3333)$, and $(4, 0.25)$. The result would be
+
+\begin{equation}
+	\notag
+	f_2 (x) =  0.041667x^2 - 0.375x + 1.08333
+\end{equation}
+
+\noindent The answer to the inverse interpolation problem of finding the $x$ corresponding to
+$f (x) = 0.3$ would therefore involve determining the root of
+
+\begin{equation}
+	\notag
+	0.3 = 0.041667x^2 - 0.375x + 1.08333
+\end{equation}
+
+\noindent For this simple case, the quadratic formula can be used to calculate
+
+\begin{equation}
+	\notag
+	x = \frac{0.375 \pm \sqrt{(-0.375)^2 - 4(0.041667)0.78333}}{2(0.041667)} = 
+	\begin{matrix}
+		5.704158 \\ 3.295842
+	\end{matrix}
+\end{equation}
+
+\noindent Thus, the second root, $3.296$, is a good approximation of the true value of $3.333$. If additional accuracy were desired, a third- or fourth-order polynomial along with one of the
+root-location methods from Chaps. 5 or 6 could be employed.
+
+\label{cha:cha_P_17_5} % 421
+\section{EXTRAPOLATION AND OSCILLATIONS}
+
+\noindent Before leaving this chapter, there are two issues related to polynomial interpolation that
+must be addressed. These are extrapolation and oscillations.
+
+\label{cha:cha_P_17_5_1} 
+\subsection{Extrapolation}
+
+\noindent Extrapolation is the process of estimating a value of $f (x)$ that lies outside the range of the
+known base points, $x_1 , x_2, \dots , x_n$. As depicted in Fig. 17.10, the open-ended nature of extrapolation represents a step into the unknown because the process extends the curve
+beyond the known region. As such, the true curve could easily diverge from the prediction.
+Extreme care should, therefore, be exercised whenever a case arises where one must
+extrapolate.
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=1\linewidth]{fig_17_10}
+	\caption{\textsf{Illustration of the possible divergence of an extrapolated prediction. The extrapolation is based
+	on fitting a parabola through the first three known points.}}
+	\label{fig:fig_17_10}
+\end{figure}
+
+% TODO example 17.6
+
+\label{cha:cha_P_17_5_2} 
+\subsection{Extrapolation}
+
+\noindent Although ``more is better'' in many contexts, it is absolutely not true for polynomial interpolation. Higher-order polynomials tend to be very ill-conditioned - that is, they tend to be
+highly sensitive to round-off error. The following example illustrates this point nicely.
+
+% TODO example 17.7
+
+% TODO problems
+
 \end{document}
-% TODO figure references, examples, align left math expressions
+% TODO figure references, examples, align left math expressions. notag
