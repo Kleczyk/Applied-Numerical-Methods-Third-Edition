@@ -206,6 +206,7 @@ A simple example of the use of this M-file would be to fit the force-velocity da
 \noindent where $x$ and $y$ are the vectors of the independent and the dependent variabless, respectively, and $n =$ the order of the polynomial. The function returns a vector $p$ containing the polynomial's coefficients. We should note that it represents the polynomial using decreasing powers of $x$ as in the following representation:
 
 \begin{equation}
+	\notag
 	f(x) = p_1x^n + p_2x^{n-1} + \cdots + p_n x + p_{n + 1}
 \end{equation}
 
@@ -241,6 +242,7 @@ y =
 \textbf{Background.} \textit{Enzymes} act as catalysts to speed up the rate of chemical reactions in living cells. In most cases, they convert one chemical, the \textit{substrate},into another, the \textit{product}. The \textit{Michaelis-Menten} equation is commonly used to describe such reactions:
 
 \begin{equation}
+	\tag{14.28}
 	v = \frac{v_m[S]}{k_s + [S]}
 \end{equation}
 
@@ -256,6 +258,7 @@ y =
 Although the Michaelis-Menten model provides a nice starting point, it has been refined and extended to incorporate additional features of enzyme kinetics. One simple extension involves so-called \textit{allosteric enzymes}, where the binding of a substrate molecule at one site leads to enhanced binding of subsequent molecules at other sites. For cases with two interacting bonding sites, the following second-order version often results in a better fit:
 
 \begin{equation}
+	\tag{14.29}
 	v = \frac{v_m {[S]}^2}{k^2_s + {[S]}^2}
 \end{equation}
 
@@ -273,6 +276,7 @@ v   0.07 0.13 0.22 0.275 0.335 0.35 0.36
 \textbf{Solution.} Equation (14.28), which is in the format of the saturation-growth-rate model (Eq. 14.24), can be linearized by inverting it to give (recall Eq. 14.27)
 
 \begin{equation}
+	\notag
 	\frac{1}{v} = \frac{1}{v_m} + \frac{k_s}{v_m} \frac{1}{[S]}
 \end{equation}
 
@@ -303,6 +307,7 @@ ks =
 \noindent Thus, the best-fit model is
 
 \begin{equation}
+	\notag
 	v = \frac{5.2570[S]}{86.2260 + [S]}
 \end{equation}
 
@@ -316,6 +321,7 @@ Beyond the visual evidence, the poorness of the fit is also reflected by statist
 The foregoing analysis can be repeated for the second-order model. Equation (14.28) can also be linearized by inverting it to give
 
 \begin{equation}
+	\notag
 	\frac{1}{v} = \frac{1}{v_m} + \frac{k^2_s}{v_m} \frac{1}{[S]^2}
 \end{equation}
 
@@ -352,6 +358,7 @@ ks =
 \noindent Substituting these values into Eq. (14.29) gives
 
 \begin{equation}
+	\notag
 	v = \frac{0.4083[S]^2}{7.911 + [S]^2}
 \end{equation}
 
@@ -420,28 +427,34 @@ The least-squares procedure can be readily extended to fit the data to a higher-
 To generate the least-squares fit, we take the derivative of Eq. (15.2) with respect to each of the unknown coefficients of the polynomial, as in
 
 \begin{equation}
+	\notag
 	\frac{\partial S_r}{\partial a_0} = -2 \sum (y_i -a_0 -a_1x_i - a_2x_i^2)
 \end{equation}
 
 \begin{equation}
+	\notag
 	\frac{\partial S_r}{\partial a_1} = -2 \sum x_i (y_i -a_0 -a_1x_i - a_2x_i^2)
 \end{equation}
 
 \begin{equation}
+	\notag
 	\frac{\partial S_r}{\partial a_2} = -2 \sum x_i^2 (y_i -a_0 -a_1x_i - a_2x_i^2)
 \end{equation}
 
 \noindent These equations can be set equal to zero and rearranged to develop the following set of normal equations:
 
 \begin{equation}
+	\notag
 	(n)a_0 + (\sum x_i) a_1 + (\sum x^2_i) a_2 = \sum y_i
 \end{equation}
 
 \begin{equation}
+	\notag
 	(\sum x_i)a_0 + (\sum x_i ^ 2) a_1 + (\sum x^3_i) a_2 = \sum x_i y_i
 \end{equation}
 
 \begin{equation}
+	\notag
 	(\sum x_i^2)a_0 + (\sum x_i ^ 3) a_1 + (\sum x^4_i) a_2 = \sum x_i^2 y_i
 \end{equation}
 
@@ -450,6 +463,7 @@ To generate the least-squares fit, we take the derivative of Eq. (15.2) with res
 For this case, we see that the problem of determining a least-squares second-order polynomial is equivalent to solving a system of three simultaneous linear equations. The two-dimensional case can be easily extended to an $m$th-order polynomial as in
 
 \begin{equation}
+	\notag
 	y = a_0 + a_1 x + a_2 x^2 + \cdots + a_m x^m + e
 \end{equation}
 
@@ -470,6 +484,7 @@ This quantity is divided by $n - (m + 1)$ because $(m + 1)$ data-derived coeffic
 \noindent Another useful extension of linear regression is the case where $y$ is a linear function of two or more independent variables. For example, $y$ might be a linear function of $x_1$ and $x_2$, as in
 
 \begin{equation}
+	\notag
 	y = a_0 + a_1x_1 + a_2x_2+e
 \end{equation}
 
@@ -485,14 +500,17 @@ As with the previous cases, the "best" values of the coefficients are determined
 \noindent and differentiating with respect to each of the unknown coefficients:
 
 \begin{equation}
+	\notag
 	\frac{\partial S_r}{\partial a_0} = -2 \sum (y_i -a_0 -a_1x_{1,i} - a_2x_{2,i}^2)
 \end{equation}
 
 \begin{equation}
+	\notag
 	\frac{\partial S_r}{\partial a_1} = -2 \sum x_{1,i} (y_i -a_0 -a_1x_{1,i} - a_2x_{2,i}^2)
 \end{equation}
 
 \begin{equation}
+	\notag
 	\frac{\partial S_r}{\partial a_2} = -2 \sum x_{2,i}^2 (y_i -a_0 -a_1x_{1,i} - a_2x_{2,i}^2)
 \end{equation}
 
@@ -525,6 +543,7 @@ As with the previous cases, the "best" values of the coefficients are determined
 The foregoing two-dimensional case can be easily extended to m dimensions, as in
 
 \begin{equation}
+	\notag
 	y = a_0 + a_1 x_1 + a_2 x_2 + \cdots + a_m x_m + e
 \end{equation}
 
@@ -532,6 +551,7 @@ The foregoing two-dimensional case can be easily extended to m dimensions, as in
 
 \noindent where the standard error is formulated as
 \begin{equation}
+	\notag
 	s_{y/x} = \sqrt{\frac{S_r}{n - (m + 1)}}
 \end{equation}
 
@@ -540,12 +560,14 @@ The foregoing two-dimensional case can be easily extended to m dimensions, as in
 Although there may be certain cases where a variable is linearly related to two or more other variables, multiple linear regression has additional utility in the derivation of powerequations of the general form 
 
 \begin{equation}
+	\notag
 	y = a_0 x_1 ^ {a_1} x_2 ^ {a_2} \cdots x_m ^ {a_m}
 \end{equation}
 
 \noindent Such equations are extremely useful when fitting experimental data. To use multiple linear regression, the equation is transformed by taking its logarithm to yield
 
 \begin{equation}
+	\notag
 	\log y = \log a_0 + a_1 \log x_1 + a_2 \log x_2 + \cdots + a_m \log x_m
 \end{equation}
 
@@ -565,6 +587,7 @@ Note that the terminology ``linear'' refers only to the model's dependence on it
 parameters-that is, the $a$'s. As in the case of polynomial regression, the functions themselves can be highly nonlinear. For example, the $z$'s can be sinusoids, as in
 
 \begin{equation}
+	\notag
 	y = a_0 + a_1 \cos (\omega x) + a_2 sin (\omega x)
 \end{equation}
 
@@ -573,6 +596,7 @@ parameters-that is, the $a$'s. As in the case of polynomial regression, the func
 On the other hand, a simple-looking model such as
 
 \begin{equation}
+	\notag
 	y = a_0 (1- e^{-a_1 x})
 \end{equation}
 
@@ -588,6 +612,7 @@ Equation (15.7) can be expressed in matrix notation as
 \noindent where $[Z]$ is a matrix of the calculated values of the basis functions at the measured values of the independent variables:
 
 \begin{equation}
+	\notag
 	\begin{bmatrix}
 		z_{01} & z_{11} & \cdots & z_{m1} \\ 
 		z_{02} & z_{12} & \cdots & z_{m2} \\ 
@@ -601,18 +626,21 @@ Equation (15.7) can be expressed in matrix notation as
 The column vector ${y}$ contains the observed values of the dependent variable:
 
 \begin{equation}
+	\notag
 	{y}^T = \lfloor y_1 \quad  y_2 \quad \cdots \quad y_n \rfloor 
 \end{equation}
 
 \noindent The column vector ${a}$ contains the unknown coefficients:
 
 \begin{equation}
+	\notag
 	{a}^T = \lfloor a_1 \quad  a_2 \quad \cdots \quad a_m \rfloor 
 \end{equation}
 
 \noindent and the column vector ${e}$ contains the residuals:
 
 \begin{equation}
+	\notag
 	{e}^T = \lfloor e_1 \quad  e_2 \quad \cdots \quad e_n \rfloor 
 \end{equation}
 
@@ -639,18 +667,21 @@ The coefficient of determination and the standard error can also be formulated i
 of matrix algebra. Recall that $r^2$ is defined as
 
 \begin{equation}
+	\notag
 	r^2 = \frac{S_t - S_r}{S_t} = 1 - \frac{S_r}{S_t}
 \end{equation}
 
 \noindent Substituting the definitions of $S_r$ and $S_t$ gives
 
 \begin{equation}
+	\notag
 	r^2 = 1 - \frac{\sum {(y_i - \hat{y}_i)} ^ 2}{\sum {(y_i - \bar{y}_i)} ^ 2}
 \end{equation}
 
 \noindent where $\hat{y} =$ the prediction of the least-squares fit. The residuals between the best-fit curve and the data, $y_i - \hat{y}$, can be expressed in vector form as
 
 \begin{equation}
+	\notag
 	\{y\} - [Z] \{a\}
 \end{equation}
 
@@ -802,12 +833,14 @@ data, create the $[Z]$ matrix, and compute the coefficients for the least-square
 \noindent Therefore, the best-fit model is
 
 \begin{equation}
+	\notag
 	\log K_L = 0.57627 + 1.562 \log U + 0.50742 \log H
 \end{equation}
 
 \noindent or in the untransformed form (note, $a_0 = 10^{0.57627} = 3.7694$),
 
 \begin{equation}
+	\notag
 	K_L = 3.7694 U^{1.560} H ^ {0.5074}
 \end{equation}
 
@@ -1015,12 +1048,14 @@ Before proceeding to the next section, however, we should stress that we could h
 employed a sine rather than a cosine as our fundamental model of Eq. (16.2). For example,
 
 \begin{equation}
+	\notag
 	f(t) = A_0 + C_1 \sin(\omega_0 t + \delta)
 \end{equation}
 
 \noindent could have been used. Simple relationships can be applied to convert between the two forms:
 
 \begin{equation}
+	\notag
 	\sin(\omega_0 t + \delta) = \cos(\omega_0 t + \delta - \frac{\pi}{2})
 \end{equation}
 
@@ -1047,12 +1082,14 @@ should be used consistently. Thus, we will use the cosine version throughout our
 \noindent which is just another example of the general model [recall Eq. (15.7)]
 
 \begin{equation}
+	\notag
 	y = a_0 z_0 + a_1 z_1 + a_2 z_2 + \cdots + a_m z_m + e
 \end{equation}
 
 \noindent where $z_0 = 1$, $z_1 = \cos(\omega_0 t)$, $z_2 = sin(\omega_0 t)$, and all other $z$'s = 0. Thus, our goal is to determine coefficient values that minimize
 
 \begin{equation}
+	\notag
 	S_r = \sum ^ N _ {i=1} \{ y_i - [A_0 + A_1 \cos(\omega_0 t) + B_1 \sin(\omega_0 t)]\}^2
 \end{equation}
 
@@ -1084,6 +1121,7 @@ tion, the following average values can be determined (see Prob. 16.3):
 \noindent Thus, for equispaced points the normal equations become
 
 \begin{equation}
+	\notag
 	\begin{bmatrix}
 		N & 0 & 0 \\
 		0 & N/2 & 0 \\
@@ -1104,6 +1142,7 @@ tion, the following average values can be determined (see Prob. 16.3):
 reciprocals of the original. Thus, the coefficients can be determined as
 
 \begin{equation}
+	\notag
 	\begin{Bmatrix}
 		A_0 \\ B_1 \\ B_2
 	\end{Bmatrix}
@@ -1143,16 +1182,19 @@ reciprocals of the original. Thus, the coefficients can be determined as
 
 The foregoing analysis can be extended to the general model
 \begin{equation}
+	\notag
 	f(t) = A_0 + A_1 \cos(\omega_0 t) + B_1 \sin(\omega_0 t) + A_2 \cos(2 \omega_0 t) + B_2 \sin(2 \omega_0 t) + \cdots + A_m \cos(m \omega_0 t) + B_m \sin(m \omega_0 t)
 \end{equation}
 
 \noindent where, for equally spaced data, the coefficients can be evaluated by
 
 \begin{equation}
+	\notag
 	A_0 = \frac{\sum y}{N}
 \end{equation}
 
 \begin{equation}
+	\notag
 	\left.
 		\begin{array}{ll}
 			A_j = \frac{2}{N} \sum y \cos(j \omega_0) t \\
@@ -1175,6 +1217,7 @@ function can be represented by an infinite series of sinusoids of harmonically r
 frequencies. For a function with period $T$, a continuous Fourier series can be written
 
 \begin{equation}
+	\notag
 	f(t) a_0 + a_1 \cos(\omega_0 t) + b_1 \sin(\omega_0 t) +  a_2 \cos(2 \omega_0 t) + b_2 \sin(2 \omega_0 t) + \cdots
 \end{equation}
 
@@ -1259,6 +1302,7 @@ Just as amplitude can be plotted versus time, it can also be plotted versus freq
 Both types of expression are depicted in Fig. 16.6a, where we have drawn a threedimensional graph of a sinusoidal function:
 
 \begin{equation}
+	\notag
 	f(t) = C_1 \cos(t + \frac{\pi}{2})
 \end{equation} 
 
@@ -1416,30 +1460,35 @@ sample frequency of $f_s = 1000$ Hz (i.e., 1000 samples per second). This means 
 sample interval is
 
 \begin{equation}
+	\notag
 	\Delta t = \frac{1}{f_s}=\frac{1}{1000 \text{ samples/s}} = 0.01 \text{ s/sample}
 \end{equation}
 
 \noindent The total sample length is 
 
 \begin{equation}
+	\notag
 	t_n = \frac{n}{f_s} = \frac{100 \text{ samples}}{1000 \text{ samples/s}}=0.1 \text{ Hz}
 \end{equation}
 
 \noindent and the frequency increment is
 
 \begin{equation}
+	\notag
 	\Delta f = \frac{f_s}{n} = \frac{1000 \text{ samples/s}}{100 \text{ samples}}=10 \text{ Hz}
 \end{equation}
 
 \noindent The Nyquist frequency is
 
 \begin{equation}
+	\notag
 	f_{\text{max}} = 0.5 f_s = 0.5 (1000 \text{ Hz}) = 500 \text{ Hz}
 \end{equation}
 
 \noindent and the lowest detectable frequency is
 
 \begin{equation}
+	\notag
 	f_{\text{min}} = \frac{1}{0.1 \text{s}} = 10 \text{ Hz}
 \end{equation}
 
@@ -1509,6 +1558,7 @@ spectrum} consists of a plot of the power associated with each frequency compone
 frequency. The power can be computed by summing the squares of the Fourier coefficients:
 
 \begin{equation}
+	\notag
 	P_k = {|\tilde{c}_k|}^2
 \end{equation}
 
@@ -2114,4 +2164,4 @@ highly sensitive to round-off error. The following example illustrates this poin
 % TODO problems
 
 \end{document}
-% TODO figure references, examples, align left math expressions. notag
+% TODO figure references, examples, align left math expressions
