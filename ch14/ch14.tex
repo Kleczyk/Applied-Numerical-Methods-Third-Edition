@@ -71,7 +71,37 @@ These concepts can be used to quantify the ``goodness'' of our fit. This is part
 	r = \frac{n \sum (x_i y_i) - (\sum x_i) (\sum y_i)}{\sqrt{n \sum x^2_i - (\sum x_i)^2} \sqrt{n \sum y^2_i - (\sum y_i)^2}}
 \end{equation}
 
-%TODO EXAMPLE 342
+\begin{example} Estimation of Errors for the Linear Least-Squares Fit
+
+    \noindent\textbf{Problem Statement.}\quad Compute the total standard deviation, the standard error of the estimate, and the correlation coefficient for the fit in Example 14.4.
+
+    \noindent\textbf{Solution.}\quad  The data can be set up in tabular form and the necessary sums computed as in Table 14.5.
+
+    % TODO table 14.4
+
+    The standard deviation is [Eq. (14.3)]
+
+	\begin{equation}
+		\notag
+		s_y = \frac{1,808,297}{8-1}=508.26
+	\end{equation}
+
+	\noindent and the standard error of the estimate is [Eq. (14.19)]
+
+	\begin{equation}
+		\notag
+		s_{y/x} = \frac{216,118}{8-2}189.79
+	\end{equation}
+
+	\noindent Thus, because $s_{y/x} < s_y$, the linear regression model has merit. The extent of the improvement is quantified by [Eq. (14.20)]
+
+	\begin{equation}
+		\notag
+		r^2 = \frac{1,808,297 - 216,118}{1,808,297} = 0.8805
+	\end{equation}
+
+	\noindent or $r = \sqrt{0.8805} = 0.9383$. These results indicate that 88.05\% of the original uncertainty has been explained by the linear model.
+\end{example}
 
 Before proceeding, a word of caution is in order. Although the coefficient of determination provides a handy measure of goodness-of-fit, you should be careful not to ascribe more meaning to it than is warranted. Just because $r^2$ is ``close'' to 1 does not mean that the fit is necessarily ``good''. For example, it is possible to obtain a relatively high value of $r^2$ when the underlying relationship between $y$ and $x$ is not even linear. Draper and Smith (1981) provide guidance and additional material regarding assessment of results for linear regression. In addition, at the minimum, you should always inspect a plot of the data along with your regression curve.
 
@@ -162,7 +192,59 @@ Equation (14.24) is linearized by inverting it to give
 
 In their transformed forms, these models can be fit with linear regression to evaluate the constant coefficients. They can then be transformed back to their original state and used for predictive purposes. The following illustrates this procedure for the power model.
 
-% TODO EXAMPLE 14.6 346
+\begin{example} Estimation of Errors for the Linear Least-Squares Fit
+
+    \noindent\textbf{Problem Statement.}\quad CFit Eq. (14.23) to the data in Table 14.1 using a logarithmic transformation.
+
+    \noindent\textbf{Solution.}\quad  The data can be set up in tabular form and the necessary sums computed as in Table 14.6.
+
+	The means can be computed as
+	
+	\begin{equation}
+		\notag
+		\bar{x} = \frac{12.606}{8}=1.5757 \quad \bar{y} = \frac{20.515}{8} = 2.5644
+	\end{equation}
+
+	% TODO  table 14.6
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\linewidth]{fig_14_14}
+		\caption{\textsf{Least-squares fit of a power model to the data from Table 14.1. (a) The fit of the transformed data.
+		(b) The power equation fit along with the data.}}
+		\label{fig:fig_14_14}
+	\end{figure}
+
+	\noindent The slope and the intercept can then be calculated with Eqs. (14.15) and (14.16) as
+
+	\begin{equation}
+		\notag
+		a_1 = \frac{8(33.622) - 12.606(20.515)}{8(20.516) - (12.606)^2} = 1.9842
+	\end{equation}
+
+	\begin{equation}
+		\notag
+		a_0 = 2.5644 - 1.9842(1.5757) = -0.5620
+	\end{equation}
+
+	\noindent The least-squares fit is
+
+	\begin{equation}
+		\notag
+		\log y = -0.5620 + 1.9842 \log x
+	\end{equation}
+
+	\noindent The fit, along with the data, is shown in Fig. 14.14a.
+
+	We can also display the fit using the untransformed coordinates. To do this, the coefficients of the power model are determined as $\alpha_2 = 10^{-0.5620} = 0.2741$ and $\beta_2 = 1.9842$. Using force and velocity in place of $y$ and $x$, the least-squares fit is
+
+	\begin{equation}
+		\notag
+		F = 0.2741 v ^ {1.9842}		
+	\end{equation}
+
+	\noindent This equation, along with the data, is shown in Fig. 14.14b.
+\end{example}
 
 
 The fits in Example 14.6 (Fig. 14.14) should be compared with the one obtained previously in Example 14.4 (Fig. 14.8) using linear regression on the untransformed data. Although both results would appear to be acceptable, the transformed result has the advantage that it does not yield negative force predictions at low velocities. Further, it is known from the discipline of fluid mechanics that the drag force on an object moving through a fluid is often well described by a model with velocity squared. Thus, knowledge from the field you are studying often has a large bearing on the choice of the appropriate model equation you use for curve fitting.
@@ -192,7 +274,70 @@ Such assumptions are relevant to the proper derivation and use of regression. Fo
 
 A simple example of the use of this M-file would be to fit the force-velocity data analyzed in Example 14.4:
 
-%TODO EXAMPLE 14.1 349
+\begin{lstlisting}[numbers=none]
+	>> x = [10 20 30 40 50 60 70 80];
+	>> y = [25 70 380 550 610 1220 830 1450];
+	>> linregr(x,y)
+	r2 =
+		0.8805
+	ans =
+		19.4702 -234.2857
+\end{lstlisting}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_14_5_1_u_1}
+\end{figure}
+
+It can just as easily be used to fit the power model (Example 14.6) by applying the
+\texttt{log10} function to the data as in
+
+\begin{lstlisting}[numbers=none]
+	>> linregr(log10(x),log10(y))
+	r2 =
+		0.9481
+	ans =
+		1.9842	-0.5620
+\end{lstlisting}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_14_5_1_u_2}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\begin{lstlisting}[numbers=none]
+		function [a, r2] = linregr(x,y)
+		% linregr: linear regression curve fitting
+		%	[a, r2] = linregr(x,y): Least squares fit of straight
+		%		line to data by solving the normal equations
+
+		% input:
+		%	x = independent variable
+		%	y = dependent variable
+		% output:
+		%	a = vector of slope, a(1), and intercept, a(2)
+		%	r2 = coefficient of determination
+
+		n = length(x);
+		if length(y)~=n, error('x and y must be same length'); end
+		x = x(:); y = y(:);
+		% convert to column vectors
+		sx = sum(x); sy = sum(y);
+		sx2 = sum(x.*x); sxy = sum(x.*y); sy2 = sum(y.*y);
+		a(1) = (n*sxy-sx*sy)/(n*sx2-sx^2);
+		a(2) = sy/n-a(1)*sx/n;
+		r2 = ((n*sxy-sx*sy)/sqrt(n*sx2-sx^2)/sqrt(n*sy2-sy^2))^2;
+		% create plot of data and best fit line
+		xp = linspace(min(x),max(x),2);
+		yp = a(1)*xp+a(2);
+		plot(x,y,'o',xp,yp)
+		grid on
+	\end{lstlisting}
+	\caption{\textsf{An M-file to implement linear regression.}}
+	\label{fig:fig_14_15}
+\end{figure}
 
 \label{cha:cha_P_14_5_2} %351
 \subsection{MATLAB Functions: \texttt{polyfit} and \texttt{polyval}}
@@ -379,10 +524,444 @@ Beyond this specific result, there are a few other general conclusions that can 
 
 Finally, although transformations may yield a decent fit of the transformed data, this does not always translate into an acceptable fit in the original format. The reason that this might occur is that minimizing squared residuals of transformed data is not the same as for the untransformed data. Linear regression assumes that the scatter of points around the best-fit line follows a Gaussian distribution,  and that the standard deviation is the same at every value of the dependent variable. These assumptions are rarely true after transforming data. 
 
-As a consequence of the last conclusion, some analysts suggest that rather than using linear transformations, nonlinear regression should be employed to fit curvilinear data. In this approach, a best-fit curve is developed that directly minimizes the untransformed residuals. We will describe how this is done in Chap. 15. %TODO chapter label
-% 356
+As a consequence of the last conclusion, some analysts suggest that rather than using linear transformations, nonlinear regression should be employed to fit curvilinear data. In this approach, a best-fit curve is developed that directly minimizes the untransformed residuals. We will describe how this is done in Chap. 15.
 
-% TODO PROBLEMS
+
+\bigskip
+\noindent\textbf{PROBLEMS}\\
+
+\begin{multicols}{2}
+    \noindent\textbf{14.1} Given the data
+
+	\noindent \begin{tabular}{ c c c c c }
+		0.90 & 1.42 & 1.30 & 1.55 & 1.63 \\
+		1.32 & 1.35 & 1.47 & 1.95 & 1.66 \\
+		1.96 & 1.47 & 1.92 & 1.35 & 1.05 \\
+		1.85 & 1.74 & 1.65 & 1.78 & 1.71 \\
+		2.29 & 1.82 & 2.06 & 2.14 & 1.27
+	\end{tabular}
+
+	\noindent Determine \textbf{(a)} the mean, \textbf{(b)} median, \textbf{(c)} mode, \textbf{(d)} range,
+	\textbf{(e)} standard deviation, \textbf{(f)} variance, and \textbf{(g)} coefficient of
+	variation.	
+
+
+	\noindent\textbf{14.2}  Construct a histogram from the data from Prob. 14.1. Use a range from 0.8 to 2.4 with intervals of 0.2.
+
+	\noindent\textbf{14.3} Given the data
+
+	\noindent \begin{tabular}{c c c c c c c}
+		29.65 & 28.55 & 28.65 & 30.15 & 29.35 & 29.75 & 29.25 \\
+		30.65 & 28.15 & 29.85 & 29.05 & 30.25 & 30.85 & 28.75 \\
+		29.65 & 30.45 & 29.15 & 30.45 & 33.65 & 29.35 & 29.75 \\
+		31.25 & 29.45 & 30.15 & 29.65 & 30.55 & 29.65 & 29.25
+	\end{tabular}
+
+	\noindent Determine \textbf{(a)} the mean, \textbf{(b)} median, \textbf{(c)} mode, \textbf{(d)} range,
+	\textbf{(e)} standard deviation, \textbf{(f)} variance, and \textbf{(g)} coefficient of
+	variation.
+	\textbf{(h)} Construct a histogram. Use a range from 28 to 34 with
+	increments of 0.4.
+	\textbf{(i)} Assuming that the distribution is normal, and that your
+	estimate of the standard deviation is valid, compute the
+	range (i.e., the lower and the upper values) that encompasses 68\% of the readings. Determine whether this is a
+	valid estimate for the data in this problem.
+
+	\noindent\textbf{14.4} Using the same approach as was employed to derive
+	Eqs. (14.15) and (14.16), derive the least-squares fit of the
+	following model:
+
+	$$y = a_1 x + e$$
+
+	\noindent That is, determine the slope that results in the leastsquares fit for a straight line with a zero intercept. Fit the following data with this model and display the result graphically.
+
+	\noindent \begin{tabular}{c c c c c c c c c c }
+	 	\textbf{x} & 2 & 4 & 6 & 7 & 10 & 11 & 		14 & 		17 & 		20 \\
+	  	\textbf{y} & 4 & 5 & 6 & 5 & 8 & 8 & 6 & 9 & 		12
+	\end{tabular}
+
+	\noindent\textbf{14.5} Use least-squares regression to fit a straight line to
+
+	\noindent \begin{tabular}{c c c c c c c c c c c  }
+ 		x & 0 & 2 & 4 & 6 & 9 & 11 & 12 & 15 & 17 & 19 \\
+ 		y & 5 & 6 & 7 & 6 & 9 & 8 & 8 & 10 & 12 & 12
+   	\end{tabular}
+
+   	\noindent Along with the slope and intercept, compute the standard
+	   error of the estimate and the correlation coefficient. Plot the
+	   data and the regression line. Then repeat the problem, but
+	   regress $x$ versus $y$ - that is, switch the variables. Interpret
+	   your results.
+
+	\noindent\textbf{14.6} Fit a power model to the data from Table 14.1, but use
+	natural logarithms to perform the transformations.
+
+	\noindent\textbf{14.7} The following data were gathered to determine the
+	relationship between pressure and temperature of a fixed
+	volume of 1 kg of nitrogen. The volume is 10 m$^3$.
+
+	\noindent \begin{tabular}{l c c c c c c c c c c  }
+		\textbf{T, $^\circ$C} & -40 & 0 & 40 & 80 & 120 & 160 \\
+		\textbf{p, N/m$^2$} & 6900 & 8100 & 9350 & 10,500 & 11,700 & 12,800
+  	\end{tabular}
+
+	\noindent Employ the ideal gas law $pV = nRT$ to determine $R$ on the
+	basis of these data. Note that for the law, $T$ must be expressed
+	in kelvins.
+
+	\noindent\textbf{14.8} Beyond the examples in Fig. 14.13, there are other
+	models that can be linearized using transformations. For
+	example,
+
+	$$y = a_4 x e^{\beta_4 x}$$
+
+	\noindent Linearize this model and use it to estimate $\alpha_4$ and $\beta_4$ based
+	on the following data. Develop a plot of your fit along with
+	the data.
+
+	\noindent \begin{tabular}{c c c c c c c c c c}
+		\textbf{x} & 0.1 & 0.2 & 0.4 & 0.6 & 0.9 & 1.3 & 1.5 & 1.7 & 1.8 \\
+		\textbf{y} & 0.75 & 1.25 & 1.45 & 1.25 & 0.85 & 0.55 & 0.35 & 0.28 & 0.18	
+  	\end{tabular}
+
+	\noindent\textbf{14.9} The concentration of \textit{E. coli} bacteria in a swimming
+	area is monitored after a storm:
+
+	\noindent \begin{tabular}{l c c c c c c}
+		\textbf{t (hr)} & 4 & 8 & 12 & 16 & 20 & 24 \\
+		\textbf{c (CFU/100 mL)} & 1600 & 1320 & 1000 & 890 & 650 & 560
+  	\end{tabular}
+
+	\noindent The time is measured in hours following the end of the storm
+	and the unit CFU is a ``colony forming unit.'' Use this data to
+	estimate \textbf{(a)} the concentration at the end of the storm ($t = 0$)
+	and \textbf{(b)} the time at which the concentration will reach
+	200 CFU/100 mL. Note that your choice of model should
+	be consistent with the fact that negative concentrations are
+	impossible and that the bacteria concentration always decreases with time.
+
+	\noindent\textbf{14.10} Rather than using the base-$e$ exponential model
+	(Eq. 14.22), a common alternative is to employ a base-10
+	model:
+
+	$$y = \alpha_5 10^{\beta_5 x}$$
+
+	\noindent When used for curve fitting, this equation yields identical
+	results to the base-$e$ version, but the value of the exponent
+	parameter ($\beta_5$) will differ from that estimated with Eq.14.22
+	($\beta_1$). Use the base-10 version to solve Prob. 14.9. In addition, develop a formulation to relate $\beta_1$ to $\beta_5$ .
+
+	\noindent\textbf{14.11} Determine an equation to predict metabolism rate as a
+	function of mass based on the following data. Use it to predict the metabolism rate of a 200-kg tiger.
+
+	\noindent \begin{tabular}{l c c }
+		\textbf{Animal} & \textbf{Mass (kg)} & \textbf{Metabolism (watts)} \\
+		\hline
+		Cow &  400 &  270 \\
+		Human &  70 &  82 \\ 
+		Sheep &  45 &  50 \\ 
+		Hen &  2 &  4.8 \\ 
+		Rat &  0.3 &  1.45 \\ 
+		Dove &  0.16 &  0.97
+  	\end{tabular}
+
+	\noindent\textbf{14.12} On average, the surface area $A$ of human beings is
+	related to weight $W$ and height $H$. Measurements on a number of individuals of height 180 cm and different weights
+	(kg) give values of $A$ (m$^2$) in the following table:
+
+	\noindent \begin{tabular}{l c c c c c c c c c}
+		\textbf{W (kg)} & 70 & 75 & 77 & 80 & 82 & 84 & 87 & 90 \\
+		\textbf{A (m2)} & 2.10 & 2.12 & 2.15 & 2.20 & 2.22 & 2.23 & 2.26 & 2.30 &
+  	\end{tabular}
+
+	\noindent Show that a power law $A = aW^b$ fits these data reasonably
+	well. Evaluate the constants $a$ and $b$, and predict what the
+	surface area is for a 95-kg person.
+
+	\noindent\textbf{14.13} Fit an exponential model to
+
+	\noindent \begin{tabular}{l c c c c c c }
+		\textbf{x} & 0.4 & 0.8 & 1.2 & 1.6 & 2 & 2.3 \\
+		\textbf{y} & 800 & 985 & 1490 & 1950 & 2850 & 3600
+  	\end{tabular}
+
+	\noindent Plot the data and the equation on both standard and semilogarithmic graphs with the MATLAB \texttt{subplot} function.
+
+	\noindent\textbf{14.14} An investigator has reported the data tabulated below
+	for an experiment to determine the growth rate of bacteria
+	$k$ (per d) as a function of oxygen concentration $c$ (mg/L). It
+	is known that such data can be modeled by the following
+	equation:
+
+	$$k = \frac{k_{\text{max}} c^2}{c_s + c^2}$$
+
+	\noindent where $c_s$ and $k_{\text{max}}$ are parameters. Use a transformation to
+	linearize this equation. Then use linear regression to estimate $c_s$ and $k_{\text{max}}$ and predict the growth rate at $c$ = 2 mg/L.
+
+	\noindent \begin{tabular}{l c c c c c}
+		\textbf{c} & 0.5 & 0.8 & 1.5 & 2.5 \\
+		\textbf{k} & 1.1 & 2.5 & 5.3 & 7.6 & 8.9
+  	\end{tabular}
+
+	\noindent\textbf{14.15} Develop an M-file function to compute descriptive
+	statistics for a vector of values. Have the function determine
+	and display number of values, mean, median, mode, range,
+	standard deviation, variance, and coefficient of variation. In
+	addition, have it generate a histogram. Test it with the data
+	from Prob. 14.3.
+
+	\noindent\textbf{14.16}  Modify the \texttt{linregr} function in Fig. 14.15 so that it
+	\textbf{(a)} computes and returns the standard error of the estimate,
+	and \textbf{(b)} uses the \texttt{subplot} function to also display a plot of
+	the residuals (the predicted minus the measured $y$) versus $x$.
+
+	\noindent\textbf{14.17} Develop an M-file function to fit a power model.
+	Have the function return the best-fit coefficient $\alpha_2$ and
+	power $\beta_2$ along with the $r^2$ for the untransformed model. In
+	addition, use the \texttt{subplot} function to display graphs of both
+	the transformed and untransformed equations along with the
+	data. Test it with the data from Prob. 14.11.
+
+	\noindent\textbf{14.18} The following data show the relationship between the
+	viscosity of SAE 70 oil and temperature. After taking the log
+	of the data, use linear regression to find the equation of the
+	line that best fits the data and the $r^2$ value.
+
+	\noindent \begin{tabular}{l c c c c}
+		\textbf{Temperature, $^\circ$C} & 26.67 & 93.33 & 148.89 & 315.56 \\
+		\textbf{Viscosity, $\mu$, N $\cdot$ s/m$^2$} & 1.35 & 0.085 & 0.012 & 0.00075
+  	\end{tabular}
+
+	\noindent\textbf{14.19} You perform experiments and determine the following values of heat capacity $c$ at various temperatures $T$ for a gas:
+
+	\noindent \begin{tabular}{l c c c c c c}
+		\textbf{T} & -50 & -30 & 0 & 60 & 90 & 110 \\
+		\textbf{c} & 1250 & 1280 & 1350 & 1480 & 1580 & 1700
+  	\end{tabular}
+
+	\noindent Use regression to determine a model to predict $c$ as a function of $T$.
+
+	\noindent\textbf{14.20} It is known that the tensile strength of a plastic increases as a function of the time it is heat treated. The following data are collected:
+
+	\noindent \begin{tabular}{l c c c c c c c c c c}
+		\textbf{Time} & 10 & 15 & 20 & 25 & 40 & 50 & 55 & 60 & 75 \\
+		\textbf{Tensile Strength} & 5 & 20 & 18 & 40 & 33 & 54 & 70 & 60 & 78
+  	\end{tabular}
+
+	\noindent \textbf{(a)} Fit a straight line to these data and use the equation to
+	determine the tensile strength at a time of 32 min.
+
+
+	\noindent \textbf{(b)} Repeat the analysis but for a straight line with a zero
+	intercept.
+
+	\noindent\textbf{14.21}  The following data were taken from a stirred tank reactor for the reaction $A \rightarrow B$. Use the data to determine the
+	best possible estimates for $k_{01}$ and $E_1$ for the following
+	kinetic model:
+
+	$$- \frac{d A}{d t} = k _{01} e^{-E_1 / RT} A$$
+
+	\noindent where $R$ is the gas constant and equals 0.00198 kcal/mol/K.
+
+	\noindent \begin{tabular}{l c c c c c c c c}
+		\textbf{-dA/dt (moles/L/s)} & 460 & 960 & 2485 & 1600 & 1245 \\ 
+		\textbf{A (moles/L)} & 200 & 150 & 50 & 20 & 10 \\
+		\textbf{T (K)} & 280 & 320 & 450 & 500 & 550
+	\end{tabular}
+
+	\noindent\textbf{14.22} Concentration data were collected at 15 time points
+	for the polymerization reaction:
+
+	$$x A + y B \rightarrow A_x B_y$$
+
+	\noindent We assume the reaction occurs via a complex mechanism
+	consisting of many steps. Several models have been hypothesized, and the sum of the squares of the residuals had been
+	calculated for the fits of the models of the data. The results are shown below. Which model best describes the data (statistically)? Explain your choice.
+
+
+	\noindent \begin{tabular}{l c c c}
+		 & \textbf{Model A} & \textbf{Model B} & \textbf{Model C} \\
+		\hline
+		\textbf{S$_r$} & 135 & 105 & 100 \\
+		\textbf{Number of Model} \\
+		\textbf{Parameters Fit} & 2 & 3 & 5
+  	\end{tabular}
+
+	\noindent\textbf{14.23} Below are data taken from a batch reactor of bacterial
+	growth (after lag phase was over). The bacteria are allowed
+	to grow as fast as possible for the first 2.5 hours, and then
+	they are induced to produce a recombinant protein, the production of which slows the bacterial growth significantly.
+	The theoretical growth of bacteria can be described by
+
+	$$\frac{d X}{dt} = \mu X$$
+
+	\noindent where $X$ is the number of bacteria, and $\mu$ is the specific
+	growth rate of the bacteria during exponential growth. Based
+	on the data, estimate the specific growth rate of the bacteria
+	during the first 2 hours of growth and during the next 4 hours
+	of growth.
+
+	\noindent \begin{tabular}{l c c c c c c c c}
+		\textbf{Time,} \\
+		\textbf{h} &  0 &  1 &  2 &  3 &  4 &  5 &  6 \\
+		\textbf{[Cells],} \\
+		\textbf{g/L} & 0.100 & 0.335 & 1.102 & 1.655 & 2.453 & 3.702 & 5.460
+	\end{tabular}
+
+	\noindent\textbf{14.24} A transportation engineering study was conducted to
+	determine the proper design of bike lanes. Data were gathered on bike-lane widths and average distance between bikes
+	and passing cars. The data from 9 streets are
+
+	\noindent \begin{tabular}{l c c c c c c c c c c c c}
+		\textbf{Distance, m} & 2.4 & 1.5 & 2.4 & 1.8 & 1.8 & 2.9 & 1.2 & 3 & 1.2 \\
+		\textbf{Lane Width, m} & 2.9 & 2.1 & 2.3 & 2.1 & 1.8 & 2.7 & 1.5 & 2.9 & 1.5
+	\end{tabular}
+
+	\noindent \textbf{(a)} Plot the data.
+
+	\noindent \textbf{(b)} Fit a straight line to the data with linear regression. Addthis line to the plot.
+
+	\noindent \textbf{(c)} If the minimum safe average distance between bikes and passing cars is considered to be 1.8 m, determine the corresponding minimum lane width.
+
+	\noindent\textbf{14.25}  In water-resources engineering, the sizing of reser	voirs depends on accurate estimates of water flow in the
+	river that is being impounded. For some rivers, long-term
+	historical records of such flow data are difficult to obtain. In
+	contrast, meteorological data on precipitation are often
+	available for many years past. Therefore, it is often useful to determine a relationship between flow and precipitation.
+	This relationship can then be used to estimate flows for
+	years when only precipitation measurements were made.
+	The following data are available for a river that is to be
+	dammed:
+
+	\noindent \begin{tabular}{l c c c c c c c c c c}
+		\textbf{Precip.,} \\
+		\textbf{cm/yr} & 88.9 & 108.5 & 104.1 & 139.7 & 127 & 94 & 116.8 & 99.1 \\
+		\textbf{Flow,} \\
+		\textbf{m$^3$/s} & 14.6 & 16.7 & 15.3 & 23.2 & 19.5 & 16.1 & 18.1 & 16.6
+	\end{tabular}	
+
+		\noindent \textbf{(a)} Plot the data.
+
+	\noindent \textbf{(b)} Fit a straight line to the data with linear regression.
+Superimpose this line on your plot.
+
+	\noindent \textbf{(c)} Use the best-fit line to predict the annual water flow if
+the precipitation is 120 cm.
+
+	\noindent \textbf{(d)} If the drainage area is 1100 km$^2$, estimate what fraction
+of the precipitation is lost via processes such as evaporation, deep groundwater infiltration, and consumptive
+use.
+
+	\noindent\textbf{14.26}  The mast of a sailboat has a cross-sectional area of
+	10.65 cm$^2$ and is constructed of an experimental aluminum
+	alloy. Tests were performed to define the relationship between stress and strain. The test results are
+
+	\noindent \begin{tabular}{l c c c c c c c c c c}
+		\textbf{Strain,} \\
+		\textbf{cm/cm} & 0.0032 & 0.0045 & 0.0055 & 0.0016 & 0.0085 & 0.0005 \\
+		\textbf{Stress,} \\
+		\textbf{N/cm$^2$} & 4970 & 5170 & 5500 & 3590 & 6900 & 1240
+	\end{tabular}
+
+	\noindent The stress caused by wind can be computed as $F/A_c$ where $F$ = force in the mast and $A_c$ = mast's cross-sectional area. This value can then be substituted into Hooke's law to determine the mast's deflection, $\Delta L$ = strain $\times L$, where $L$ = the mast's length. If the wind force is 25,000 N, use the data to estimate the deflection of a 9-m mast.
+
+	\noindent\textbf{14.27} The following data were taken from an experiment
+	that measured the current in a wire for various imposed voltages:
+
+	\noindent \begin{tabular}{l c c c c c c c c c c}
+		\textbf{$V$, V} & 2 & 3 & 4 & 5 & 7 & 10 \\
+		\textbf{$i$, A} & 5.2 & 7.8 & 10.7 & 13 & 19.3 & 27.5
+	\end{tabular}
+
+	\noindent \textbf{(a)} On the basis of a linear regression of this data, determine
+current for a voltage of 3.5 V. Plot the line and the data
+and evaluate the fit.
+
+\noindent \textbf{(b)} Redo the regression and force the intercept to be zero.
+
+	\noindent\textbf{14.28} An experiment is performed to determine the \% elongation of electrical conducting material as a function of temperature. The resulting data are listed below. Predict the \%
+	elongation for a temperature of $400^\circ$C.
+
+	\noindent \begin{tabular}{l c c c c c c c c c c}
+		\textbf{Temperature, $^\circ$C} & 200 & 250 & 300 & 375 & 425 & 475 & 600 \\
+		\textbf{\% Elongation} & 7.5 & 8.6 & 8.7 & 10 & 11.3 & 12.7 & 15.3
+	\end{tabular}
+
+	\noindent\textbf{14.29} The population $p$ of a small community on the outskirts of a city grows rapidly over a 20-year period:
+
+	\noindent \begin{tabular}{l c c c c c c c c c c}
+		\textbf{t} & 0 & 5 & 10 & 15 & 20 \\
+		\textbf{p} & 100 & 200 & 450 & 950 & 2000
+	\end{tabular}
+
+	\noindent As an engineer working for a utility company, you must
+	forecast the population 5 years into the future in order to an	ticipate the demand for power. Employ an exponential
+	model and linear regression to make this prediction.
+
+	\noindent\textbf{14.30} The velocity u of air flowing past a flat surface is
+	measured at several distances y away from the surface. Fit a
+	curve to this data assuming that the velocity is zero at the
+	surface ($y = 0$). Use your result to determine the shear stress
+	($du/dy$) at the surface.
+
+	\noindent \begin{tabular}{l c c c c c c c c c c}
+		\textbf{$y$, m} & 0.002 & 0.006 & 0.012 & 0.018 & 0.024 \\
+		\textbf{$u$, m/s} & 0.287 & 0.899 & 1.915 & 3.048 & 4.299
+	\end{tabular}
+
+	\noindent\textbf{14.31} \textit{Andrade's equation} has been proposed as a model of the effect of temperature on viscosity:
+
+	$$ \mu = De^{B/T_a}$$
+
+	\noindent where $\mu$ = dynamic viscosity of water ($10^{-3}$ N$\cdot$s/m$^2$), $T_a$ = absolute temperature (K), and $D$ and $B$ are parameters. Fit this model to the following data for water:
+
+	\noindent \begin{tabular}{l c c c c c c c c c c}
+		\textbf{T} & 0 & 5 & 10 & 20 & 30 & 40 \\
+		\textbf{$\mu$} & 1.787 & 1.519 & 1.307 & 1.002 & 0.7975 & 0.6529
+	\end{tabular}
+
+	\noindent\textbf{14.32} Perform the same computation as in Example 14.2,
+	but in addition to the drag coefficient, also vary the mass
+	uniformly by $\pm 10\%$.
+
+	\noindent\textbf{14.33} Perform the same computation as in Example 14.3,
+	but in addition to the drag coefficient, also vary the mass
+	normally around its mean value with a coefficient of variation of 5.7887\%.
+
+	\noindent\textbf{14.34}  Manning's formula for a rectangular channel can be
+	written as
+
+	$$Q = \frac{1}{n_m} \frac{(BH) ^ {5/3}}{(B+2H) ^ {2/3}} \sqrt{S}$$
+
+	\noindent where $Q$ = flow (m$^3$/s), $n_m$ = a roughness coefficient, $B$ =
+	width (m), $H$ = depth (m), and $S$ = slope. You are applying
+	this formula to a stream where you know that the width = 20 m
+	and the depth = 0.3 m. Unfortunately, you know the roughness and the slope to only a $\pm 10\%$ precision. That is, you
+	know that the roughness is about 0.03 with a range from 0.027
+	to 0.033 and the slope is 0.0003 with a range from 0.00027
+	to 0.00033. Assuming uniform distributions, use a Monte
+	Carlo analysis with $n$ = 10,000 to estimate the distribution
+	of flow.
+
+	\noindent\textbf{14.35} A Monte Carlo analysis can be used for optimization.
+	For example, the trajectory of a ball can be computed with
+
+	\begin{equation}
+		\tag{P14.35}
+		y = (\tan \theta_0)x - \frac{g}{2 v^2_0 \cos ^2 \theta_0} x^2 + y_0
+	\end{equation}
+
+	\noindent where $y$ = the height (m), $\theta_0$ = the initial angle (radians),
+	$v_0$ = the initial velocity (m/s), $g$ = the gravitational constant =
+	9.81 m/s$^2$, and $y_0$ = the initial height (m). Given $y_0$ = 1 m,
+	$v_0$ = 25 m/s, and $\theta_0 = 50^\circ$, determine the maximum height
+	and the corresponding $x$ distance (\textbf{a}) analytically with calculus and (\textbf{b}) numerically with Monte Carlo simulation. For
+	the latter, develop a script that generates a vector of 10,000
+	uniformly-distributed values of $x$ between 0 and 60 m. Use
+	this vector and Eq. P14.35 to generate a vector of heights.
+	Then, employ the \texttt{max} function to determine the maximum
+	height and the associated $x$ distance.
+\end{multicols}
 
 \label{cha:cha_P_15} %351
 \chapter{General Linear Least-Squares and Nonlinear Regression}
@@ -1176,7 +1755,7 @@ reciprocals of the original. Thus, the coefficients can be determined as
 	B_1 = \frac{2}{N} \sum y \sin(\omega_0 t)
 \end{equation}
 
-\noindent Notice that the first coefficient represents the function’s average value.
+\noindent Notice that the first coefficient represents the function's average value.
 
 % TODO example 16.1
 
