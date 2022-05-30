@@ -971,7 +971,7 @@ and evaluate the fit.
 
 \begin{itemize}
 	\item Knowing how to implement polynomial regression.
-	\item Knowing how to implement multiple linear regression. %why FIXME
+	\item Knowing how to implement multiple linear regression. 
 	\item Understanding the formulation of the general linear least-squares model.
 	\item Understanding how the general linear least-squares model can be solved with MATLAB using either the normal equations or left division.
 	\item Understanding how to implement nonlinear regression with optimization techniques.
@@ -1055,7 +1055,96 @@ The foregoing analysis can be easily extended to this more general case. Thus, w
 
 This quantity is divided by $n - (m + 1)$ because $(m + 1)$ data-derived coefficients - $a_0, a_1, ..., a_m$ - were used to compute $S_r$; thus, we have lost $m + 1$ degrees of freedom. In addition to the standard error, a coefficient of determination can also be computed for polynomial regression with Eq. (14.20).
 
-% TODO EXAMPLE 15.1
+\begin{example} Polynomial Regression
+
+    \textbf{Problem Statement.}\quad Fit a second-order polynomial to the data in the first two columns
+	of Table 15.1.
+
+	\textbf{TABLE 15.1} \quad Computations for an error analysis of the quadratic least-squares fit.
+
+	\begin{tabular}{l c c c c c c c c c c}
+		$x_i$ & $y_i$ & $(y_i - \bar{y})^2$ & $(y_i - a_0 - a_1 x_i - a_2 x_i^2 )^2$ \\
+		0 &  2.1 &  544.44 &  0.14332 \\
+		1 &	 7.7 &  314.47 &  1.00286 \\
+		2 &  13.6 &  140.03 &  1.08160 \\
+		3 &  27.2 &  3.12 &  0.80487 \\
+		4 &  40.9 &  239.22 &  0.61959 \\
+		5 &  61.1 &  1272.11 &  0.09434 \\
+		$\sum$ & 152.6 &  2513.39 &  3.74657
+  	\end{tabular}
+
+	\noindent\textbf{Solution.}\quad The following can be computed from the data:
+$$
+	\begin{matrix}
+		m = 1 & \sum x_i = 15 & \sum x^4_i = 979 \\
+		n= 6 & \sum y_i = 152.6 & \sum x_i y_i = 585.6 \\
+		\bar{x} = 2.5 & \sum x^2_i = 55 & \sum x^2_i y_i = 2488.8 \\
+		\bar{y} = 25.443 & \sum x^3_i = 225
+	\end{matrix}
+$$
+
+	\noindent Therefore, the simultaneous linear equations are
+
+	$$
+		\begin{bmatrix}
+			6 & 15 & 55 \\
+			15 & 55 & 225 \\
+			55 & 225 & 979
+		\end{bmatrix}
+		\begin{Bmatrix}
+			a_0 \\ a_1 \\ a_2
+		\end{Bmatrix}
+		=
+		\begin{Bmatrix}
+			152.6 \\
+			585.6 \\
+			2488.8
+		\end{Bmatrix}
+	$$
+
+	\noindent These equations can be solved to evaluate the coefficients. For example, using MATLAB:
+
+	\begin{lstlisting}[numbers=none]
+		>> N = [6 15 55;15 55 225;55 225 979];
+		>> r = [152.6 585.6 2488.8];
+		>> a = N\r
+
+		a =
+			2.4786
+			2.3593
+			1.8607
+	\end{lstlisting}
+
+	\noindent Therefore, the least-squares quadratic equation for this case is
+
+	$$
+		y= 2.4786 + 2.3593x + 1.8607x^2
+	$$
+
+	\noindent The standard error of the estimate based on the regression polynomial is [Eq. (15.3)]
+
+	$$
+		s_{y/x} = \sqrt{\frac{3.74657}{6 - (2 + 1)}} = 1.1175
+	$$
+
+	\noindent The coefficient of determination is
+
+	$$
+		r^2 = \frac{2513.39 - 3.74657}{2513.39}= 0.99851
+	$$
+
+	\noindent and the correlation coefficient is $r$ = 0.99925.
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\linewidth]{fig_15_2}
+		\caption{\textsf{Fit of a second-order polynomial.}}
+		\label{fig:fig_15_2}
+	\end{figure}
+
+	These results indicate that 99.851 percent of the original uncertainty has been explained by the model. This result supports the conclusion that the quadratic equation
+represents an excellent fit, as is also evident from Fig. 15.2.
+\end{example}
 
 \label{cha:cha_P_15_2} % 365
 \section{MULTIPLE LINEAR REGRESSION}
@@ -1119,14 +1208,68 @@ As with the previous cases, the "best" values of the coefficients are determined
 
 % TODO EXAMPLE 15.2
 
-The foregoing two-dimensional case can be easily extended to m dimensions, as in
+\begin{example} Polynomial Regression
+
+    \textbf{Problem Statement.}\quad The following data were created from the equation $y = 5 + 4x_1 - 3x_2$:
+
+	\begin{tabular}{l c c c c c c c c c c}
+		$x_1$ & $x_2$ & $y$ \\
+		\hline
+		0 & 0 & 5 \\
+		2 & 1 & 10 \\
+		2.5 & 2 & 9 \\
+		1 & 3 & 0 \\
+		4 & 6 & 3 \\
+		7 & 2 & 27
+  	\end{tabular}
+
+	\noindent Use multiple linear regression to fit this data.
+
+	\noindent\textbf{Solution.}\quad The summations required to develop Eq. (15.5) are computed in Table 15.2. Substituting them into Eq. (15.5) gives
+
+	\begin{equation}
+		\tag{15.6}
+		\begin{bmatrix}
+			6 & 16.5 & 14 \\
+			16.5 & 76.25 & 48 \\
+			14 & 48 & 54
+		\end{bmatrix}
+		\begin{Bmatrix}
+			a_0 \\ a_1 \\ a_2
+		\end{Bmatrix}
+		=
+		\begin{Bmatrix}
+			54 \\ 243.5 \\ 100
+		\end{Bmatrix}
+	\end{equation}
+
+	\noindent which can be solved for
+
+	$$a_0 = 5 \quad a_1 = 4 \quad a_2 = -3$$
+
+	\noindent which is consistent with the original equation from which the data were derived.
+\end{example}
+
+The foregoing two-dimensional case can be easily extended to $m$ dimensions, as in
 
 \begin{equation}
 	\notag
 	y = a_0 + a_1 x_1 + a_2 x_2 + \cdots + a_m x_m + e
 \end{equation}
 
-% TODO table 15.2
+\textbf{TABLE 15.2} \quad Computations required to develop the normal equations for Example 15.2.
+
+\begin{tabular}{c c c c c c c c c c c c c}
+	$y$ & $x_1$ & $x_2$ & $x^2_1$ & $x_2^2$ & $x_1 x_2$ & $x_1 y$ & $x_2 y$ \\ 
+	\hline
+	5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+	10 & 2 & 1 & 4 & 1 & 2 & 20 & 10 \\ 
+	9 & 2.5 & 2 & 6.25 & 4 & 5 & 22.5 & 18 \\ 
+	0 & 1 & 3 & 1 & 9 & 3 & 0 & 0 \\ 
+	3 & 4 & 6 & 16 & 36 & 24 & 12 & 18 \\ 
+	27 & 7 & 2 & 49 & 4 & 14 & 189 & 54 \\ 
+	54 & 16.5 & 14 & 76.25 & 54 & 48 & 243.5 & 100            
+\end{tabular}
 
 \noindent where the standard error is formulated as
 \begin{equation}
@@ -1266,7 +1409,75 @@ of matrix algebra. Recall that $r^2$ is defined as
 
 Matrix algebra can then be used to manipulate this vector to compute both the coefficient of determination and the standard error of the estimate as illustrated in the following example.
 
-% TODO example 15.3 369
+\begin{example} Polynomial Regression with MATLAB
+
+    \textbf{Problem Statement.}\quad Repeat Example 15.1, but use matrix operations as described in this
+	section.
+
+	\noindent\textbf{Solution.}\quad First, enter the data to be fit
+
+	\begin{lstlisting}[numbers=none]
+		>> x = [0 1 2 3 4 5]';
+		>> y = [2.1 7.7 13.6 27.2 40.9 61.1]';
+	\end{lstlisting}
+
+	\noindent Next, create the [Z] matrix:
+
+	\begin{lstlisting}[numbers=none]
+		>> Z = [ones(size(x)) x x.^2]
+		Z = 
+			1  0  0 
+			1  1  1 
+			1  2  4 
+			1  3  9 
+			1  4 16 
+			1  5 25
+	\end{lstlisting}
+
+	\noindent We can verify that [Z]$^T$ [Z] results in the coefficient matrix for the normal equations:
+
+	\begin{lstlisting}[numbers=none]
+		>> Z'*Z
+		ans = 
+			 6  15    55 
+			15  55   225 
+			55  225  979
+	\end{lstlisting}
+
+	\noindent This is the same result we obtained with summations in Example 15.1. We can solve for the	coefficients of the least-squares quadratic by implementing Eq. (15.10):
+
+	\begin{lstlisting}[numbers=none]
+		>> a = (Z'*Z)\(Z'*y)
+		ans =
+			2.4786
+			2.3593
+			1.8607
+	\end{lstlisting}
+
+	\noindent In order to compute $r^2$ and $s_{y/x}$, first compute the sum of the squares of the residuals:
+
+	\begin{lstlisting}[numbers=none]
+		>> Sr = sum((y-Z*a).^2)
+		Sr =
+			3.7466
+	\end{lstlisting}
+
+	\noindent Then $r^2$ can be computed as
+
+	\begin{lstlisting}[numbers=none]
+		>> r2 = 1-Sr/sum((y-mean(y)).^2)
+		r2 =
+			0.9985
+	\end{lstlisting}
+
+	\noindent and $s_{y/x}$ can be computed as
+
+	\begin{lstlisting}[numbers=none]
+		>> syx = sqrt(Sr/(length(x)-length(a)))
+		syx =
+			1.1175
+	\end{lstlisting}
+\end{example}
 
 Our primary motivation for the foregoing has been to illustrate the unity among the
 three approaches and to show how they can all be expressed simply in the same matrix notation. It also sets the stage for the next section where we will gain some insights into the
@@ -1301,7 +1512,42 @@ the number of unknowns $(n > m)$. Such systems are said to be \textit{overdeterm
 MATLAB senses that you want to solve such systems with left division, it automatically uses
 QR factorization to obtain the solution. The following example illustrates how this is done.
 
-% TODO example 15.4 370
+\begin{example} Implementing Polynomial Regression with \texttt{polyfit} and Left Division
+
+    \textbf{Problem Statement.}\quad Repeat Example 15.3, but use the built-in \texttt{polyfit} function and
+	left division to calculate the coefficients.
+
+	\noindent\textbf{Solution.}\quad As in Example 15.3, the data can be entered and used to create the [Z] matrix
+	as in
+
+	\begin{lstlisting}[numbers=none]
+		>> x = [0 1 2 3 4 5]';
+		>> y = [2.1 7.7 13.6 27.2 40.9 61.1]';
+		>> Z = [ones(size(x)) x x.^2];
+	\end{lstlisting}
+
+	\noindent The \texttt{polyfit} function can be used to compute the coefficients:
+
+	\begin{lstlisting}[numbers=none]
+		>> a = polyfit(x,y,2)
+		a =
+			1.8607
+			2.3593
+			2.4786
+	\end{lstlisting}
+
+	The same result can also be calculated using the backslash:
+
+	\begin{lstlisting}[numbers=none]
+		>> a = Z\y
+		a =
+			2.4786
+			2.3593
+			1.8607	
+	\end{lstlisting}
+
+	\noindent As just stated, both these results are obtained automatically with QR factorization.
+\end{example}
 
 \bigskip
 \label{cha:cha_P_15_5} %370
@@ -1348,8 +1594,68 @@ As described previously in Section 7.3.1, MATLAB's \texttt{fminsearch} function 
 Note that if \texttt{options} is omitted, MATLAB uses default values that are reasonable for most problems. If you would like to pass additional arguments (\texttt{p1, p2, }\dots), but do not want to set the options, use empty brackets \texttt{[]} as a place holder.
 
 % TODO example 15.5 371
-%TODO 15.6 CASE STUDY FITTING EXPERIMENTAL DATA
+\begin{example} Nonlinear Regression with MATLAB
 
+    \textbf{Problem Statement.}\quad  Recall that in Example 14.6, we fit the power model to data from
+	Table 14.1 by linearization using logarithms. This yielded the model:
+
+	$$
+		F = 0.2741 v ^{1.942}
+	$$
+
+	\noindent Repeat this exercise, but use nonlinear regression. Employ initial guesses of 1 for the
+	coefficients.
+
+	\noindent\textbf{Solution.}\quad First, an M-file function must be created to compute the sum of the squares.
+	The following file, called \texttt{fSSR.m}, is set up for the power equation:
+
+	\begin{lstlisting}[numbers=none]
+		function f = fSSR(a,xm,ym)
+		yp = a(1)*xm.^a(2);
+		f = sum((ym-yp).^2);
+	\end{lstlisting}
+
+	\noindent In command mode, the data can be entered as
+
+	\begin{lstlisting}[numbers=none]
+		>> x = [10 20 30 40 50 60 70 80];
+		>> y = [25 70 380 550 610 1220 830 1450];
+	\end{lstlisting}
+
+	\noindent The minimization of the function is then implemented by
+
+	\begin{lstlisting}[numbers=none]
+		>> fminsearch(@fSSR, [1, 1], [], x, y)
+		ans=
+			2.5384
+			1.4359	
+	\end{lstlisting}
+
+	\noindent The best-fit model is therefore
+
+	$$
+		F = 2.5384 v^ {1.4359}
+	$$
+
+	Both the original transformed fit and the present version are displayed in Fig. 15.4.
+	Note that although the model coefficients are very different, it is difficult to judge which fit
+	is superior based on inspection of the plot.
+
+	This example illustrates how different best-fit equations result when fitting the same
+	model using nonlinear regression versus linear regression employing transformations. This
+	is because the former minimizes the residuals of the original data whereas the latter minimizes the residuals of the transformed data.
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\linewidth]{fig_15_4}
+		\caption{\textsf{Comparison of transformed and untransformed model fits for force versus velocity data from
+		Table 14.1.}}
+		\label{fig:fig_15_4}
+	\end{figure}
+\end{example}
+
+
+\section[CASE STUDY: FITTING EXPERIMENTAL DATA]{CASE STUDY: FITTING EXPERIMENTAL DATA}
 \noindent\textbf{Background.} \quad As mentioned at the end of Section 15.2, although there are many cases where a variable is linearly related to two or more other variables, multiple linear regression has additional utility in the derivation of multivariable power equations of the general form
 
 \begin{equation}
@@ -1382,7 +1688,11 @@ A simple example relates to gas transfer in natural waters such as rivers, lakes
 
 The following data were collected in a laboratory flume at a constant temperature of $20^\circ$C:
 
-%TODO table
+\begin{tabular}{l c c c c c c c c c}
+	$U$ & 0.5 & 2 & 10 & 0.5 & 2 & 10 & 0.5 & 2 & 10 \\
+	$H$ & 0.15 & 0.15 & 0.15 & 0.3 & 0.3 & 0.3 & 0.5 & 0.5 & 0.5 \\
+	$K_L$ & 0.48 & 3.9 & 57 & 0.85 & 5 & 77 & 0.8 & 9 & 92
+\end{tabular}
 
 \noindent Use these data and general linear least squares to evaluate the constants in Eq. (15.16).
 
@@ -1473,6 +1783,99 @@ the transformed and untransformed versions.
 \end{figure}
 
 % TODO PROBLEMS 375
+
+\noindent\textbf{PROBLEMS}\\
+
+\begin{multicols}{2}
+    \noindent\textbf{15.1}  Fit a parabola to the data from Table 14.1. Determine
+	the r 2 for the fit and comment on the efficacy of the result.
+
+	\noindent\textbf{15.2} Using the same approach as was employed to derive
+	Eqs. (14.15) and (14.16), derive the least-squares fit of the
+	following model:
+
+	$$
+		y = a_1 x + a_2 x^2 + e
+	$$
+
+	\noindent That is, determine the coefficients that result in the leastsquares fit for a second-order polynomial with a zero inter	cept. Test the approach by using it to fit the data from
+	Table 14.1.
+
+	\noindent\textbf{15.3} Fit a cubic polynomial to the following data:
+
+	\noindent
+	\begin{tabular}{l c c c c c c c c}
+		x & 3 & 4 & 5 & 7 & 8 & 9 & 11 & 12 \\
+		y & 1.6 & 3.6 & 4.4 & 3.4 & 2.2 & 2.8 & 3.8 & 4.6
+	\end{tabular}
+
+	\noindent Along with the coefficients, determine $r^2$ and $s_{y/x}$.
+
+	\noindent\textbf{15.4} Develop an M-file to implement polynomial regression. Pass the M-file two vectors holding the $x$ and $y$
+	values along with the desired order $m$. Test it by solving
+	Prob. 15.3.
+
+	\noindent\textbf{15.5}  For the data from Table P15.5, use polynomial
+	regression to derive a predictive equation for dissolved
+	oxygen concentration as a function of temperature for the
+	case where the chloride concentration is equal to zero.
+	Employ a polynomial that is of sufficiently high order that
+	the predictions match the number of significant digits displayed in the table.
+
+	\noindent\textbf{15.6} Use multiple linear regression to derive a predictive
+	equation for dissolved oxygen concentration as a function of
+	temperature and chloride based on the data from Table P15.5.
+	Use the equation to estimate the concentration of dissolved
+	oxygen for a chloride concentration of 15 g/L at $T = 12 ^\circ C$.
+	Note that the true value is 9.09 mg/L. Compute the percent
+
+	\noindent\textbf{TABLE P15.5} Dissolved oxygen concentration in water as a function of temperature ($^\circ C$) and chloride concentration (g/L).
+
+	\noindent
+	\begin{tabular}{c c c c}
+		T, $^\circ C$ & c = 0 g/L & c = 10 g/L & c = 20 g/L \\
+		\hline
+		0 & 14.6 & 12.9 & 11.4 \\
+		5 & 12.8 & 11.3 & 10.3 \\
+		10 & 11.3 & 10.1 & 8.96 \\
+		15 & 10.1 & 9.03 & 8.08 \\
+		20 & 9.09 & 8.17 & 7.35 \\
+		25 & 8.26 & 7.46 & 6.73 \\
+		30 & 7.56 & 6.85 & 6.20
+	\end{tabular}
+
+	\noindent relative error for your prediction. Explain possible causes for
+	the discrepancy.
+
+	\noindent\textbf{15.7} As compared with the models from Probs. 15.5 and
+	15.6, a somewhat more sophisticated model that accounts
+	for the effect of both temperature and chloride on dissolved oxygen saturation can be hypothesized as being of
+	the form
+
+	$$
+		o = f_3 (T ) + f_1(c)
+	$$
+
+	\noindent That is, a third-order polynomial in temperature and a linear
+	relationship in chloride is assumed to yield superior results.
+	Use the general linear least-squares approach to fit this
+	model to the data in Table P15.5. Use the resulting equation
+	to estimate the dissolved oxygen concentration for a chloride
+	concentration of 15 g/L at $T = 12^\circ C$. Note that the true
+	value is 9.09 mg/L. Compute the percent relative error for
+	your prediction.
+
+	\noindent\textbf{15.8} Use multiple linear regression to fit
+
+	\noindent
+	\begin{tabular}{l c c c c c c c c c}
+		\textbf{x_1} & 0 & 1 & 1 & 2 & 2 & 3 & 3 & 4 & 4 \\
+		\textbf{x_2} & 0 & 1 & 2 & 1 & 2 & 1 & 2 & 1 & 2 \\
+		\textbf{y} & 15.1 & 17.9 & 12.7 & 25.6 & 20.5 & 35.1 & 29.7 & 45.4 & 40.2
+	\end{tabular}
+
+\end{multicols}
+
 
 \label{cha:cha_P_16} %380
 \chapter{Fourier Analysis}
