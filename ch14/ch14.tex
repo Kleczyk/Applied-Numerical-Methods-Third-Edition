@@ -1868,11 +1868,284 @@ the transformed and untransformed versions.
 	\noindent\textbf{15.8} Use multiple linear regression to fit
 
 	\noindent
-	\begin{tabular}{l c c c c c c c c c}
-		\textbf{x_1} & 0 & 1 & 1 & 2 & 2 & 3 & 3 & 4 & 4 \\
-		\textbf{x_2} & 0 & 1 & 2 & 1 & 2 & 1 & 2 & 1 & 2 \\
-		\textbf{y} & 15.1 & 17.9 & 12.7 & 25.6 & 20.5 & 35.1 & 29.7 & 45.4 & 40.2
+	\begin{tabular}{l c c c c c c c c c c c c}
+		\textbf{$x_1$} & 0 & 1 & 1 & 2 & 2 & 3 & 3 & 4 & 4 \\
+		\textbf{$x_2$} & 0 & 1 & 2 & 1 & 2 & 1 & 2 & 1 & 2 \\
+		\textbf{$y$} & 15.1 & 17.9 & 12.7 & 25.6 & 20.5 & 35.1 & 29.7 & 45.4 & 40.2
 	\end{tabular}
+
+	\noindent Compute the coefficients, the standard error of the estimate,
+	and the correlation coefficient.
+
+	\noindent\textbf{15.9} The following data were collected for the steady flow of water in a concrete circular pipe:
+
+	\noindent
+	\begin{tabular}{c c c c}
+		\textbf{Experiment} & \textbf{Diameter, m} & \textbf{Slope, m/m} & \textbf{Flow, m$^3$/s} \\
+		1 & 0.3 & 0.001 & 0.04 \\
+		2 & 0.6 & 0.001 & 0.24 \\
+		3 & 0.9 & 0.001 & 0.69 \\
+		4 & 0.3 & 0.01 & 0.13  \\
+		5 & 0.6 & 0.01 & 0.82 \\
+		6 & 0.9 & 0.01 & 2.38 \\
+		7 & 0.3 & 0.05 & 0.31 \\
+		8 & 0.6 & 0.05 & 1.95 \\
+		9 & 0.9 & 0.05 & 5.66
+	\end{tabular}
+
+	\noindent Use multiple linear regression to fit the following model to this data:
+
+	$$
+		Q = \alpha_0 D^{\alpha_1} S^{\alpha_2}
+	$$
+
+	\noindent where $Q$ = flow, $D$ = diameter, and $S$ = slope.
+
+	\noindent\textbf{15.10} Three disease-carrying organisms decay exponentially in seawater according to the following model:
+
+	$$
+		p(t) = Ae^{-1.5t} + Be^{-0.3t} + Ce^{-0.05t}
+	$$
+
+	\noindent Estimate the initial concentration of each organism ($A$, $B$,
+	and $C$) given the following measurements:
+
+	\noindent
+	\begin{tabular}{l c c c c c c c c c}
+		\textbf{t} & 0.5 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 9 \\
+		\textbf{p(t)} & 6 & 4.4 & 3.2 & 2.7 & 2 & 1.9 & 1.7 & 1.4 & 1.1
+	\end{tabular}
+
+	\noindent\textbf{15.11} The following model is used to represent the effect of
+	solar radiation on the photosynthesis rate of aquatic plants:
+
+	$$
+		P = P_m \frac{I}{I_{\text{sat}}} e ^ {-\frac{I}{I_{\text{sat}}} + 1}
+	$$
+
+	\noindent where $P$ = the photosynthesis rate (mg $m^{-3}$ $d^{-1}$ ),$P_m$ = the
+	maximum photosynthesis rate (mg $m^{-3}$ $d^{-1}$ ), $I$ = solar
+	radiation ($\mu E m^{-2} s^{-1}$), and $I_{\text{sat}}$ = optimal solar radiation
+	($\mu E m^{-2} s^{-1}$). Use nonlinear regression to evaluate $P_m$ and
+	$I_{\text{sat}}$ based on the following data:
+
+	\noindent
+	\begin{tabular}{l c c c c c c c c c c c c}
+		\textbf{I} & 50 & 80 & 130 & 200 & 250 & 350 & 450 & 550 & 700 \\
+		\textbf{P} & 99 & 177 & 202 & 248 & 229 & 219 & 173 & 142 & 72
+	\end{tabular}
+
+	\noindent\textbf{15.12} The following data are provided
+
+	\noindent
+	\begin{tabular}{l c c c c c}
+		\textbf{x} & 1 & 2 & 3 & 4 & 5 \\
+		\textbf{y} & 2.2 & 2.8 & 3.6 & 4.5 & 5.5
+	\end{tabular}
+
+	\noindent Fit the following model to this data using MATLAB and the
+	general linear least-squares model
+
+	$$
+		y= a + bx + \frac{c}{x}
+	$$
+
+	\noindent\textbf{15.13} In Prob. 14.8 we used transformations to linearize
+	and fit the following model:
+
+	$$
+		y = \alpha_4 x e^{\beta_4 x}
+	$$
+
+	\noindent Use nonlinear regression to estimate $\alpha_4$ and $\beta_4$ based on the
+	following data. Develop a plot of your fit along with the data.
+
+	\noindent
+	\begin{tabular}{l c c c c c c c c c c c c c c}
+		\textbf{x}& 0.1& 0.2& 0.4& 0.6& 0.9 &1.3 &1.5 &1.7 &1.8 \\
+		\textbf{y}& 0.75 &1.25 &1.45 &1.25& 0.85& 0.55 &0.35& 0.28& 0.18
+	\end{tabular}
+
+	\noindent\textbf{15.14}  Enzymatic reactions are used extensively to characterize biologically mediated reactions. The following is an example of a model that is used to fit such reactions:
+
+	$$
+		v_0 = \frac{k_m [S]^3}{K + [S]^3}
+	$$
+
+	\noindent where $v_0$ = the initial rate of the reaction (M/s), $[S]$ = the substrate concentration (M), and $k_m$ and $K$ are parameters. The following data can be fit with this model:
+
+	\noindent
+	\begin{tabular}{c c}
+		\textbf{[S], M} & \textbf{$v_0$, M/s} \\
+ 0.01 &  $6.078 \times 10^{-11}$ \\
+0.05 &  $7.595 \times 10^{-9}$ \\
+0.1 &  $6.063 \times 10^{-8}$ \\
+ 0.5 &  $5.788 \times 10^{-6}$ \\
+ 1 &  $1.737 \times 10^{-5}$ \\
+ 5 &  $2.423 \times 10^{-5}$ \\
+10 &  $2.430 \times 10^{-5}$ \\
+50 &  $2.431 \times 10^{-5}$ \\
+ 100 &  $2.431 \times 10^{-5}$ 
+	\end{tabular}
+
+	\noindent \textbf{(a)} Use a transformation to linearize the model and evaluate
+the parameters. Display the data and the model fit on a
+graph.
+
+\noindent \textbf{(b)} Perform the same evaluation as in \textbf{(a)} but use nonlinear
+regression.
+ 
+	\noindent\textbf{15.15} Given the data
+
+	\begin{tabular}{l c c c c c c c c c c }
+		\textbf{x} & 5 & 10 & 15 & 20 & 25 & 30 & 35 & 40 & 45 & 50 \\
+		\textbf{y} & 17 & 24 & 31 & 33 & 37 & 37 & 40 & 40 & 42 & 41
+	\end{tabular}
+
+	\noindent use least-squares regression to fit \textbf{(a)} a straight line, \textbf{(b)} a
+	power equation, \textbf{(c)} a saturation-growth-rate equation, and
+	\textbf{(d)} a parabola. For \textbf{(b)} and \textbf{(c)}, employ transformations to
+	linearize the data. Plot the data along with all the curves. Is
+	any one of the curves superior? If so, justify.
+
+	\noindent\textbf{15.16} The following data represent the bacterial growth in a
+	liquid culture over of number of days:
+
+	\begin{tabular}{l c c c c c c c c}
+		Day & 0 & 4 & 8 & 12 & 16 & 20 \\
+		Amount $\times 10^6$ & 67.38 & 74.67 & 82.74 & 91.69 & 101.60 & 112.58
+	\end{tabular}
+
+	\noindent Find a best-fit equation to the data trend. Try several
+	possibilities—linear, quadratic, and exponential. Determine
+   the best equation to predict the amount of bacteria after
+   30 days.
+
+   \noindent\textbf{15.17}Dynamic viscosity of water $\mu$ ($10^{-3}$ N $\cdot $ s/m$^2$ ) is related to temperature $T$ ($^\circ C$) in the following manner:
+
+	\noindent
+	\begin{tabular}{l c c c c c c}
+		$T$ &	0 &	5 &	10 &	20 &	30 &	40 \\
+		$\mu$ & 1.787 & 1.519 & 1.307 &	1.002 &	0.7975 & 0.6529
+	\end{tabular}
+  
+	\noindent \textbf{(a)} Plot this data.
+	\noindent \textbf{(b)} Use linear interpolation to predict $\mu$ at $T = 7.5 ^\circ C$.
+	\noindent \textbf{(c)} Use polynomial regression to fit a parabola to the data in
+order to make the same prediction.
+
+	\noindent\textbf{15.18}  Use the following set of pressure-volume data to find
+	the best possible virial constants ($A_1$ and $A_2$) for the following equation of state. $R$ = 82.05 mL atm/gmol K, and $T$ =
+	 303 K.
+
+	$$
+		\frac{P V}{R T}=1 + \frac{A_1}{V}+\frac{A_2}{V^2} 
+	$$
+	
+	\noindent
+	\begin{tabular}{l c c c c }
+		\textbf{P (atm)} &		0.985 &		 1.108 &		 1.363 &		 1.631 \\	 
+		\textbf{V (mL)} &		 25,000 &		 22,200 &		 18,000 &		 15,000
+	\end{tabular}
+
+	\noindent\textbf{15.19} Environmental scientists and engineers dealing with
+	the impacts of acid rain must determine the value of the
+	ion product of water $K_w$ as a function of temperature. Scientists have suggested the following equation to model this
+	relationship:
+
+	$$
+		- \log_10 K_w = \frac{a}{T_a} + b \log_10 T_a + c T_a +d
+	$$
+
+	\noindent where $T_a$ = absolute temperature (K), and $a$, $b$, $c$, and $d$ are
+	parameters. Employ the following data and regression to estimate the parameters with MATLAB. Also, generate a
+	plot of predicted $K_w$ versus the data.
+
+	\noindent
+	\begin{tabular}{c c}
+		T ($^\circ C$) & $K_w$ \\
+		0  & $1.164 \times 10^{-15}$ \\
+		10 & $2.950 \times 10^{-15}$ \\
+		20 & $6.846 \times 10^{-15}$ \\
+		30 & $1.467 \times 10^{-14}$ \\
+		40 & $2.929 \times 10^{-14}$ \\
+	\end{tabular}
+
+	\noindent\textbf{15.20} The distance required to stop an automobile consists
+	of both thinking and braking components, each of which is a
+	function of its speed. The following experimental data were
+	collected to quantify this relationship. Develop best-fit equations for both the thinking and braking components. Use
+	these equations to estimate the total stopping distance for a
+	car traveling at 110 km/h.
+
+	\begin{tabular}{l c c c c c c} 
+		\textbf{Speed, km/h} &  30 &  45 &  60 &  75 &  90 &  120 \\
+		\textbf{Thinking, m} &  5.6 &  8.5 &  11.1 &  14.5 &  16.7 &  22.4 \\
+		\textbf{Braking, m} &  5.0 &  12.3 &  21.0 &  32.9 &  47.6 &  84.7
+	\end{tabular}
+
+	\noindent\textbf{15.21} An investigator has reported the data tabulated below.
+	It is known that such data can be modeled by the following
+   equation
+
+   $$
+	x = e^{(y-b) / a}
+   $$
+
+   \noindent where $a$ and $b$ are parameters. Use nonlinear regression to
+   determine $a$ and $b$. Based on your analysis predict $y$ at $x = 2.6$.
+
+   \noindent
+   \begin{tabular}{l c c c c c }
+	\textbf{x} &	1 &	2 &	3 &	4 &	5 \\
+	\textbf{y} &	0.5 &	2 &	2.9 &	3.5 &	4
+   \end{tabular}
+
+   \noindent\textbf{15.22} It is known that the data tabulated below can be modeled by the following equation
+
+   $$
+ 	y = ( \frac{a + \sqrt{x}}{b \sqrt{x}})^2  
+   $$
+
+   \noindent Use nonlinear regression to determine the parameters $a$ and $b$.
+   Based on your analysis predict $y$ at $x = 1.6$.
+
+   \noindent 
+   \begin{tabular}{l c c c c c c}
+	\textbf{x} &	1 &	2 &	3 &	4 &	5 \\
+	\textbf{y} &	0.5 &	2 &	2.9 &	3.5 &	4
+   \end{tabular}
+
+   \noindent\textbf{15.23}  An investigator has reported the data tabulated below
+   for an experiment to determine the growth rate of bacteria $k$
+   (per d), as a function of oxygen concentration $c$ (mg/L). It is
+   known that such data can be modeled by the following
+   equation:
+
+   $$
+ 	k = \frac{k_{\text{max}} c^2}{c_s + c^2}  
+   $$
+
+   \noindent Use nonlinear regression to estimate $c_s$ and $k_{\text{max}}$ and predict
+   the growth rate at $c$ = 2 mg/L.
+   
+   \begin{tabular}{l c c c c c}
+		\textbf{c} &	0.5 &	0.8 &	1.5 &	2.5 &	4 \\
+		\textbf{k} &	1.1 &	2.4 &	5.3 &	7.6 &	8.9
+   \end{tabular}
+
+   \noindent\textbf{15.24} A material is tested for cyclic fatigue failure whereby
+   a stress, in MPa, is applied to the material and the number of
+   cycles needed to cause failure is measured. The results are in
+   the table below. Use nonlinear regression to fit a power
+	model to this data.
+   
+	
+   
+   
+	
+
+   
 
 \end{multicols}
 
