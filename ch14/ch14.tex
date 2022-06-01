@@ -2139,14 +2139,66 @@ order to make the same prediction.
    cycles needed to cause failure is measured. The results are in
    the table below. Use nonlinear regression to fit a power
 	model to this data.
-   
-	
-   
-   
-	
 
-   
+	\noindent
+	\begin{tabular}{l c c c c c c c}
+		\textbf{$N$, cycles} &1 & 10 &100 &1000& 10,000& 100,000& 1,000,000\\
+		\textbf{Stress,} \\
+		\textbf{MPa} & 1100 & 1000 & 925 & 800 &	625 &	550 &	420
+	\end{tabular}
 
+	\noindent\textbf{15.25} The following data shows the relationship between the viscosity of SAE 70 oil and temperature. Use nonlinear regression to fit a power equation to this data.
+
+	\noindent
+	\begin{tabular}{l c c c c}
+		\textbf{Temperature}, $T$, $^\circ C$ 26.67 & 93.33 & 148.89 & 315.56 \\
+		\textbf{Viscosity}, $\mu$, N$\cdot$s/m$^2$ 1.35 & 0.085 & 0.012 & 0.00075
+	\end{tabular}
+
+	\noindent\textbf{15.26} The concentration of E. \textit{coli} bacteria in a swimming
+	area is monitored after a storm:
+
+	\noindent
+	\begin{tabular}{l c c c c c c}
+		\textbf{t (hr)} &	4 &	8 &	12 &	16 &	20 &	24 \\
+		\textbf{c(CFU/100 mL)} &	1590 &	1320 &	1000 &	900 &	650 &	560	   
+	\end{tabular}
+
+	\noindent The time is measured in hours following the end of the storm
+and the unit CFU is a ``colony forming unit.'' Employ nonlinear regression to fit an exponential model (Eq. 14.22) to
+this data. Use the model to estimate \textbf{(a)} the concentration at
+the end of the storm ($t = 0$) and \textbf{(b)} the time at which the
+concentration will reach 200 CFU/100 mL.
+
+	\noindent\textbf{15.27} Use the following set of pressure-volume data to
+	find the best possible virial constants ($A_1$ and $A_2$ ) for the
+	equation of state shown below. $R$ = 82.05 mL atm/gmol K
+	and $T$ = 303 K.
+
+	$$
+		\frac{PV}{RT} = 1 + \frac{A_1}{V} + \frac{A_2}{V^2}
+	$$
+   
+	\noindent
+	\begin{tabular}{l c c c c}
+		\textbf{P (atm)} & 0.985 & 1.108 & 1.363 & 1.631 \\
+		\textbf{V (mL)} & 25,000 & 22,200 & 18,000 & 15,000
+	\end{tabular}
+
+	\noindent\textbf{15.28} Three disease-carrying organisms decay exponentially in lake water according to the following model:
+
+	$$
+		p(t) = Ae^{-1.5t} + Ae^{-0.3t} + Ae^{-0.05t}
+	$$
+
+	\noindent  Estimate the initial population of each organism ($A$, $B$,
+	and $C$) given the following measurements:
+
+	\noindent
+	\begin{tabular}{l c c c c c c c c c}
+		\textbf{t, hr} & 0.5 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 9 \\
+		\textbf{p(t)} & 6.0 & 4.4 & 3.2 & 2.7 & 2.2 & 1.9 & 1.7 & 1.4 & 1.1
+	\end{tabular}
 \end{multicols}
 
 
