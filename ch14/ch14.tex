@@ -2230,12 +2230,10 @@ within a time series of data. Specific objectives and topics covered in this cha
 	\item Knowing how to compute and interpret a power spectrum.
 \end{itemize}
 
-% TODO YOU'VE GOT A PROBLEM
+\noindent\textbf{YOU'VE GOT A PROBLEM}\\
 
-AThen, predict t the beginning in the Chap. equilibrium 13, of we Chap. determined positions 8, we used the of Newton's three same system's bungee second jumpers eigenvalues law and connected force and eigenvectors
-balances by cords.
-to
-in order to identify its resonant frequencies and principal modes of vibration. Although this analysis certainly provided useful results, it required detailed system information including
+\noindent At the begginning of Chap. 8, we used Newton's second law and force balances to predict the equilibrium positions of three bungee jumpers connected by cords. Then, in Chap. 13, we determined the same systems's eigenvalues and eigenvectors in order to identify its resonant frequences and principal modes of vibration.
+Although this analysis certainly provided useful results, it required detailed system information including
 knowledge of the underlying model and parameters (i.e., the jumpers' masses and the
 cords' spring constants).
 
@@ -2423,7 +2421,14 @@ These equations can be employed to solve for the unknown coefficients. However,
 rather than do this, we can examine the special case where there are N observations equispaced at intervals of $\Delta t$ and with a total record length of $T = (N - 1)\Delta t$. For this situa-
 tion, the following average values can be determined (see Prob. 16.3):
 
-% TODO eq 16.13
+\begin{equation}
+	\tag{16.13}
+	\begin{matrix}
+		\frac{\sum \sin (\omega_0 t)}{N} = 0 & \frac{\sum \cos (\omega_0 t)}{N} = 0 \\
+		\frac{\sum \sin ^2 (\omega_0 t)}{N} = \frac{1}{2} & \frac{\sum \cos ^2 (\omega_0 t)}{N} = \frac{1}{2} \\
+		\frac{\sum \cos (\omega_0 t) \sin(\omega_0 t)}{N} = 0
+	\end{matrix}
+\end{equation}
 
 \noindent Thus, for equispaced points the normal equations become
 
@@ -2485,7 +2490,67 @@ reciprocals of the original. Thus, the coefficients can be determined as
 
 \noindent Notice that the first coefficient represents the function's average value.
 
-% TODO example 16.1
+\begin{example} Least-Squares Fit of a Sinusoid
+
+    \noindent\textbf{Problem Statement.}\quad The curve in Fig. 16.2a is described by $y = 1.7 + \cos(4.189t + 1.0472)$. Generate 10 discrete values for this curve at intervals of $\Delta t = 0.15$ for the range
+	t = 0 to 1.35. Use this information to evaluate the coefficients of Eq. (16.11) by a least squares fit.
+
+    \noindent\textbf{Solution.}\quad  The data required to evaluate the coefficients with $\omega = 4.189$ are
+
+	\noindent
+	\begin{tabular}{c c c c}
+		\textbf{t} & \textbf{y} & \textbf{$y \cos(\omega_0 t)$} & \textbf{$y \sin(\omega_0 t)$} \\
+		\hline
+		0 & 2.200 & 2.200 & 0.000 \\
+		0.15 & 1.595 & 1.291 & 0.938 \\
+		0.30 & 1.031 & 0.319 & 0.980 \\
+		0.45 & 0.722 & -0.223 & 0.687 \\
+		0.60 & 0.786 & -0.636 & 0.462 \\
+		0.75 & 1.200 & -1.200 & 0.000 \\
+		0.90 & 1.805 & -1.460 & -1.061 \\
+		1.05 & 2.369 & -0.732 & -2.253 \\
+		1.20 & 2.678 & 0.829 & -2.547 \\
+		1.35 & 2.614 & 2.114 & -1.536 \\
+		\hline
+		$\sum$ = & 17.000 & 2.502 & -4.330
+	\end{tabular}
+
+	\noindent These results can be used to determine [Eqs. (16.14) through (16.16)]
+
+	$$
+		A_0 = \frac{17.000}{10} = 1.7	\quad A_1 = \frac{2}{10} 2.502 = 0.500 \quad B_1 = \frac{2}{10} (-4.330) = -0.866
+	$$
+
+	\noindent Thus, the least-squares fit is
+
+	$$
+		y = 1.7 + 0.500 \cos(\omega_0 t) - 0.866 \sin(\omega_0 t)
+	$$
+
+	\noindent The model can also be expressed in the format of Eq. (16.2) by calculating [Eq. (16.8)]
+
+	$$
+		\theta = \arctan (\frac{-0.866}{0.500}) = 1.0472
+	$$
+
+	\noindent and [Eq. (16.9)]
+
+	$$
+		C_1 = \sqrt{0.5^2 + (-0.866)^2} = 1.00
+	$$
+
+	\noindent to give 
+
+	$$
+		y = 1.7 + \cos(\omega_0 t + 1.0472)
+	$$
+
+	\noindent or alternatively, as a sine by using [Eq. (16.10)]
+
+	$$
+		y = 1.7 + \sin (\omega_0 t + 2.618)
+	$$
+\end{example}
 
 The foregoing analysis can be extended to the general model
 \begin{equation}
@@ -2529,10 +2594,10 @@ frequencies. For a function with period $T$, a continuous Fourier series can be 
 \end{equation}
 
 \noindent or more concisely,
-% TODO THIS BREAKS EVERYTHING
+
 \begin{equation}
 	\tag{16.17}
-	f(t) = a_0 + \sum
+	f(t) = a_0 + \sum ^ \infty _ {k=1} [a_k \cos(k \omega_0 t) + b_k \sin(k \omega_0 t)]
 \end{equation}
 
 \noindent where the angular frequency of the first mode $(\omega_0 = 2 \pi /T)$ is called the fundamental
@@ -2561,7 +2626,53 @@ The coefficients of Eq. (16.17) can be computed via
 	a_0 = \frac{1}{T} \int ^ T _ 0 f(t)dt
 \end{equation}
 
-%TODO example 16.2
+\begin{example} Continuous Fourier Series Approximation
+
+    \noindent\textbf{Problem Statement.}\quad Use the continuous Fourier series to approximate the square or rectangular wave function (Fig. 16.1a) with a height of 2 and a period $T = 2\pi /\omega_0$:
+
+	$$
+		f(t) = \left\{ \begin{matrix}
+			-1 & -T/2 < t < -T/4 \\
+			1 & -T/4 < t < T/4 \\
+			-1 & T/4 < t < T/2
+		\end{matrix}  \right.
+	$$
+
+    \noindent\textbf{Solution.}\quad  Because the average height of the wave is zero, a value of $a_0 = 0$ can be
+	obtained directly. The remaining coefficients can be evaluated as [Eq. (16.18)]
+
+	$$
+		a_k = \frac{2}{T} \int_{-T/s} ^{T/2} f(t) \cos (k \omega_0 t) dt = \frac{2}{T} [- \int ^ {-T/4} _ {-T/2} \cos(k \omega_0 t) dt + \int ^ {T/4} _ {-T/4} \cos (k \omega_0 t) dt - \int _ {T/4} ^ {T/2} \cos(k \omega_0 t) dt]
+	$$
+
+	\noindent The integrals can be evaluated to give
+
+	$$
+		a_k = \left\{ \begin{matrix}
+			4 / (k \pi) & \text{for } k = 1,5,9, \dots \\
+			-4 / (k \pi) & \text{for } k = 3,7,11, \dots \\
+			0 & \text{for } k = \text{even integers} \dots \\
+		\end{matrix} \right.
+	$$
+
+	\begin{figure}[H] 
+		\centering
+		\includegraphics[width=1\linewidth]{fig_16_4}
+		\caption{\textsf{The Fourier series approximation of a square wave. The series of plots shows the summation up
+		to and including the (a) first, (b) second, and (c) third terms. The individual terms that were
+		added or subtracted at each stage are also shown.}}
+		\label{fig:fig_16_4}
+	\end{figure}
+
+	\noindent Similarly, it can be determined that all the $b$'s = 0. Therefore, the Fourier series approximation is
+
+	$$
+		f(t) = \frac{4}{\pi} \cos(\omega_0 t) - \frac{4}{3 \pi} \cos(3 \omega_0 t) + \frac{4}{5 \pi} \cos(5 \omega_0 t) - \frac{4}{7 \pi} \cos (7 \omega_0 t) + \dots
+	$$
+
+	\noindent The results up to the first three terms are shown in Fig. 16.4.
+\end{example}
+
 
 Before proceeding, the Fourier series can also be expressed in a more compact form
 using complex notation. This is based on \textit{Euler's formula} (Fig. 16.5):
@@ -2853,7 +2964,125 @@ order}. The first half of the values are the positive frequencies (starting with
 and the second half are the negative frequencies. Thus, if $n = 8$, the order is 0, 1, 2, 3, 4, -3, -2, -1. The following example illustrates the function's use to calculate the DFT of a
 simple sinusoid.
 
-%TODO example 16.3
+\begin{example} Computing the DFT of a Simple Sinusoid with MATLAB
+
+    \noindent\textbf{Problem Statement.}\quad Apply the MATLAB fft function to determine the discrete Fourier
+	transform for a simple sinusoid:
+
+	$$
+		f(t) = 5 + \cos(2 \pi (12.5) t) + \sin(2 \pi (18.75) t)
+	$$
+
+	\noindent Generate 8 equispaced points with $\Delta t = 0.02 $s. Plot the result versus frequency.
+
+    \noindent\textbf{Solution.}\quad  Before generating the DFT, we can compute a number of quantities. The sampling frequency is
+
+	$$
+		f_x = \frac{1}{\Delta t} = \frac{1}{0.02 s} = 50 \text{Hz}
+	$$
+
+	\noindent The total sample length is
+
+	$$
+		t_n = \frac{n}{f_s} = \frac{8 \text{samples}}{50 \text{samples/s}} = 0.16 s
+	$$
+
+	\noindent The Nyquist frequency is
+
+	$$
+		f_\text{max} 0.5 f_s = 0.5 (50Hz) = 25 \text{Hz}
+	$$
+
+	\noindent and the lowest detectable frequency is
+
+	$$
+		f_\text{min}	= \frac{1}{0.16 s} = 6.25 \text {Hz}
+	$$
+
+	\noindent Thus, the analysis can detect signals with periods from 1/25 = 0.04 s up to 1/6.25 = 0.16 s.
+	So we should be able to detect both the 12.5 and 18.75 Hz signals.
+
+	The following MATLAB statements can be used to generate and plot the sample
+(Fig. 16.11a):
+
+	\begin{lstlisting}[numbers=none]
+		>> clc
+		>> n=8; dt=0.02; fs=1/dt; T = 0.16;
+		>> tspan=(0:n-1)/fs;
+		>> y=5+cos(2*pi*12.5*tspan)+sin(2*pi*31.25*tspan);
+		>> subplot(3,1,1);
+		>> plot(tspan,y,'-ok','linewidth',2,'MarkerFaceColor','black');
+		>> title('(a) f(t) versus time (s)');
+	\end{lstlisting}
+
+	\begin{figure}[H] 
+		\centering
+		\includegraphics[width=1\linewidth]{fig_16_11}
+		\caption{\textsf{Results of computing a DFT with MATLAB's \texttt{fft} function: (a) the sample; and plots of
+		the (b) real and (c) imaginary parts of the DFT versus frequency.}}
+		\label{fig:fig_16_11}
+	\end{figure}
+
+	\noindent As was mentioned at the beginning of Sec. 16.5, notice that tspan omits the last point.
+
+	The \texttt{fft} function can be used to compute the DFT and display the results
+
+	\begin{lstlisting}[numbers=none]
+		>>Y=fft(y)/n;
+		>>Y'
+	\end{lstlisting}
+
+	\noindent We have divided the transform by n in order that the first coefficient is equal to the arithmetic mean of the samples. When this code is executed, the results are displayed as
+
+	\begin{lstlisting}[numbers=none]
+		ans =
+			5.0000
+			0.0000 - 0.0000i
+			0.5000
+			-0.0000 + 0.5000i
+			0
+			-0.0000 - 0.5000i
+			0.5000
+			0.0000 + 0.0000i
+	\end{lstlisting}
+
+	\noindent Notice that the first coefficient corresponds to the signal's mean value. In addition, because of the \textit{reverse-wrap-around order}, the results can be interpreted as in the following
+	table:
+
+	\begin{tabular}{l l c c c c}
+		\textbf{Index} & \textbf{k} & \textbf{Frequency} & \textbf{Period} & \textbf{Real} & \textbf{Imaginary} \\
+		1 & 0 & constant & 5 & 0 \\
+		2 & 1 & 6.25 & 0.16 & 0 & 0 \\
+		3 & 2 & 12.5 & 0.08 & 0.5 & 0 \\
+		4 & 3 & 18.75 & 0.053333 & 0 & 0.5 \\
+		\textbf{5} & \textbf{4} & \textbf{25} & \textbf{0.04} & \textbf{0} & \textbf{0} \\
+		6 & -3 & 31.25 & 0.032 & 0 & -0.5 \\
+		7 & -2 & 37.5 & 0.026667 & 0.5 & 0 \\
+		8 & -1 & 43.75 & 0.022857 & 0 & 0
+	\end{tabular}
+
+	\noindent Notice that the \texttt{fft} has detected the 12.5- and 18.75-Hz signals. In addition, we have highlighted the Nyquist frequency to indicate that the values below it in the table are redundant.
+	That is, they are merely reflections of the results below the Nyquist frequency.
+
+	If we remove the constant value, we can plot both the real and imaginary parts of the
+DFT versus frequency
+
+	\begin{lstlisting}[numbers=none]
+		>> nyquist=fs/2;fmin=1/T;
+		>> f = linspace(fmin,nyquist,n/2);
+		>> Y(1)=[];YP=Y(1:n/2);
+		>> subplot(3,1,2)
+		>> stem(f,real(YP),'linewidth',2,'MarkerFaceColor','blue')
+		>> grid;title('(b) Real component versus frequency')
+		>> subplot(3,1,3)
+		>> stem(f,imag(YP),'linewidth',2,'MarkerFaceColor','blue')
+		>> grid;title('(b) Imaginary component versus frequency')
+		>> xlabel('frequency (Hz)')
+	\end{lstlisting}
+
+	\noindent As expected (recall Fig. 16.7), a positive peak occurs for the cosine at 12.5 Hz
+	(Fig. 16.11b), and a negative peak occurs for the sine at 18.75 Hz (Fig. 16.11c).
+\end{example}
 
 \label{cha:cha_P_16_6}
 \section{THE POWER SPECTRUM}
