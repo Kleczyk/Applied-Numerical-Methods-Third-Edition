@@ -3361,7 +3361,7 @@ Specific objectives and topics covered are
 	\item  Recognizing that higher-order polynomials can manifest large oscillations.
 \end{itemize}
 
-% TODO YOU'VE GOT A PROBLEM
+\noindent\textbf{YOU'VE GOT A PROBLEM}
 
 If we want to improve the velocity prediction for the free-falling bungee jumper, we might expand our model to account for other factors beyond mass and the drag coefficient can itself be formulated as a function of other factors such as the area of the jumper and characteristics such as the air's density and viscosity.
 
@@ -3377,6 +3377,31 @@ data exhibit significant curvature. In this chapter, we will explore a number of
 approaches for obtaining adequate estimates for such situations.
 
 %TODO TABLE 17.1
+
+\noindent \textbf{TABLE 17.1} Density ($\rho$), dynamic viscosity ($\mu$), and kinematic viscosity ($v$) as a function of
+temperature ($T$ ) at 1 atm as reported by White (1999).
+
+\begin{tabular}{r c c c}
+	$T, ^\circ C$ & $\rho$, kg/m$^3$ & $\mu$, N $\cdot$ s/m$^2$ & $v$ , m$^2$/s \\
+	\hline
+	-40 & 1.52 & $1.51 \times 10^{-5}$ & $0.99 \times 10^{-5}$ \\
+	0 & 1.29 & $1.71 \times 10^{-5}$ & $1.33 \times 10^{-5}$ \\
+	20 & 1.20 & $1.80 \times 10^{-5}$ & $1.50 \times 10^{-5}$ \\
+	50 & 1.09 & $1.95 \times 10^{-5}$ & $1.79 \times 10^{-5}$ \\
+	100 & 0.946 & $2.17 \times 10^{-5}$ & $2.30 \times 10^{-5}$ \\
+	150 & 0.835 & $2.38 \times 10^{-5}$ & $2.85 \times 10^{-5}$ \\
+	200 & 0.746 & $2.57 \times 10^{-5}$ & $3.45 \times 10^{-5}$ \\
+	250 & 0.675 & $2.75 \times 10^{-5}$ & $4.08 \times 10^{-5}$ \\
+	300 & 0.616 & $2.93 \times 10^{-5}$ & $4.75 \times 10^{-5}$ \\
+	400 & 0.525 & $3.25 \times 10^{-5}$ & $6.20 \times 10^{-5}$ \\
+	500 & 0.457 & $3.55 \times 10^{-5}$ & $7.77 \times 10^{-5}$ \\
+\end{tabular}
+
+\noindent desired temperature based on the densities that bracket it. The simplest approach is to determine the equation for the straight line connecting the two adjacent values and use this
+equation to estimate the density at the desired intermediate temperature. Although such
+\textit{linear interpolation} is perfectly adequate in many cases, error can be introduced when the
+data exhibit significant curvature. In this chapter, we will explore a number of different
+approaches for obtaining adequate estimates for such situations.
 
 \label{cha:cha_P_17_1} % 406
 \section{INTRODUCTION TO INTERPOLATION}
@@ -3423,7 +3448,77 @@ $n$ data points are required to determine the n coefficients. As in the followin
 allows us to generate n linear algebraic equations that we can solve simultaneously for the
 coefficients.
 
-% TODO example 17.1
+\begin{example} Determining Polynomial Coefficients with Simultaneous Equations
+
+	\noindent \textbf{Problem Statement. } \quad Suppose that we want to determine the coefficients of the parabola,
+	$f (x) = p_1 x^2 + p_2 x + p_3$ , that passes through the last three density values from Table 17.1:
+
+	$$
+	\begin{matrix}
+		x_1 = 300 & f(x_1) = 0.616 \\
+		x_2 = 400 & f(x_2) = 0.525  \\
+		x_3 = 500 & f(x_3) = 0.457 
+	\end{matrix}
+	$$
+
+	\noindent Each of these pairs can be substituted into Eq. (17.2) to yield a system of three equations:
+
+	$$
+	\begin{matrix}
+		0.616 = p_1 (300)^2 + p_2 (300) + p_3 \\
+		0.525 = p_1 (400)^2 + p_2 (400) + p_3 \\
+		0.457 = p_1 (500)^2 + p_2 (500) + p_3
+	\end{matrix}
+	$$
+
+	\noindent or in matrix form:
+
+	$$
+	\begin{bmatrix}
+		90,000 & 300 & 1  \\
+		160,000 & 400 & 1  \\
+		250,000 & 500 & 1
+	\end{bmatrix} 
+	\begin{Bmatrix}
+		p_1 \\
+		p_2 \\
+		p_3 \\
+	\end{Bmatrix} =
+	\begin{Bmatrix}
+		0.616 \\
+		0.525 \\
+		0.457
+	\end{Bmatrix}
+	$$
+
+	\noindent Thus, the problem reduces to solving three simultaneous linear algebraic equations for
+	the three unknown coefficients. A simple MATLAB session can be used to obtain the solution:
+
+	\begin{lstlisting}[numbers=none]
+		>> format long
+		>> A = [90000 300 1;160000 400 1;250000 500 1];
+		>> b = [0.616 0.525 0.457]’;
+		>> p = A\b
+		p =
+			0.00000115000000
+			-0.00171500000000
+			1.02700000000000
+	\end{lstlisting}
+
+	\noindent Thus, the parabola that passes exactly through the three points is
+
+	$$
+	f (x) = 0.00000115x^2 - 0.001715x + 1.027
+	$$
+
+	\noindent This polynomial then provides a means to determine intermediate points. For example, the
+	value of density at a temperature of $350 ^\circ C$ can be calculated as
+
+	$$
+	f (350) = 0.00000115(350)^2 - 0.001715(350) + 1.027 = 0.567625
+	$$
+	
+\end{example}
 
 Although the approach in Example 17.1 provides an easy way to perform interpola-
 tion, it has a serious deficiency. To understand this flaw, notice that the coefficient matrix
@@ -3540,7 +3635,38 @@ This characteristic is demonstrated in the following example.
 	\label{fig:fig_17_2}
 \end{figure}
 
-% TODO example 17.2
+\begin{example} Linear Interpolation
+
+	\noindent \textbf{Problem Statement. } \quad Estimate the natural logarithm of 2 using linear interpolation. First,
+	perform the computation by interpolating between ln 1 = 0 and ln 6 = 1.791759. Then,
+	repeat the procedure, but use a smaller interval from ln 1 to ln 4 (1.386294). Note that the
+	true value of ln 2 is 0.6931472.
+
+	\noindent \textbf{Solution.} \quad We use Eq. (17.5) from $x_1 = 1$ to $x_2 = 6$ to give
+
+	$$
+		f_1 (2) = 0 + \frac{1.791759 - 0}{6 - 1} (2 - 1) = 0.3583519
+	$$
+	
+	\noindent which represents an error of $\epsilon_t = 48.3\%$. Using the smaller interval from $x_1 = 1$ to $x_2 = 4$
+	yields
+
+	$$
+		f_1 (2) = 0 + \frac{1.386294 - 0}{4 - 1} (2 - 1) = 0.4620981
+	$$
+
+	\begin{figure}[H] 
+		\centering
+		\includegraphics[width=1\linewidth]{fig_17_3}
+		\caption{\textsf{Two linear interpolations to estimate ln 2. Note how the smaller interval provides a better
+		estimate.}}
+		\label{fig:fig_17_3}
+	\end{figure}
+
+	\noindent Thus, using the shorter interval reduces the percent relative error to $\epsilon_t = 33.3\%$. Both
+	interpolations are shown in Fig. 17.3, along with the true function.
+
+\end{example}
 
 \label{cha:cha_P_17_2_2}
 \subsection{Quadratic Interpolation}
@@ -3591,6 +3717,33 @@ that is very similar to the Taylor series expansion. That is, terms are added se
 capture increasingly higher-order curvature.
 
 % TODO example 17.3
+
+\begin{example} Quadratic Interpolation
+	\noindent\textbf{Problem Statement.}\quad Employ a second-order Newton polynomial to estimate ln 2 with
+	the same three points used in Example 17.2:
+
+	$$
+	\begin{matrix}
+		x_1 = 1 & f (x_1) = 0 \\
+		x_2 = 4 & f (x_2 ) = 1.386294 \\
+		x_3 = 6 & f (x_3 ) = 1.791759
+	\end{matrix}
+	$$
+
+    \noindent\textbf{Solution.}\quad Applying Eq. (17.7) yields
+
+	$$
+	b_1 = 0
+	$$
+
+	\noindent Equation (17.8) gives
+
+	$$
+		b_2 = \frac{1.386294 - 0
+		}{4-1} = 0.4620981
+	$$
+	% TODO czemu ktoś już to zrobił??
+\end{example}
 
 \label{cha:cha_P_17_2_3} % 413
 \subsection{General Form of Newton's Interpolating Polynomials}
