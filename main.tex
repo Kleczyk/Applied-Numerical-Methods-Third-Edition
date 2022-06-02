@@ -10,7 +10,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %chapter 7
 \theoremstyle{definition}
-\newtheorem{exmp}{Example}
+\newtheorem{exmp}{Example \thechapter.}
 \usepackage{listings}
 \usepackage{courier}    %pakiet z czcionką courier
 \usepackage{amsmath,amsthm,amssymb}
@@ -75,15 +75,26 @@
     \addcontentsline{toc}{section}{Contents}
     \clearpage
 
-	\subfile{pre/pre} 	%preface
-	\subfile{pt1/pt1}	%part 1
-	\subfile{ch1/ch1}
+    \subfile{pre/pre} 	%preface
+    \subfile{pt1/pt1}	%part 1
+    \subfile{ch1/ch1}
     \subfile{ch4/ch4}
     \subfile{pt2/pt2}	%part 2
     \subfile{ch5/ch5}
     \subfile{ch6/ch6}
     \subfile{ch7/ch7}
-    \subfile{ch14/ch14}
+    \subfile{ch14/ch14} 
+    \subfile{ch17/ch17} 
+    \subfile{ch18/ch18} 
+    \subfile{ch19/ch19} 
+    \subfile{ch23/ch23}
+    \subfile{ch24/ch24}
+    \subfile{appendix_A/appendix_a}
+    \subfile{appendix_b/appendix_b}
+    \subfile{index/index}
+    \subfile{bibliography/bibliography}
+    
+
     
 
 \end{document}
