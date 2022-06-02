@@ -410,11 +410,11 @@ Although the Michaelis-Menten model provides a nice starting point, it has been 
 \noindent This model also describes a saturating curve but, as depicted in Fig. 14.16, the squared concentrations tend to make the shape more \textit{sigmoid},or S-shaped.
 
 Suppose that you are provided with the following data:
-% todo this should be a table
-\begin{lstlisting}[numbers=none] 
-[S] 1.3  1.8  3    4.5   6     8    9
-v   0.07 0.13 0.22 0.275 0.335 0.35 0.36
-\end{lstlisting}
+
+\begin{tabular}{l c c c c c c c c c}
+	[S] &1.3 & 1.8 & 3  &  4.5  & 6  &   8   & 9 \\
+	v  & 0.07 &0.13 &0.22 &0.275& 0.335& 0.35 &0.36
+\end{tabular}
 
 \noindent Employ linear regression to fit these data with linearized versions of Eqs. (14.28) and (14.29). Aside from estimating the model parameters, assess the validity of the fits with both statistical measures and graphs.
 
@@ -1206,8 +1206,6 @@ As with the previous cases, the "best" values of the coefficients are determined
 	\end{Bmatrix}
 \end{equation}
 
-% TODO EXAMPLE 15.2
-
 \begin{example} Polynomial Regression
 
     \textbf{Problem Statement.}\quad The following data were created from the equation $y = 5 + 4x_1 - 3x_2$:
@@ -1593,7 +1591,6 @@ As described previously in Section 7.3.1, MATLAB's \texttt{fminsearch} function 
 \noindent where $x = a$ vector of the values of the parameters that minimize the function \texttt{fun, fval} = the value of the function at the minimum, \texttt{x0 = }a vector of the initial guesses for the parameters, \texttt{options} = a structure containing values of the optimization parameters as created with the \texttt{optimset} function (recall Sec. 6.5), and \texttt{p1, p2, }etc. = additional arguments that are passed to the objective function. 
 Note that if \texttt{options} is omitted, MATLAB uses default values that are reasonable for most problems. If you would like to pass additional arguments (\texttt{p1, p2, }\dots), but do not want to set the options, use empty brackets \texttt{[]} as a place holder.
 
-% TODO example 15.5 371
 \begin{example} Nonlinear Regression with MATLAB
 
     \textbf{Problem Statement.}\quad  Recall that in Example 14.6, we fit the power model to data from
@@ -1781,8 +1778,6 @@ the transformed and untransformed versions.
 	\caption{\textsf{Plots of predicted versus measured values of the oxygen mass-transfer coefficient as computed with multiple regression. Results are shown for (a) log transformed and (b) untransformed cases. The 1:1 line, which indicates a perfect correlation, is superimposed on both plots.}}
 	\label{fig:fig_15_5}
 \end{figure}
-
-% TODO PROBLEMS 375
 
 \noindent\textbf{PROBLEMS}\\
 
@@ -2295,7 +2290,7 @@ sinusoid (Fig. 16.2a):
 	\label{fig:fig_16_3}
 \end{figure}
 
-Note that the \textit{angular frequency} (in radians/time) is related to the \textit{ordinary frequency} $f$ (in cycles/time) by % TODO CITATION 383
+Note that the \textit{angular frequency} (in radians/time) is related to the \textit{ordinary frequency} $f$ (in cycles/time) by 
 
 \begin{equation}
 	\tag{16.3}
@@ -3100,11 +3095,254 @@ frequency. The power can be computed by summing the squares of the Fourier coeff
 
 \noindent where $P_k$ is the power associated with each frequency $k \omega_0$.
 
-% TODO example 16.4
+\begin{example}  Computing the Power Spectrum with MATLAB
+	\noindent \textbf{Problem Statement. } \quad Compute the power spectrum for the simple sinusoid for which the
+	DFT was computed in Example 16.3.
+
+	\noindent \textbf{Solution. } \quad  The following script can be developed to compute the power spectrum:
+
+	\begin{lstlisting}[numbers=none]
+		% compute the DFT
+		clc;clf
+		n=8; dt=0.02;
+		fs=1/dt;tspan=(0:n-1)/fs;
+		y=5+cos(2*pi*12.5*tspan)+sin(2*pi*18.75*tspan);
+		Y=fft(y)/n;
+		f = (0:n-1)*fs/n;
+		Y(1)=[];f(1)=[];
+		% compute and display the power spectrum
+		nyquist=fs/2;
+		f = (1:n/2)/(n/2)*nyquist;
+		Pyy = abs(Y(1:n/2)).^2;
+		stem(f,Pyy,'linewidth',2,'MarkerFaceColor','blue')
+		title('Power spectrum')
+		xlabel('Frequency (Hz)');ylim([0 0.3])
+	\end{lstlisting}
+
+	\noindent As indicated, the first section merely computes the DFT with the pertinent statements from
+	Example 16.3. The second section then computes and displays the power spectrum. As in
+	Fig. 16.12, the resulting graph indicates that peaks occur at both 12.5 and 18.75 Hz as
+	expected.
+
+	\begin{figure}[H] 
+		\centering
+		\includegraphics[width=1\linewidth]{fig_16_12}
+		\caption{\textsf{Power spectrum for a simple sinusoidal function with frequencies of 12.5 and 18.75 Hz.}}
+		\label{fig:fig_16_12}
+	\end{figure}
+\end{example}
 
 % TODO case study 16.7
 
-% TODO problems
+\section[CASE STUDY: SUNSPOTS]{CASE STUDY: SUNSPOTS}
+\noindent\textbf{Background.}\quad  In 1848, Johann Rudolph Wolf devised a method for quantifying solar
+activity by counting the number of individual spots and groups of spots on the sun's surface. He computed a quantity, now called a \textit{Wolf sunspot number}, by adding 10 times the
+number of groups plus the total count of individual spots. As in Fig. 16.13, the data set for
+the sunspot number extends back to 1700. On the basis of the early historical records, Wolf
+determined the cycle's length to be 11.1 years. Use a Fourier analysis to confirm this result
+by applying an FFT to the data.
+
+\noindent\textbf{Solution.}\quad  The data for year and sunspot number are contained in a MATLAB file,
+\texttt{sunspot.dat}. The following statements load the file and assign the year and number information to vectors of the same name:
+
+\begin{lstlisting}[numbers=none]
+	>> load sunspot.dat
+	>> year=sunspot(:,1);number=sunspot(:,2);
+\end{lstlisting}
+
+\noindent Before applying the Fourier analysis, it is noted that the data seem to exhibit an upward linear trend (Fig. 16.13). MATLAB can be used to remove this trend:
+
+\begin{lstlisting}[numbers=none]
+	>> n=length(number);
+	>> a=polyfit(year,number,1);
+	>> lineartrend=polyval(a,year);
+	>> ft=number-lineartrend;
+\end{lstlisting}
+
+\noindent Next, the \texttt{fft} function is employed to generate the DFT
+
+\begin{lstlisting}[numbers=none]
+	F=fft(ft);
+\end{lstlisting}
+
+\noindent The power spectrum can then be computed and plotted
+
+\begin{lstlisting}[numbers=none]
+	fs=1;
+	f=(0:n/2)*fs/n;
+	pow=abs(F(1:n/2+1)).^2;
+	plot(f,pow)
+	xlabel('Frequency (cycles/year)'); ylabel('Power')
+	title('Power versus frequency')
+\end{lstlisting}
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=1\linewidth]{fig_16_13}
+	\caption{\textsf{Plot of Wolf sunspot number versus year. The dashed line indicates a mild, upward linear trend.}}
+	\label{fig:fig_16_13}
+\end{figure}
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=1\linewidth]{fig_16_14}
+	\caption{\textsf{Power spectrum for Wolf sunspot number versus year.}}
+	\label{fig:fig_16_14}
+\end{figure}
+
+\noindent The result, as shown in Fig. 16.14, indicates a peak at a frequency of about 0.0915 Hz. This
+corresponds to a period of 1/0.0915 = 10.93 years. Thus, the Fourier analysis is consistent
+with Wolf's estimate of 11 years.
+
+\noindent\textbf{PROBLEMS}
+\begin{multicols}{2}
+    \noindent\textbf{16.1} The pH in a reactor varies sinusoidally over the course
+	of a day. Use least-squares regression to fit Eq. (16.11) to
+	the following data. Use your fit to determine the mean,
+	amplitude, and time of maximum pH. Note that the period
+	is 24 hr
+
+	\noindent
+	\begin{tabular}{l c c c c c c}
+		Time, hr & 0 & 2 & 4 & 5 & 7 & 9 \\
+		pH & 7.6 & 7.2 & 7 & 6.5 & 7.5 & 7.2 \\
+		Time, hr & 12 & 15 & 20 & 22 & 24 \\
+		pH & 8.9 & 9.1 & 8.9 & 7.9 & 7
+	\end{tabular}
+
+	\noindent\textbf{16.2}  The solar radiation for Tucson, Arizona, has been tabulated as
+
+	\noindent
+	\begin{tabular}{l c c c c c c}
+		Time, mo & J & F & M & A & M & J \\
+		Radiation, W/m$^2$ & 144 & 188 & 245 & 311 & 351 & 359 \\
+		Time, mo & J & A & S & O & N & D \\
+		Radiation, W/m$^2$ & 308 & 287 & 260 & 211 & 159 & 131
+	\end{tabular}
+
+	\noindent Assuming each month is 30 days long, fit a sinusoid to these
+	data. Use the resulting equation to predict the radiation in
+	mid-August.
+
+	\noindent\textbf{16.3} The average values of a function can be determined by
+
+	$$
+		\bar{f} = \frac{\int ^t _ 0 f(t) dt}{t}
+	$$
+
+	\noindent Use this relationship to verify the results of Eq. (16.13).
+
+	\noindent\textbf{16.4} In electric circuits, it is common to see current
+	behavior in the form of a square wave as shown in Fig. P16.4
+	(notice that square wave differs from the one described in
+	Example 16.2). Solving for the Fourier series from
+
+	$$
+		f(t) = \left\{ 
+			\begin{matrix}
+				A_0 & 0 \leq t \leq T/2 \\
+				-A_0 & T/2 \leq t \leq T
+			\end{matrix}
+		\right.
+	$$
+
+	\noindent the Fourier series can be represented as
+
+	$$
+		f(t) = \sum ^ \infty _ {n=1} (\frac{4 A_0}{(2n -1) \pi}) \sin (\frac{2 \pi (2n -1) t}{T})
+	$$
+
+	\noindent Develop a MATLAB function to generate a plot of the first $n$
+	terms of the Fourier series individually, as well as the sum of
+	these six terms. Design your function so that it plots the
+	curves from $t$ = 0 to $4T$. Use thin dotted red lines for the individual terms and a bold black solid line for the summation
+	(i.e., 'k-','linewidth',2). The function's first line
+	should be
+
+	\noindent
+	\begin{lstlisting}[numbers=none]
+		function [t,f] = FourierSquare(A0,T,n)
+	\end{lstlisting}
+
+	\noindent Let $A_0 = 1$ and $T = 0.25$ s.
+
+	\noindent\textbf{16.5} Use a continuous Fourier series to approximate the
+	sawtooth wave in Fig. P16.5. Plot the first four terms along
+	with the summation. In addition, construct amplitude and
+	phase line spectra for the first four terms.
+
+	\noindent\textbf{16.6}  Use a continuous Fourier series to approximate the tri-
+	angular wave form in Fig. P16.6. Plot the first four terms
+	along with the summation. In addition, construct amplitude
+	and phase line spectra for the first four terms.
+
+	\noindent
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=0.8\linewidth]{./images/problem_16_4}
+        \captionof*{figure}{Figure P16.4}
+    \end{minipage}
+
+	\noindent
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=0.8\linewidth]{./images/problem_16_5}
+        \captionof*{figure}{Figure P16.5}
+    \end{minipage}
+
+	\noindent
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=0.8\linewidth]{./images/problem_16_6}
+        \captionof*{figure}{Figure P16.6} % TODO captions?
+    \end{minipage}
+
+	\noindent\textbf{16.7} Use the \textit{Maclaurin series expansions} for $e^x$, $\cos x$ and
+	$\sin x$ to prove Euler's formula (Eq. 16.21).
+
+	\noindent\textbf{16.8}A half-wave rectifier can be characterized by
+
+	$$
+		C_1 = [\frac{1}{\pi} + \frac{1}{2} \sin t 	- \frac{2}{3 \pi} \cos 2t - \frac{2}{15t} \cos 4t - \frac{2}{35 \pi} \cos 6t - \cdots]
+	$$
+
+	\noindent where $C_1$ is the amplitude of the wave.
+	\textbf{(a)} Plot the first four terms along with the summation.
+	\textbf{(b)} Construct amplitude and phase line spectra for the first
+	four terms.
+
+	\noindent\textbf{16.9} Duplicate Example 16.3, but for 64 points sampled at a
+	rate of $\Delta t = 0.01$ s from the function
+
+	$$
+		f (t) = \cos[2 \pi (12.5)t] + \cos[2 \pi (25)t]
+	$$
+
+	\noindent Use \texttt{fft} to generate a DFT of these values and plot the
+	results.
+
+	\noindent\textbf{16.10}  Use MATLAB to generate 64 points from the function
+
+	$$
+	f (t) = \cos(10t) + \sin(3t)
+	$$
+
+	\noindent from $t = 0$ to $2 \pi$ . Add a random component to the signal with
+	the function randn. Use \texttt{fft} to generate a DFT of these
+	values and plot the results.
+
+	\noindent\textbf{16.11}  Use MATLAB to generate 32 points for the sinusoid
+	depicted in Fig. 16.2 from $t = 0$ to 6 s. Compute the DFT
+	and create subplots of \textbf{(a)} the original signal, \textbf{(b)} the real
+	part, and \textbf{(c)} the imaginary part of the DFT versus frequency.
+
+	\noindent\textbf{16.12} Use the \texttt{fft} function to compute a DFT for the triangular wave from Prob. 16.6. Sample the wave from $t = 0$
+	to $4T$ using 128 sample points.
+
+	\noindent\textbf{16.13}  Develop an M-file function that uses the \texttt{fft} function to generate a power spectrum plot. Use it to solve
+	Prob. 16.9.
+\end{multicols}
+
 
 \label{cha:cha_P_17} %351
 \chapter{Polynomial Interpolation}
