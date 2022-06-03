@@ -956,7 +956,22 @@ These concepts can be used to quantify the ``goodness'' of our fit. This is part
 
     \noindent\textbf{Solution.}\quad  The data can be set up in tabular form and the necessary sums computed as in Table 14.5.
 
-    % TODO table 14.4
+    \noindent \textbf{TABLE 14.5} \quad Data and summations needed to compute the goodness-of-fit statistics
+	for the data from Table 14.1.
+
+	\begin{tabular}{lrrrrr}
+		$i$ & $x_i$ & $y_i$ & $a_0 + a_1 x_i$ & $( y_i - \bar{y})^2$ & $( y_i - a_0 - a_1 x_i)^2$ \\
+		1 & 10 & 25 & -39.58 & 380,535 & 4,171 \\
+		2 & 20 & 70 & 155.12 & 327,041 & 7,245 \\
+		3 & 30 & 380 & 349.82 & 68,579 & 911 \\
+		4 & 40 & 550 & 544.52 & 8,441 & 30 \\
+		5 & 50 & 610 & 739.23 & 1,016 & 16,699 \\
+		6 & 60 & 1,220 & 933.93 & 334,229 & 81,837 \\
+		7 & 70 & 830 & 1,128.63 & 35,391 & 89,180 \\
+		8 & 80 & 1,450 & 1,323.33 & 653,066 & 16,044 \\
+		$\sum$ & 360 & 5,135 & & 1,808,297 & 216,118
+
+	\end{tabular}
 
     The standard deviation is [Eq. (14.3)]
 
@@ -1084,7 +1099,23 @@ In their transformed forms, these models can be fit with linear regression to ev
 		\bar{x} = \frac{12.606}{8}=1.5757 \quad \bar{y} = \frac{20.515}{8} = 2.5644
 	\end{equation}
 
-	% TODO  table 14.6
+	\noindent\textbf{TABLE 14.6}\quad Data and summations needed to fit the power model to the data from
+	Table 14.1
+
+	\begin{tabular}{rrrrrrr}
+		$i$ & $x_i$ & $y_i$ & $\log x_i$ & $\log y_i$ & $(\log x_i )^2$ & $\log x_i \log y_i$ \\
+		\hline
+		1 & 10 & 25 & 1.000 & 1.398 & 1.000 & 1.398 \\
+		2 & 20 & 70 & 1.301 & 1.845 & 1.693 & 2.401 \\
+		3 & 30 & 380 & 1.477 & 2.580 & 2.182 & 3.811 \\
+		4 & 40 & 550 & 1.602 & 2.740 & 2.567 & 4.390 \\
+		5 & 50 & 610 & 1.699 & 2.785 & 2.886 & 4.732 \\
+		6 & 60 & 1220 & 1.778 & 3.086 & 3.162 & 5.488 \\
+		7 & 70 & 830 & 1.845 & 2.919 & 3.404 & 5.386 \\
+		8 & 80 & 1450 & 1.903 & 3.161 & 3.622 & 6.016 \\
+		$\sum$ &&&12.606 & 20.515 & 20.516 & 33.622
+
+	\end{tabular}
 
 	\begin{figure}[H]
 		\centering
@@ -4011,8 +4042,6 @@ frequency. The power can be computed by summing the squares of the Fourier coeff
 	\end{figure}
 \end{example}
 
-% TODO case study 16.7
-
 \section[CASE STUDY: SUNSPOTS]{CASE STUDY: SUNSPOTS}
 \noindent\textbf{Background.}\quad  In 1848, Johann Rudolph Wolf devised a method for quantifying solar
 activity by counting the number of individual spots and groups of spots on the sun's surface. He computed a quantity, now called a \textit{Wolf sunspot number}, by adding 10 times the
@@ -4166,14 +4195,14 @@ with Wolf's estimate of 11 years.
     \begin{minipage}{\linewidth}
         \centering
         \includegraphics[width=0.8\linewidth]{./images/problem_16_5}
-        \captionof*{figure}{Figure P16.5}
+        \captionof*{figure}{Figure P16.5 \textsf{A sawtooth wave.}}
     \end{minipage}
 
 	\noindent
     \begin{minipage}{\linewidth}
         \centering
         \includegraphics[width=0.8\linewidth]{./images/problem_16_6}
-        \captionof*{figure}{Figure P16.6} % TODO captions?
+        \captionof*{figure}{Figure P16.6 \textsf{A triangular wave.}}
     \end{minipage}
 
 	\noindent\textbf{16.7} Use the \textit{Maclaurin series expansions} for $e^x$, $\cos x$ and
@@ -4225,4 +4254,3 @@ with Wolf's estimate of 11 years.
 
 
 \end{document}
-% TODO figure references, examples, align left math expressions
