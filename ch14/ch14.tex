@@ -2,6 +2,885 @@
 
 \begin{document}
 
+\part{CurveFitting}
+
+\section{OVERVIEW}
+
+\noindent \textbf{What Is Curve Fitting?}
+
+\noindent Data are often given for discrete values along a continuum. However, you may require estimates at points between the discrete values. Chapters 14 through 18 describe techniques to
+fit curves to such data to obtain intermediate estimates. In addition, you may require a simplified version of a complicated function. One way to do this is to compute values of the
+function at a number of discrete values along the range of interest. Then, a simpler function
+may be derived to fit these values. Both of these applications are known as \textit{curve fitting}.
+
+There are two general approaches for curve fitting that are distinguished from each
+other on the basis of the amount of error associated with the data. First, where the data
+exhibit a significant degree of error or ``scatter,'' the strategy is to derive a single curve that
+represents the general trend of the data. Because any individual data point may be incorrect, we make no effort to intersect every point. Rather, the curve is designed to follow the
+pattern of the points taken as a group. One approach of this nature is called \textit{least-squares
+regression} (Fig. PT4.1a).
+
+Second, where the data are known to be very precise, the basic approach is to fit a
+curve or a series of curves that pass directly through each of the points. Such
+data usually originate from tables. Examples are values for the density of water
+or for the heat capacity of gases as a
+function of temperature. The estimation
+of values between well-known discrete
+points is called \textit{interpolation} (Fig.
+PT4.1b and c).
+
+\noindent \textbf{Curve Fitting and Engineering and
+Science. }  Your first exposure to curve
+fitting may have been to determine intermediate values from tabulated data- for instance, from interest tables for
+engineering economics or from steam tables for thermodynamics. Throughout the remainder of your career, you will have frequent occasion to estimate intermediate values from such tables.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_4_1pt}
+	\caption{\textsf{Three attempts to fit a ``best'' curve through five data points: (a) least-squares regression, (b) linear
+	interpolation, and (c) curvilinear interpolation.}}
+	\label{fig:fig_4_1pt}
+\end{figure}
+
+Although many of the widely used engineering and scientific properties have been tabulated, there are a great many more that are not available in this convenient form. Special
+cases and new problem contexts often require that you measure your own data and develop
+your own predictive relationships. Two types of applications are generally encountered
+when fitting experimental data: trend analysis and hypothesis testing.
+
+\textit{Trend analysis} represents the process of using the pattern of the data to make predictions. For cases where the data are measured with high precision, you might utilize interpolating polynomials. Imprecise data are often analyzed with least-squares regression.
+
+Trend analysis may be used to predict or forecast values of the dependent variable. This
+can involve extrapolation beyond the limits of the observed data or interpolation within the
+range of the data. All fields of engineering and science involve problems of this type.
+
+A second application of experimental curve fitting is \textit{hypothesis testing}. Here, an
+existing mathematical model is compared with measured data. If the model coefficients are unknown, it may be necessary to determine values that best fit the observed data. On the
+other hand, if estimates of the model coefficients are already available, it may be appropriate to compare predicted values of the model with observed values to test the adequacy of
+the model. Often, alternative models are compared and the ``best'' one is selected on the
+basis of empirical observations.
+
+In addition to the foregoing engineering and scientific applications, curve fitting is important in other numerical methods such as integration and the approximate solution of differential equations. Finally, curve-fitting techniques can be used to derive simple functions
+to approximate complicated functions.
+
+\section{PART ORGANIZATION}
+
+\noindent After a brief review of statistics, Chap. 14 focuses on \textit{linear regression}; that is, how to determine the ``best'' straight line through a set of uncertain data points. Besides discussing how to
+calculate the slope and intercept of this straight line, we also present quantitative and visual
+methods for evaluating the validity of the results. In addition, we describe \textit{random number
+generation} as well as several approaches for the linearization of nonlinear equations.
+
+Chapter 15 begins with brief discussions of polynomial and multiple linear regression.
+\textit{Polynomial regression} deals with developing a best fit of parabolas, cubics, or higher-order
+polynomials. This is followed by a description of \textit{multiple linear regression}, which is designed for the case where the dependent variable $y$ is a linear function of two or more
+independent variables $x_1, x_2, \dots , x_m$. This approach has special utility for evaluating experimental data where the variable of interest is dependent on a number of different factors.
+
+After multiple regression, we illustrate how polynomial and multiple regression are
+both subsets of a \textit{general linear least-squares model}. Among other things, this will allow
+us to introduce a concise matrix representation of regression and discuss its general statistical properties. Finally, the last sections of Chap. 15 are devoted to \textit{nonlinear regression}.
+This approach is designed to compute a least-squares fit of a nonlinear equation to data.
+
+\textit{Chapter 16} deals with \textit{Fourier analysis} which involves fitting periodic functions to
+data. Our emphasis will be on the \textit{fast Fourier transform} or \textit{FFT}. This method, which is
+readily implemented with MATLAB, has many engineering applications, ranging from
+vibration analysis of structures to signal processing.
+
+In \textit{Chap. 17}, the alternative curve-fitting technique called \textit{interpolation} is described.
+As discussed previously, interpolation is used for estimating intermediate values between
+precise data points. In Chap. 17, polynomials are derived for this purpose. We introduce the
+basic concept of polynomial interpolation by using straight lines and parabolas to connect
+points. Then, we develop a generalized procedure for fitting an nth-order polynomial. Two
+formats are presented for expressing these polynomials in equation form. The first, called
+\textit{Newton's interpolating polynomial}, is preferable when the appropriate order of the polynomial is unknown. The second, called the \textit{Lagrange interpolating polynomial}, has advantages when the proper order is known beforehand.
+
+Finally, \textit{Chap. 18} presents an alternative technique for fitting precise data points. This
+technique, called \textit{spline interpolation}, fits polynomials to data but in a piecewise fashion.
+As such, it is particularly well suited for fitting data that are generally smooth but exhibit
+abrupt local changes. The chapter ends with an overview of how piecewise interpolation is
+implemented in MATLAB.
+
+\label{cha:cha_P_14} 
+\chapter{General Linear Least-Squares and Nonlinear Regression}
+\textbf{CHAPTER OBJECTIVES}
+
+\noindent The primary objective of this chapter is to introduce you to how least-squares
+regression can be used to fit a straight line to measured data. Specific objectives and
+topics covered are
+
+\begin{itemize}
+	\item Familiarizing yourself with some basic descriptive statistics and the normal
+	distribution.
+	\item	 Knowing how to compute the slope and intercept of a best-fit straight line with
+	linear regression.
+	\item	 Knowing how to generate random numbers with MATLAB and how they can be
+	employed for Monte Carlo simulations.
+	\item	 Knowing how to compute and understand the meaning of the coefficient of
+	determination and the standard error of the estimate.
+	\item	 Understanding how to use transformations to linearize nonlinear equations so that
+	they can be fit with linear regression.
+	\item	 Knowing how to implement linear regression with MATLAB.
+\end{itemize}
+
+\noindent\textbf{YOU'VE GOT A PROBLEM}
+
+\noindent In Chap. 1, we noted that a free-falling object such as a bungee jumper is subject to the upward force of air resistance. As a first approximation, we assumed that this force was proportional to the square of velocity as in
+
+\begin{equation}
+	\tag{14.1}
+	F_U = c_d v^2
+\end{equation}
+
+\noindent where $F_U$ = the upward force of air resistance [N = kg m/s$^2$], $c_d$ = a drag coefficient
+(kg/m), and $v$ = velocity [m/s].
+
+Expressions such as Eq. (14.1) come from the field of fluid mechanics. Although such
+relationships derive in part from theory, experiments play a critical role in their formulation. One such experiment is depicted in Fig. 14.1. An individual is suspended in a wind tunnel (any volunteers?) and the force measured for various levels of wind velocity. The
+result might be as listed in Table 14.1.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_14_1}
+	\caption{\textsf{Wind tunnel experiment to measure how the force of air resistance depends on velocity.}}
+	\label{fig:fig_14_1}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_14_2}
+	\caption{\textsf{Plot of force versus wind velocity for an object suspended in a wind tunnel.}}
+	\label{fig:fig_14_2}
+\end{figure}
+
+\noindent \textbf{TABLE 14.1} Experimental data for force (N) and velocity (m/s) from a wind tunnel
+experiment.
+
+\begin{tabular}{l c c c ccccc}
+	\textbf{$v$, m/s} & 10 & 20 & 30 & 40 & 50 & 60 & 70 & 80 \\
+	\textbf{F, N} & 25 & 70 & 380 & 550 & 610 & 1220 & 830 & 1450
+\end{tabular}
+
+The relationship can be visualized by plotting force versus velocity. As in Fig. 14.2,
+several features of the relationship bear mention. First, the points indicate that the force
+increases as velocity increases. Second, the points do not increase smoothly, but exhibit
+rather significant scatter, particularly at the higher velocities. Finally, although it may not
+be obvious, the relationship between force and velocity may not be linear. This conclusion
+becomes more apparent if we assume that force is zero for zero velocity.
+
+In Chaps. 14 and 15, we will explore how to fit a ``best'' line or curve to such data. In
+so doing, we will illustrate how relationships like Eq. (14.1) arise from experimental data.
+
+
+\label{cha:cha_P_14_1}
+\section{STATISTICS REVIEW}
+
+\noindent Before describing least-squares regression, we will first review some basic concepts
+from the field of statistics. These include the mean, standard deviation, residual sum of
+the squares, and the normal distribution. In addition, we describe how simple descriptive
+statistics and distributions can be generated in MATLAB. If you are familiar with these
+subjects, feel free to skip the following pages and proceed directly to Section 14.2. If you
+are unfamiliar with these concepts or are in need of a review, the following material is
+designed as a brief introduction.
+
+\label{cha:cha_P_14_1_1}
+\subsection{Descriptive Statistics}
+
+\noindent Suppose that in the course of an engineering study, several measurements were made of a
+particular quantity. For example, Table 14.2 contains 24 readings of the coefficient of thermal expansion of a structural steel. Taken at face value, the data provide a limited amount
+of information-that is, that the values range from a minimum of 6.395 to a maximum of
+6.775. Additional insight can be gained by summarizing the data in one or more wellchosen statistics that convey as much information as possible about specific characteristics of
+the data set. These descriptive statistics are most often selected to represent (1) the location
+of the center of the distribution of the data and (2) the degree of spread of the data set.
+
+\noindent \textbf{Measure of Location.} \quad The most common measure of central tendency is the arithmetic
+mean. The arithmetic mean ($\bar{y}$) of a sample is defined as the sum of the individual data
+points ($y_i$) divided by the number of points ($n$), or
+
+\begin{equation}
+	\tag{14.2}
+	\bar{y} = \frac{\sum y_i}{n}
+\end{equation}
+
+where the summation (and all the succeeding summations in this section) is from $i$ = 1
+through $n$.
+
+There are several alternatives to the arithmetic mean. The \textit{median} is the midpoint of a
+group of data. It is calculated by first putting the data in ascending order. If the number of
+measurements is odd, the median is the middle value. If the number is even, it is the arithmetic mean of the two middle values. The median is sometimes called the \textit{50th percentile}.
+
+The mode is the value that occurs most frequently. The concept usually has direct utility only when dealing with discrete or coarsely rounded data. For continuous variables such
+as the data in Table 14.2, the concept is not very practical. For example, there are actually four modes for these data: 6.555, 6.625, 6.655, and 6.715, which all occur twice. If the numbers had not been rounded to 3 decimal digits, it would be unlikely that any of the values
+would even have repeated twice. However, if continuous data are grouped into equispaced
+intervals, it can be an informative statistic. We will return to the mode when we describe histograms later in this section.
+
+\noindent \textbf{TABLE 14.2}	 \quad Measurements of the coefficient of thermal expansion of structural steel.
+
+\begin{tabular}{ccccccccc}
+	6.495 & 6.595 & 6.615 & 6.635 & 6.485 & 6.555 \\
+	6.665 & 6.505 & 6.435 & 6.625 & 6.715 & 6.655 \\
+	6.755 & 6.625 & 6.715 & 6.575 & 6.655 & 6.605 \\
+	6.565 & 6.515 & 6.555 & 6.395 & 6.775 & 6.685
+\end{tabular}
+
+\noindent \textbf{Measures of Spread. } \quad  The simplest measure of spread is the \textit{range}, the difference between the largest and the smallest value. Although it is certainly easy to determine, it is not
+considered a very reliable measure because it is highly sensitive to the sample size and is
+very sensitive to extreme values.
+
+The most common measure of spread for a sample is the \textit{standard deviation} ($s_ y$) about
+the mean:
+
+\begin{equation}
+	\tag{14.3}
+	s_y = \sqrt{\frac{S_t}{n-1}}
+\end{equation}
+
+\noindent where $S_t$ is the total sum of the squares of the residuals between the data points and the
+mean, or
+
+\begin{equation}
+	\tag{14.4}
+	S_t = \sum (y_i - \bar{y})^2
+\end{equation}
+
+\noindent Thus, if the individual measurements are spread out widely around the mean, $S_t$ (and, consequently, $s_y$) will be large. If they are grouped tightly, the standard deviation will be small.
+The spread can also be represented by the square of the standard deviation, which is called
+the \textit{variance}:
+
+\begin{equation}
+	\tag{14.5}
+	s^2_y = \frac{\sum (y_i - \bar{y})^2}{n-1}
+\end{equation}
+
+Note that the denominator in both Eqs. (14.3) and (14.5) is $n - 1$. The quantity $n - 1$
+is referred to as the \textit{degrees of freedom}. Hence $S_t$ and $s_y$ are said to be based on $n - 1$ degrees of freedom. This nomenclature derives from the fact that the sum of the quantities
+upon which $S_t$ is based (i.e., $\bar{y} - y_1 , \bar{y} - y_2 , \dots , \bar{y} - y_n$) is zero. Consequently, if $\bar{y}$ is
+known and $n - 1$ of the values are specified, the remaining value is fixed. Thus, only $n - 1$
+of the values are said to be freely determined. Another justification for dividing by $n - 1$ is
+the fact that there is no such thing as the spread of a single data point. For the case where
+$n = 1$, Eqs. (14.3) and (14.5) yield a meaningless result of infinity.
+
+We should note that an alternative, more convenient formula is available to compute
+the variance:
+
+\begin{equation}
+	\tag{14.6}
+	s^2_y = \frac{\sum y_i^2 -(\sum y_i)^2 / n}{n-1}
+\end{equation}
+
+\noindent This version does not require precomputation of $\bar{y}$ and yields an identical result as Eq. (14.5).
+
+A final statistic that has utility in quantifying the spread of data is the coefficient of
+variation (c.v.). This statistic is the ratio of the standard deviation to the mean. As such, it
+provides a normalized measure of the spread. It is often multiplied by 100 so that it can be
+expressed in the form of a percent:
+
+\begin{equation}
+	\tag{14.7}
+	\text{c.v.} = \frac{s_y}{\bar{y}} \times 100\%
+\end{equation}
+
+\begin{example} Simple Statistics of a Sample
+	
+	\noindent \textbf{Problem Statement.} \quad Compute the mean, median, variance, standard deviation, and coefficient of variation for the data in Table 14.2.
+
+	\noindent \textbf{Solution.} \quad   The data can be assembled in tabular form and the necessary sums computed
+	as in Table 14.3.
+
+	The mean can be computed as [Eq. (14.2)],
+
+	$$
+		\bar{y} = \frac{158.4}{24} = 6.6
+	$$
+
+	\noindent Because there are an even number of values, the median is computed as the arithmetic
+	mean of the middle two values: (6.605 + 6.615)/2 = 6.61.
+
+	As in Table 14.3, the sum of the squares of the residuals is 0.217000, which can be
+used to compute the standard deviation [Eq. (14.3)]:
+
+	$$
+		s_y = \sqrt{\frac{0.217000}{24 - 1}}  = 0.097133
+	$$
+
+	\noindent \textbf{TABLE 14.3} \quad Data and summations for computing simple descriptive statistics for the
+	coefficients of thermal expansion from Table 14.2.
+
+	\begin{tabular}{cccc}
+		$i$ & $y_i$ & $(y_i - \bar{y})^2$ & $y_i^2$\\
+		\hline
+		1 & 6.395 & 0.04203 & 40.896 \\
+		2 & 6.435 & 0.02723 & 41.409 \\
+		3 & 6.485 & 0.01323 & 42.055 \\
+		4 & 6.495 & 0.01103 & 42.185 \\
+		5 & 6.505 & 0.00903 & 42.315 \\
+		6 & 6.515 & 0.00723 & 42.445 \\
+		7 & 6.555 & 0.00203 & 42.968 \\
+		8 & 6.555 & 0.00203 & 42.968 \\
+		9 & 6.565 & 0.00123 & 43.099 \\ 
+		10 & 6.575 & 0.00063 & 43.231 \\
+		11 & 6.595 & 0.00003 & 43.494 \\
+		12 & 6.605 & 0.00002 & 43.626 \\ 
+		13 & 6.615 & 0.00022 & 43.758 \\
+		14 & 6.625 & 0.00062 & 43.891 \\
+		15 & 6.625 & 0.00062 & 43.891 \\ 
+		16 & 6.635 & 0.00122 & 44.023 \\
+		17 & 6.655 & 0.00302 & 44.289 \\
+		18 & 6.655 & 0.00302 & 44.289 \\ 
+		19 & 6.665 & 0.00422 & 44.422 \\
+		20 & 6.685 & 0.00722 & 44.689 \\
+		21 & 6.715 & 0.01322 & 45.091 \\ 
+		22 & 6.715 & 0.01322 & 45.091 \\
+		23 & 6.755 & 0.02402 & 45.630 \\
+		24 & 6.775 & 0.03062 & 45.901 \\ 
+		$\sum$ &158.400 & 0.21700 & 1045.657
+	\end{tabular}
+
+	\noindent the variance [Eq. (14.5)]:
+
+	$$
+	s^2_y = (0.097133)^2 = 0.009435
+	$$
+
+	\noindent and the coefficient of variation [Eq. (14.7)]:
+
+	$$
+		\text{c.v.} = \frac{0.097133}{6.6 } \times 100\% = 1.47\%
+	$$
+
+	\noindent The validity of Eq. (14.6) can also be verified by computing
+
+	$$
+		s^2_y = \frac{1045.657 - (158.400)^2 /24}{24 - 1} = 0.009435
+	$$
+
+\end{example}
+
+\label{cha:cha_P_14_1_2}
+\subsection{The Normal Distribution}
+
+\noindent Another characteristic that bears on the present discussion is the data distribution-that is,
+the shape with which the data are spread around the mean. A histogram provides a simple
+visual representation of the distribution. A \textit{histogram} is constructed by sorting the measurements into intervals, or \textit{bins}. The units of measurement are plotted on the abscissa and
+the frequency of occurrence of each interval is plotted on the ordinate.
+
+As an example, a histogram can be created for the data from Table 14.2. The result
+(Fig. 14.3) suggests that most of the data are grouped close to the mean value of 6.6.
+Notice also, that now that we have grouped the data, we can see that the bin with the most
+values is from 6.6 to 6.64. Although we could say that the mode is the midpoint of this bin,
+6.62, it is more common to report the most frequent range as the \textit{modal class interval}.
+
+If we have a very large set of data, the histogram often can be approximated by a
+smooth curve. The symmetric, bell-shaped curve superimposed on Fig. 14.3 is one such
+characteristic shape-the \textit{normal distribution}. Given enough additional measurements, the
+histogram for this particular case could eventually approach the normal distribution.
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_14_3}
+	\caption{\textsf{A histogram used to depict the distribution of data. As the number of data points increases, the
+	histogram often approaches the smooth, bell-shaped curve called the normal distribution.}}
+	\label{fig:fig_14_3}
+\end{figure}
+
+The concepts of the mean, standard deviation, residual sum of the squares, and normal distribution all have great relevance to engineering and science. A very simple exam-
+ple is their use to quantify the confidence that can be ascribed to a particular measurement.
+If a quantity is normally distributed, the range defined by $\bar{y} - s_y$ to $\bar{y} + s_y$ will encompass
+approximately 68\% of the total measurements. Similarly, the range defined by $\bar{y} -  2s_y$ to
+$\bar{y} + 2s_ y$ will encompass approximately 95\%.
+
+For example, for the data in Table 14.2, we calculated in Example 14.1 that $\bar{y} = 6.6$
+and $s_y = 0.097133$. Based on our analysis, we can tentatively make the statement that
+approximately 95\% of the readings should fall between 6.405734 and 6.794266. Because it
+is so far outside these bounds, if someone told us that they had measured a value of 7.35, we
+would suspect that the measurement might be erroneous.
+
+\label{cha:cha_P_14_1_3}
+\subsection{Descriptive Statistics in MATLAB}
+
+\noindent Standard MATLAB has several functions to compute descriptive statistics. For example,
+the arithmetic mean is computed as \texttt{mean(x)}. If \texttt{x} is a vector, the function returns the mean
+of the vector's values. If it is a matrix, it returns a row vector containing the arithmetic
+mean of each column of \texttt{x}. The following is the result of using mean and the other statistical functions to analyze a column vector s that holds the data from Table 14.2:
+
+\begin{lstlisting}[numbers=none]
+	>> format short g
+	>> mean(s),median(s),mode(s)
+	ans =
+		6.6
+	ans =
+		6.61
+	ans =
+		6.555
+	>> min(s),max(s)
+	ans =
+		6.395
+	ans =
+		6.775
+	>> range=max(s)-min(s)
+	range =
+		0.38
+	>> var(s),std(s)
+	ans =
+		0.0094348
+	ans =
+		0.097133
+\end{lstlisting}
+
+\noindent These results are consistent with those obtained previously in Example 14.1. Note that
+although there are four values that occur twice, the mode function only returns the first of
+the values: 6.555.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_14_4}
+	\caption{\textsf{Histogram generated with the MATLAB \texttt{hist} function.}}
+	\label{fig:fig_14_4}
+\end{figure}
+
+MATLAB can also be used to generate a histogram based on the \texttt{hist}  function. The
+hist function has the syntax
+
+\begin{lstlisting}[numbers=none]
+	[n, x] = hist(y, x)
+\end{lstlisting}
+
+\noindent where \texttt{n} = the number of elements in each bin, \texttt{x} = a vector specifying the midpoint of
+each bin, and \texttt{y} is the vector being analyzed. For the data from Table 14.2, the result is
+
+\begin{lstlisting}[numbers=none]
+	>> [n,x] =hist(s)
+	n =	
+		1	1	3	1	4	3	5	2	2	2
+	x =
+		6.414 6.452 6.49 6.528 6.566 6.604 6.642 6.68 6.718 6.756
+\end{lstlisting}
+
+The resulting histogram depicted in Fig. 14.4 is similar to the one we generated by hand in
+Fig. 14.3. Note that all the arguments and outputs with the exception of \texttt{y} are optional. For
+example, \texttt{hist(y)} without output arguments just produces a histogram bar plot with
+10 bins determined automatically based on the range of values in \texttt{y}.
+
+\label{cha:cha_P_14_2}
+\section{RANDOM NUMBERS AND SIMULATION}
+\noindent In this section, we will describe two MATLAB functions that can be used to produce a
+sequence of random numbers. The first (\texttt{rand}) generates numbers that are uniformly
+distributed, and the second (\texttt{randn}) generates numbers that have a normal distribution.
+
+\label{cha:cha_P_14_2_1}
+\subsection{MATLAB Function: \texttt{rand}}
+
+\noindent This function generates a sequence of numbers that are uniformly distributed between 0
+and 1. A simple representation of its syntax is
+
+\begin{lstlisting}[numbers=none]
+	r = rand(m, n)
+\end{lstlisting}
+
+\noindent where \texttt{r} = an \texttt{m}-by-\texttt{n} matrix of random numbers. The following formula can then be used
+to generate a uniform distribution on another interval:
+
+\begin{lstlisting}[numbers=none]
+	runiform = low + (up - low) * rand(m, n)
+\end{lstlisting}
+
+\noindent where \texttt{low} = the lower bound and \texttt{up} = the upper bound.
+
+\begin{example} Generating Uniform Random Values of Drag
+
+	\noindent \textbf{Problem Statement. } \quad  If the initial velocity is zero, the downward velocity of the free-falling
+	bungee jumper can be predicted with the following analytical solution (Eq. 1.9):
+
+	$$
+		v= \sqrt{\frac{gm}{c_d} } \tanh \left(\sqrt{\frac{gc_d}{m} t}\right)
+	$$
+
+	\noindent Suppose that $g = 9.81$ m/s$^2$ , and $m$ = 68.1 kg, but $c_d$ is not known precisely. For example,
+	you might know that it varies uniformly between 0.225 and 0.275 (i.e., $\pm 10\%$ around a
+	mean value of 0.25 kg/m). Use the \texttt{rand} function to generate 1000 random uniformly
+	distributed values of $c_d$ and then employ these values along with the analytical solution to
+	compute the resulting distribution of velocities at $t$ = 4 s.
+
+	\noindent \textbf{Solution. } \quad  Before generating the random numbers, we can first compute the mean velocity:
+
+	$$
+		v_{\text{mean}} = \sqrt{\frac{9.81(68.1)}{0.25}} \tanh \left(\sqrt{\frac{9.81(0.25)}{68.1}} 4 \right) = 33.1118 \frac{m}{s}
+	$$
+
+	\noindent We can also generate the range:
+
+	$$
+		v_{\text{low}} = \sqrt{\frac{9.81(68.1)}{0.275}} \tanh \left(\sqrt{\frac{9.81(0.275)}{68.1}} 4 \right) = 32.6223 \frac{m}{s}
+	$$
+
+	$$
+		v_{\text{high}} = \sqrt{\frac{9.81(68.1)}{0.225}} \tanh \left(\sqrt{\frac{9.81(0.225)}{68.1}} 4 \right) = 33.6198 \frac{m}{s}
+	$$
+
+	\noindent Thus, we can see that the velocity varies by
+
+	$$
+		\Delta v = \frac{33.6198 - 32.6223}{2(33.1118)} \times 100 \% = 1.5063\%
+	$$
+
+	\noindent The following script generates the random values for $c_d$ , along with their mean, standard
+	deviation, percent variation, and a histogram:
+
+	\begin{lstlisting}[numbers=none]
+		clc,format short g
+		n=1000;t=4;m=68.1;g=9.81;
+		cd=0.25;cdmin=cd-0.025,cdmax=cd+0.025
+		r=rand(n,1);
+		cdrand=cdmin+(cdmax-cdmin)*r;
+		meancd=mean(cdrand),stdcd=std(cdrand)
+		Deltacd=(max(cdrand)-min(cdrand))/meancd/2*100.
+		subplot(2,1,1)
+		hist(cdrand),title('(a) Distribution of drag')
+		xlabel('cd (kg/m)')
+	\end{lstlisting}
+
+	\noindent The results are
+
+	\begin{lstlisting}[numbers=none]
+		meancd =
+			0.25018
+		stdcd =
+			0.014528
+		Deltacd =
+			9.9762
+	\end{lstlisting}
+
+	\noindent These results, as well as the histogram (Fig. 14.5a) indicate that \texttt{rand} has yielded 1000
+	uniformly distributed values with the desired mean value and range. The values can then be
+	employed along with the analytical solution to compute the resulting distribution of velocities at $t$ = 4 s.
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\linewidth]{fig_14_5}
+		\caption{\textsf{Histograms of (a) uniformly distributed drag coefficients and (b) the resulting distribution of velocity.}}
+		\label{fig:fig_14_5}
+	\end{figure}
+
+	\begin{lstlisting}[numbers=none]
+		vrand=sqrt(g*m./cdrand).*tanh(sqrt(g*cdrand/m)*t);
+		meanv=mean(vrand)
+		Deltav=(max(vrand)-min(vrand))/meanv/2*100.
+		subplot(2,1,2)
+		hist(vrand),title('(b) Distribution of velocity')
+		xlabel('v (m/s)')
+	\end{lstlisting}
+
+	\noindent The results are
+
+	\begin{lstlisting}[numbers=none]
+		meanv =
+			33.1151
+		Deltav =
+			1.5048
+	\end{lstlisting}
+
+	\noindent These results, as well as the histogram (Fig. 14.5b), closely conform to our hand calculations.
+\end{example}
+
+The foregoing example is formally referred to as a \textit{Monte Carlo simulation}. The term,
+which is a reference to Monaco's Monte Carlo casino, was first used by physicists working
+on nuclear weapons projects in the 1940s. Although it yields intuitive results for this simple
+example, there are instances where such computer simulations yield surprising outcomes
+and provide insights that would otherwise be impossible to determine. The approach is feasible only because of the computer's ability to implement tedious, repetitive computations
+in an efficient manner.
+
+\label{cha:cha_P_14_2_2}
+\subsection{MATLAB Function: \texttt{randn}}
+
+\noindent This function generates a sequence of numbers that are normally distributed with a mean
+of 0 and a standard deviation of 1. A simple representation of its syntax is
+
+\begin{lstlisting}[numbers=none]
+	r = randn(m, n)
+\end{lstlisting}
+
+\noindent where \texttt{r} = an \texttt{m}-by-\texttt{n} matrix of random numbers. The following formula can then be used
+to generate a normal distribution with a different mean (\texttt{mn}) and standard deviation (s),
+
+\begin{lstlisting}[numbers=none]
+	rnormal = mn + s * randn(m, n)
+\end{lstlisting}
+
+\begin{example} Generating Normally-Distributed Random Values of Drag
+	
+	\noindent \textbf{Problem Statement. } \quad Analyze the same case as in Example 14.2, but rather than employing a uniform distribution, generate normally-distributed drag coefficients with a mean of
+	0.25 and a standard deviation of 0.01443.
+
+	\noindent \textbf{Solution. } \quad The following script generates the random values for $c_d$ , along with their mean,
+	standard deviation, coefficient of variation (expressed as a \%), and a histogram:
+
+	\begin{lstlisting}[numbers=none]
+		clc,format short g
+		n=1000;t=4;m=68.1;g=9.81;
+		cd=0.25;
+		stdev=0.01443;
+		r=randn(n,1);
+		cdrand=cd+stdev*r;
+		meancd=mean(cdrand),stdevcd=std(cdrand)
+		cvcd=stdevcd/meancd*100.
+		subplot(2,1,1)
+		hist(cdrand),title('(a) Distribution of drag')
+		xlabel('cd (kg/m)')
+	\end{lstlisting}
+
+	\noindent  The results are
+
+	\begin{lstlisting}[numbers=none]
+		meancd =
+			0.24988
+		stdevcd =
+			0.014465
+		cvcd =
+			5.7887
+	\end{lstlisting}
+
+	\noindent These results, as well as the histogram (Fig. 14.6a) indicate that randn has yielded 1000
+	uniformly distributed values with the desired mean, standard deviation, and coefficient
+	of variation. The values can then be employed along with the analytical solution to compute the resulting distribution of velocities at $t$ = 4 s.
+
+	\begin{lstlisting}[numbers=none]
+		vrand=sqrt(g*m./cdrand).*tanh(sqrt(g*cdrand/m)*t);
+		meanv=mean(vrand),stdevv=std(vrand)
+		cvv=stdevv/meanv*100.
+		subplot(2,1,2)
+		hist(vrand),title('(b) Distribution of velocity')
+		xlabel('v (m/s)')
+	\end{lstlisting}
+
+	\noindent The results are
+
+	\begin{lstlisting}[numbers=none]
+		meanv =
+			33.117
+		stdevv =
+			0.28839
+		cvv =
+			0.8708
+	\end{lstlisting}
+
+	\noindent These results, as well as the histogram (Fig. 14.6b), indicate that the velocities are also normally distributed with a mean that is close to the value that would be computed using the
+	mean and the analytical solution. In addition, we compute the associated standard deviation
+	which corresponds to a coefficient of variation of $\pm 0.8708\%$.
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\linewidth]{fig_14_6}
+		\caption{\textsf{Histograms of (a) normally-distributed drag coefficients and (b) the resulting distribution of velocity.}}
+		\label{fig:fig_14_6}
+	\end{figure}
+\end{example}
+
+Although simple, the foregoing examples illustrate how random numbers can be easily generated within MATLAB. We will explore additional applications in the end-of-chapter problems.
+
+\label{cha:cha_P_14_3}
+\section{LINEAR LEAST-SQUARES REGRESSION}
+
+\noindent Where substantial error is associated with data, the best curve-fitting strategy is to derive
+an approximating function that fits the shape or general trend of the data without necessarily matching the individual points. One approach to do this is to visually inspect the
+plotted data and then sketch a ``best'' line through the points. Although such ``eyeball''
+approaches have commonsense appeal and are valid for ``back-of-the-envelope'' calculations, they are deficient because they are arbitrary. That is, unless the points define a perfect
+straight line (in which case, interpolation would be appropriate), different analysts would
+draw different lines.
+
+To remove this subjectivity, some criterion must be devised to establish a basis for the
+fit. One way to do this is to derive a curve that minimizes the discrepancy between the data
+points and the curve. To do this, we must first quantify the discrepancy. The simplest example is fitting a straight line to a set of paired observations: $(x_1 , y_1 ), (x_2 , y_2 ), \dots , (x_n , y_n )$.
+The mathematical expression for the straight line is
+
+\begin{equation}
+	tag{14.8}
+	y = a_0 + a_1 x +e
+\end{equation}
+
+where $a_0$ and $a_1$ are coefficients representing the intercept and the slope, respectively, and
+e is the error, or \textit{residual}, between the model and the observations, which can be represented by rearranging Eq. (14.8) as
+
+\begin{equation}
+	\tag{14.9}
+	e = y - a_0 - a_1 x
+\end{equation}
+
+\noindent Thus, the residual is the discrepancy between the true value of $y$ and the approximate value,
+$a_0 + a_1 x$, predicted by the linear equation.
+
+\label{cha:cha_P_14_3_1}
+\subsection{Criteria for a ``Best'' Fit}
+
+\noindent One strategy for fitting a ``best'' line through the data would be to minimize the sum of the
+residual errors for all the available data, as in
+
+\begin{equation}
+	\tag{14.10}
+	\sum_{i=1}^n e_i = \sum^n_{i=1} (y_i - a_0 - a_1 x_i)
+\end{equation}
+
+where $n$ = total number of points. However, this is an inadequate criterion, as illustrated by
+Fig. 14.7a, which depicts the fit of a straight line to two points. Obviously, the best fit is the
+line connecting the points. However, any straight line passing through the midpoint of the
+connecting line (except a perfectly vertical line) results in a minimum value of Eq. (14.10)
+equal to zero because positive and negative errors cancel.
+
+One way to remove the effect of the signs might be to minimize the sum of the absolute values of the discrepancies, as in
+
+\begin{equation}
+	\tag{14.11}
+	\sum_{i=1}^n \left| e_i \right| = \sum^n_{i=1} \left| y_i - a_0 - a_1 x_i \right|
+\end{equation}
+
+\noindent Figure 14.7b demonstrates why this criterion is also inadequate. For the four points shown,
+any straight line falling within the dashed lines will minimize the sum of the absolute values of the residuals. Thus, this criterion also does not yield a unique best fit.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_14_7} % ups
+	\caption{\textsf{Examples of some criteria for ``best fit'' that are inadequate for regression: (a) minimizes the sum
+	of the residuals, (b) minimizes the sum of the absolute values of the residuals, and (c) minimizes
+	the maximum error of any individual point.}}
+	\label{fig:fig_14_7}
+\end{figure}
+
+A third strategy for fitting a best line is the \textit{minimax} criterion. In this technique, the line
+is chosen that minimizes the maximum distance that an individual point falls from the line.
+As depicted in Fig. 14.7c, this strategy is ill-suited for regression because it gives undue
+influence to an outlier-that is, a single point with a large error. It should be noted that
+the minimax principle is sometimes well-suited for fitting a simple function to a complicated function (Carnahan, Luther, and Wilkes, 1969).
+
+A strategy that overcomes the shortcomings of the aforementioned approaches is to
+minimize the sum of the squares of the residuals:
+
+\begin{equation}
+	\tag{14.12}
+	S_r = \sum_{i=1}^n e_i^2 = \sum^n_{i=1} (y_i - a_0 - a_1 x_i)^2
+\end{equation}
+
+\noindent This criterion, which is called \textit{least squares}, has a number of advantages, including that it
+yields a unique line for a given set of data. Before discussing these properties, we will present a technique for determining the values of $a_0$ and $a_1$ that minimize Eq. (14.12).
+
+\label{cha:cha_P_14_3_2}
+\subsection{Least-Squares Fit of a Straight Line}
+
+\noindent To determine values for $a_0$ and $a_1$ , Eq. (14.12) is differentiated with respect to each
+unknown coefficient:
+
+\begin{equation}
+	\notag
+	\frac{\partial S_r}{\partial a_0} = -2 \sum (y_i - a_0 - a_1 x_i)
+\end{equation}
+
+\begin{equation}
+	\notag
+	\frac{\partial S_r}{\partial a_1} = -2 \sum [(y_i - a_0 - a_1 x_i) x_i]
+\end{equation}
+
+\noindent Note that we have simplified the summation symbols; unless otherwise indicated, all summations are from $i = 1$ to $n$. Setting these derivatives equal to zero will result in a minimum
+$S_r$. If this is done, the equations can be expressed as
+
+\begin{equation}
+	\notag
+	0 = \sum y_i - \sum a_0 - \sum a_1 x_i
+\end{equation}
+
+\begin{equation}
+	\notag
+	0 = \sum x_i y_i - \sum a_0 x_i - \sum a_1 x_i^2
+\end{equation}
+
+\noindent Now, realizing that $\sum a_0 = na_0$, we can express the equations as a set of two simultaneous
+linear equations with two unknowns ($a_0$ and $a_1$):
+
+\begin{equation}
+	\tag{14.13}
+	n \quad a_0 + \left( \sum x_i \right) a_1 = \sum y_i
+\end{equation}
+
+\begin{equation}
+	\tag{14.14}
+	\left( \sum x_i \right) a_0 + \left( \sum x_i^2 \right) a_1 = \sum x_i y_i
+\end{equation}
+
+\noindent These are called the \textit{normal equations}. They can be solved simultaneously for
+
+\begin{equation}
+	\tag{14.15}
+	a_1 = \frac{n \sum x_i y_i - \sum x_i \sum y_i}{n \sum x^2_i - \left( \sum x_i \right) ^ 2}
+\end{equation}
+
+\noindent This result can then be used in conjunction with Eq. (14.13) to solve for
+
+\begin{equation}
+	\tag{14.16}
+	a_0 = \bar{y} - a_1 \bar{x}
+\end{equation}
+
+\noindent where $\bar{y}$ and $\bar{x}$ are the means of $y$ and $x$, respectively.
+
+\begin{example} Linear Regression
+	
+	\noindent \textbf{Problem Statement. } \quad  Fit a straight line to the values in Table 14.1.
+
+	\noindent \textbf{Solution. } \quad   In this application, force is the dependent variable ($y$) and velocity is the
+	independent variable ($x$). The data can be set up in tabular form and the necessary sums
+	computed as in Table 14.4.
+
+	\noindent \textbf{TABLE 14.4} \quad Data and summations needed to compute the best-fit line for the data
+	from Table 14.1.
+
+	\begin{tabular}{lrrrr}
+		$i$ & $x_i$ & $y_i$ & $x^2_i$ & $x_i y_i$ \\
+		\hline
+		1 & 10 & 25 & 100 & 250 \\
+		2 & 20 & 70 & 400 & 1,400 \\
+		3 & 30 & 380 & 900 & 11,400 \\
+		4 & 40 & 550 & 1,600 & 22,000 \\
+		5 & 50 & 610 & 2,500 & 30,500 \\
+		6 & 60 & 1,220 & 3,600 & 73,200 \\
+		7 & 70 & 830 & 4,900 & 58,100 \\
+		8 & 80 & 1,450 & 6,400 & 116,000 \\
+		$\sum$ &360 & 5,135 & 20,400 & 312,850
+	\end{tabular}
+
+	The means can be computed as
+
+	$$
+		\bar{x} = \frac{360}{8} = 45 \quad \bar{y} = \frac{5,135}{8 } = 641.875
+	$$
+
+	\noindent The slope and the intercept can then be calculated with Eqs. (14.15) and (14.16) as
+
+	$$
+		a_1 = \frac{8(312,850) - 360(5,135)}{8(20,400) - (360)^2} = 19.47024
+	$$
+
+	$$
+		a_0 = 641.875 - 19.47024(45) = -234.2857
+	$$
+
+	\noindent Using force and velocity in place of y and x, the least-squares fit is
+
+	$$
+	F = -234.2857 + 19.47024v
+	$$
+
+	\noindent The line, along with the data, is shown in Fig. 14.8.
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\linewidth]{fig_14_8}
+		\caption{\textsf{Least-squares fit of a straight line to the data from Table 14.1}}
+		\label{fig:fig_14_8}
+	\end{figure}
+
+	Notice that although the line fits the data well, the zero intercept means that the equation predicts physically unrealistic negative forces at low velocities. In Section 14.4, we
+will show how transformations can be employed to derive an alternative best-fit line that is
+more physically realistic.
+
+\end{example}
+
+
+
 \label{cha:cha_P_14_3_3}
 \subsection{Quantification of Error of Linear Regression}
 
