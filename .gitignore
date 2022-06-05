@@ -5,7 +5,13 @@
 *.out
 *.synctex.gz
 *.toc
+<<<<<<< HEAD
 *.pub
 *.dvi
 *.fdb_latexmk
 *.fls
+=======
+*.fls
+*.out
+*.fdb_latexmk
+>>>>>>> test

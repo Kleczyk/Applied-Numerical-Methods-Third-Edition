@@ -44,7 +44,7 @@ jeśli chodzi o kod np . matlaba mówiłem że robimy obrazki ale po zastawnowie
 	... kod ...
 	
 \end{lstlisting}
-
+testuje
 4. jak dołączamy jakieś pakiety to róbmy to w main.tex zaznaczjąc kto to dodał(np  numerem chaptera) 
 jak piszecie to co jakiś czas kompilujcie z main.tex żeby sprawdzić czy wszystko się łączy.
 
