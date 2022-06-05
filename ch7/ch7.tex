@@ -1,8 +1,6 @@
 \documentclass[../main.tex]{subfiles}
+
 \begin{document}
-
-
-
 \chapter{Optimization}
 \label{cha:cha_7}
 \begin{center}
@@ -35,7 +33,7 @@ multidimensional function.
 
 \newpage
 
-\Large\color{cyan}{YOU’VE GOT A PROBLEM}
+\Large{YOU'VE GOT A PROBLEM}
 
 \smallskip
 \color{black}
@@ -50,7 +48,6 @@ is subject to linear drag, its altitude as a function of time can be computed as
 	\centering
 	\includegraphics[width=0.75\linewidth]{fig_7_1}
 	\caption{\textsf{Elevation as a function of time for an object initially projected upward with an initial velocity.}}
-	\color{cyan} \rule{\linewidth}{0,5mm}
 	\label{fig:fig_7_1}
 \end{figure}
 where $z$ = altitude (m) above the earth's surface (defined as $z$ = 0), $z_0$ = the initial altitude
@@ -63,7 +60,7 @@ Suppose that you are given the job of determining the exact time of the peak ele
 The determination of such extreme values is referred to as optimization. This chapter will
 introduce you to how the computer is used to make such determinations.\bigskip
 
-\section{A SIMPLE MATHEMATICAL MODEL}
+\section{INTRODUCTION AND BACKGROUND}
 \label{sec:sec_7_1}
 
 In the most general sense, optimization is the process of creating something that is as
@@ -90,7 +87,6 @@ optimization involves searching for the function's extreme points.
 	\centering
 	\includegraphics[width=0.5\linewidth]{fig_7_2}
 	\caption{\textsf{A function of a single variable illustrating the difference between roots and optima.}}
-	\color{cyan} \rule{\linewidth}{0,5mm}
 	\label{fig:fig_7_2}
 \end{figure}
 
@@ -104,10 +100,9 @@ strategy for finding the latter. That is, you can differentiate the function and
 root (i.e., the zero) of the new function. In fact, some optimization methods do just this by
 solving the root problem: $f''(x)$ = 0.
 \newline
-\color{cyan}\rule{\linewidth}{1mm}
-\begin{exmp}
-	\color{cyan}{Determining the Optimum Analytically by Root Location}
-	\color{black}
+
+\begin{example}
+	\textbf{Determining the Optimum Analytically by Root Location}
 	\smallskip
 	
 	\noindent Problem Statement:
@@ -118,7 +113,7 @@ solving the root problem: $f''(x)$ = 0.
 	\noindent Solution: Equation (7.1) can be differentiated to give.
 	\medskip
 
-	$\dfrac{dz}{dt}=v_0e^{-(c/m)t}-\dfrac{mg}{c}(1-e^{-(c/m)t})$
+	$\dfrac{dz}{dt}=v_0e^{-(c/m)t}-\dfrac{mg}{c}(1-e^{-(c/m)t})$ \hfill{E7.1.1}
 	\medskip
 
 	\noindent Note that because $v = dz/dt$, this is actually the equation for the velocity. The maximum
@@ -158,8 +153,7 @@ solving the root problem: $f''(x)$ = 0.
 	same result using the root-location methods described in Chaps. 5 and 6. This will be left
 	as a homework exercise.
 	\newline
-	\color{cyan}\rule{\linewidth}{1mm}
-\end{exmp}
+\end{example}
 
 \color{black}
 
@@ -178,7 +172,6 @@ problems involve functions that depend on two or more dependent variables.
 	figure can be taken to represent either a maximization (contours increase in elevation up to
 	the maximum like a mountain) or a minimization (contours decrease in elevation down to the
 	minimum like a valley).}}
-	\color{cyan} \rule{\linewidth}{0,5mm}
 	\label{fig:fig_7_3}
 \end{figure}
 
@@ -222,7 +215,6 @@ MATLAB's \texttt{fminbnd} function.
 	\caption{\textsf{(a) A function that asymptotically approaches zero at plus and minus $\infty$ and has two maximum and
 	two minimum points in the vicinity of the origin. The two points to the right are local optima,
 	whereas the two to the left are global.}}
-	\color{cyan} \rule{\linewidth}{0,5mm}
 	\label{fig:fig_7_4}
 \end{figure}
 
@@ -279,7 +271,6 @@ $x_r=\dfrac{x_l+x_u}{2}$ \hfill {(7.5)}
 	\caption{\textsf{Euclid's definition of the golden ratio is based on dividing a line into two segments so that the
 	ratio of the whole line to the larger segment is equal to the ratio of the larger segment to the
 	smaller segment. This ratio is called the golden ratio.}}
-	\color{cyan} \rule{\linewidth}{0,5mm}
 	\label{fig:fig_7_5}
 \end{figure}
 
@@ -348,16 +339,12 @@ achieved with bisection (50\%), but this is a harder problem.
 	\caption{\textsf{(a) The initial step of the golden-section search algorithm involves choosing two interior points
 	according to the golden ratio. (b) The second step involves defining a new interval that
 	encompasses the optimum.}}
-	\color{cyan} \rule{\linewidth}{0,5mm}
 	\label{fig:fig_7_6}
 \end{figure}
 
 
-%\setcounter{exmp}{0} do resetowania licznika example
-
-\begin{exmp}
-	\color{cyan}{Golden-Section Search}
-	\color{black}
+\begin{example}
+	\textbf{Golden-Section Search}
 	\smallskip
 	
 	\noindent Problem Statement:
@@ -427,10 +414,8 @@ achieved with bisection (50\%), but this is a harder problem.
 	iteration, the minimum occurs at $x$ = 1.4427 with a function value of -1.7755. Thus, the
 	result is converging on the true value of -1.7757 at $x$ = 1.4276.
 	\newline
-	\color{cyan}\rule{\linewidth}{1mm}
-\end{exmp}
+\end{example}
 
-\color{black}
 Recall that for bisection (Sec. 5.4), an exact upper bound for the error can be calculated
 at each iteration. Using similar reasoning, an upper bound for golden-section search
 can be derived as follows: Once an iteration is complete, the optimum will either fall in one
@@ -505,12 +490,52 @@ number of function evaluations can be important. These are
 	\item Many evaluations. There are cases where the golden-section search algorithm may be a
 	part of a much larger calculation. In such cases, it may be called many times. Therefore,
 	keeping function evaluations to a minimum could pay great dividends for such cases.
-	
+
+
+	\begin{lstlisting}[numbers=none,frame=none]
+		function [x,fx,ea,iter]=goldmin(f,xl,xu,es,maxit,varargin)
+		% goldmin: minimization golden section search
+		% [x,fx,ea,iter]=goldmin(f,xl,xu,es,maxit,p1,p2,...):
+		% uses golden section search to find the minimum of f
+		% input:
+		% f = name of function
+		% xl, xu = lower and upper guesses
+		% es = desired relative error (default = 0.0001%)
+		% maxit = maximum allowable iterations (default = 50)
+		% p1,p2,... = additional parameters used by f
+		% output:
+		% x = location of minimum
+		% fx = minimum function value
+		% ea = approximate relative error (%)
+		% iter = number of iterations
+
+		if nargin<3,error('at least 3 input arguments required'),end
+		if nargin<4|isempty(es), es=0.0001;end
+		if nargin<5|isempty(maxit), maxit=50;end
+		phi=(1+sqrt(5))/2;
+		iter=0;
+		while(1)
+			d = (phi-1)*(xu - xl);
+			x1 = xl + d;
+			x2 = xu - d;
+			if f(x1,varargin{:}) < f(x2,varargin{:})
+				xopt = x1;
+				xl = x2;
+			else
+				xopt = x2;
+				xu = x1;
+			end
+			iter=iter+1;
+			if xopt~=0, ea = (2 - phi) * abs((xu - xl) / xopt) * 100;end
+			if ea <= es | iter >= maxit,break,end
+		end
+		x=xopt;fx=f(xopt,varargin{:});
+	\end{lstlisting}
+
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.0001\linewidth]{fig_7_7}
 		\caption{\textsf{An M-file to determine the minimum of a function with the golden-section search.}}
-		\color{cyan} \rule{\linewidth}{0,5mm}
 		\label{fig:fig_7_7}
 	\end{figure}
 
@@ -526,7 +551,6 @@ number of function evaluations can be important. These are
 	\centering
 	\includegraphics[width=0.5\linewidth]{fig_7_8}
 	\caption{\textsf{Graphical depiction of parabolic interpolation.}}
-	\color{cyan} \rule{\linewidth}{0,5mm}
 	\label{fig:fig_7_8}
 \end{figure}
 
@@ -540,10 +564,6 @@ connecting three points. Thus, if we have three points that jointly bracket an o
 can fit a parabola to the points. Then we can differentiate it, set the result equal to zero, and
 solve for an estimate of the optimal x. It can be shown through some algebraic manipulations
 that the result is
-
-
-
-
 \medskip
 
 $x_4 = x_2 - \dfrac{1}{2}\dfrac{(x_2-x_1)^2[f(x_2)-f(x_3)]-(x_2-x_3)^2[f(x_2)-f(x_1)]}{(x_2-x_1)[f(x_2)-f(x_3)]-(x_2-x_3)[f(x_2)-f(x_1)]} $ \hfill {(7.10)}
@@ -551,5 +571,623 @@ $x_4 = x_2 - \dfrac{1}{2}\dfrac{(x_2-x_1)^2[f(x_2)-f(x_3)]-(x_2-x_3)^2[f(x_2)-f(
 
 \noindent where $x1$, $x2$, and $x3$ are the initial guesses, and $x4$ is the value of $x$ that corresponds to the
 optimum value of the parabolic fit to the guesses.
+
+\begin{example}
+	Determining the Optimum Analytically by Root Location
+	\smallskip
+	
+	\noindent Problem Statement:
+	Use parabolic interpolation to approximate the minimum of
+
+	$ f(x) = \dfrac{x^2}{10}-2sinx $
+	\medskip
+	
+	with initial guesses of $x_1$ = 0, $x_2$ = 1, and $x_3$ = 4.
+
+	\noindent Solution: The function values at the three guesses can be evaluated:
+	\medskip
+
+	$x_1 = 0$ \hspace{2cm} $f(x_1)=0$
+
+	$x_2 = 1$ \hspace{2cm} $f(x_2)=-1.5829$
+
+	$x_3 = 4$ \hspace{2cm} $f(x_3)=3.1136$
+	\medskip
+
+	\noindent and substituted into Eq. (7.10) to give
+	\medskip
+    
+	$x_4=1- \dfrac{1}{2}\dfrac{(1-0)^2[-1.5829-3.1136]-(1-4)^2[-1.5829-0]}{(1-0)[-1.5829-3.1136]-(1-4)[-1.5829-0]}=1.5055 $
+	\medskip
+
+	\noindent which has a function value of f(1.5055) =-1.7691.
+
+	Next, a strategy similar to the golden-section search can be employed to determine
+	which point should be discarded. Because the function value for the new point is lower
+	than for the intermediate point ($x_2$) and the new x value is to the right of the intermediate
+	point, the lower guess ($x_1$) is discarded. Therefore, for the next iteration:
+	\medskip
+
+	$x_1 = 1$      \hspace{2cm} $f(x_1)=-1.5829$
+
+	$x_2 = 1.5055$ \hspace{2cm} $f(x_2)=-1.76919$
+
+	$x_3 = 4$      \hspace{2cm} $f(x_3)=3.1136$
+	\medskip
+
+	\noindent which can be substituted into Eq. (7.10) to give
+	\medskip
+
+	$x_4=1.5055-\dfrac{1}{2}\dfrac{(1.5055-1)^2[-1.7691-3.1136]-(1.5055-4)^2[-1.7691-(-1.5829)]}{(1.5055-1)[-1.7691-3.1136]-(1.5055-4)[-1.7691-(-1.5829)]}=1.4903 $
+	\medskip
+
+	\noindent which has a function value of f(1.4903) =-1.7714. The process can be repeated, with the
+	results tabulated here:
+
+	$$
+	\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+		\hline $i$ & $x_l$ & $f(x_l)$ & $x_2$ & $f(x_2)$ & $x_3$ & $f(x_3)$ & $x_4$ & $f(x_4)$\\
+		\hline 1 & 0.0000  &  0.0000  & 1.0000 & -1.5828 & 4.0000 &  3.1136 & 1.5055 & -1.7691\\
+		\hline 2 & 1.0000  & -1.5829  & 1.5055 & -1.7691 & 4.0000 &  3.1136 & 1.4903 & -1.7714\\
+		\hline 3 & 1.0000  & -1.5829  & 1.4903 & -1.7714 & 1.5055 & -1.7691 & 1.4256 & -1.7757\\
+		\hline 4 & 1.0000  & -1.5829  & 1.4256 & -1.7757 & 1.4903 & -1.7714 & 1.4266 & -1.7757\\
+		\hline 5 & 1.4265  & -1.7757  & 1.4266 & -1.7757 & 1.4903 & -1.7714 & 1.4275 & -1.7757\\
+		\hline
+	\end{tabular}
+	$$
+
+	\noindent Thus, within five iterations, the result is converging rapidly on the true value of -1.7757
+	at $x$ = 1.4276.
+\end{example}
+
+\subsection{MATLAB Function \texttt{fminbnd}}
+
+\noindent Recall that in Sec. 6.4 we described Brent's method for root location, which combined several
+root-finding methods into a single algorithm that balanced reliability with efficiency.
+Because of these qualities, it forms the basis for the built-in MATLAB function \texttt{fzero}.
+
+Brent also developed a similar approach for one-dimensional minimization which
+forms the basis for the MATLAB \texttt{fminbnd} function. It combines the slow, dependable
+golden-section search with the faster, but possibly unreliable, parabolic interpolation. It
+first attempts parabolic interpolation and keeps applying it as long as acceptable results are
+obtained. If not, it uses the golden-section search to get matters in hand.
+
+A simple expression of its syntax is
+\smallskip
+
+\texttt{[xmin, fval] = fminbnd(function,x1,x2)}
+\smallskip
+
+\noindent where x and \texttt{fval} are the location and value of the minimum, \texttt{function} is the name of the
+function being evaluated, and \texttt{x1} and \texttt{x2} are the bounds of the interval being searched.
+\newpage
+
+Here is a simple MATLAB session that uses \texttt{fminbnd} to solve the problem from Example 7.1.
+
+\begin{lstlisting}[numbers=none,frame=none]
+	>> g=9.81;v0=55;m=80;c=15;z0=100;
+	>> z=@(t) -(z0+m/c*(v0+m*g/c)*(1-exp(-c/m*t))-m*g/c*t);
+	>> [x,f]=fminbnd(z,0,8)
+
+	x =
+		3.8317
+	f =
+		-192.8609
+\end{lstlisting}
+
+As with \texttt{fzero}, optional parameters can be specified using \texttt{optimset}. For example,
+we can display calculation details:
+
+\begin{lstlisting}[numbers=none,frame=none]
+	>> options = optimset('display','iter');
+	>> fminbnd(z,0,8,options)
+	Func-count 		x 			f(x) 	Procedure
+		1 		3.05573 	-189.759 	initial
+		2 		4.94427 	-187.19 	golden
+		3 		1.88854 	-171.871 	golden
+		4 		3.87544 	-192.851 	parabolic
+		5 		3.85836 	-192.857 	parabolic
+		6 		3.83332		-192.861 	parabolic
+		7 		3.83162 	-192.861 	parabolic
+		8 		3.83166 	-192.861 	parabolic
+		9 		3.83169 	-192.861 	parabolic
+	Optimization terminated:
+	the current x satisfies the termination criteria using
+	OPTIONS.TolX of 1.000000e-004
+	ans =
+		3.8317
+\end{lstlisting}
+
+Thus, after three iterations, the method switches from golden to parabolic, and after eight
+iterations, the minimum is determined to a tolerance of 0.0001.\\
+
+\section{MULTIDIMENSIONAL OPTIMIZATION}
+\label{sec:sec_7_3}
+
+\noindent Aside from one-dimensional functions, optimization also deals with multidimensional
+functions. Recall from Fig. 7.3a that our visual image of a one-dimensional search was like
+a roller coaster. For two-dimensional cases, the image becomes that of mountains and
+valleys (Fig. 7.3b). As in the following example, MATLAB's graphic capabilities provide
+a handy means to visualize such functions.
+
+\begin{example}
+	Visualizing a Two-Dimensional Function
+	\smallskip
+	
+	\noindent Problem Statement:
+	Use MATLAB's graphical capabilities to display the following
+	function and visually estimate its minimum in the range $-2 \le x_1 \le 0$ and $0 \le x_2 \le 3$:
+
+	$ f(x_1,x_2) = 2 + x_1 - x_2 + 2_1^2 + 2x_1x_2 + x_2^2$
+	\medskip
+	
+	with initial guesses of $x_1$ = 0, $x_2$ = 1, and $x_3$ = 4.
+
+	\noindent Solution: The following script generates contour and mesh plots of the function:
+	\medskip
+
+	\begin{lstlisting}[numbers=none,frame=none]
+		x=linspace(-2,0,40);y=linspace(0,3,40);
+		[X,Y] = meshgrid(x,y);
+		Z=2+X-Y+2*X.^2+2*X.*Y+Y.^2;
+		subplot(1,2,1);
+		cs=contour(X,Y,Z);clabel(cs);
+		xlabel('x_1');ylabel('x_2');
+		title('(a) Contour plot');grid;
+		subplot(1,2,2);
+		cs=surfc(X,Y,Z);
+		zmin=floor(min(Z));
+		zmax=ceil(max(Z));
+		xlabel('x_1');ylabel('x_2');zlabel('f(x_1,x_2)');
+		title('(b) Mesh plot');
+	\end{lstlisting}
+
+	\noindent As displayed in Fig. 7.9, both plots indicate that function has a minimum value of about
+	$f(x1, x2)$ = 0 to 1 located at about $x_1$ =-1 and $x_2$ = 1.5.
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.75\linewidth]{fig_7_9}
+		\caption{\textsf{(a) Contour and (b) mesh plots of a two-dimensional function.}}
+		\label{fig:fig_7_9}
+	\end{figure}
+\end{example}
+
+Techniques for multidimensional unconstrained optimization can be classified in a
+number of ways. For purposes of the present discussion, we will divide them depending
+on whether they require derivative evaluation. Those that require derivatives are called
+\texttt{gradient}, or \texttt{descent} (or ascent), methods. The approaches that do not require derivative evaluation
+are called nongradient, or direct, methods. As described next, the built-in MATLAB
+function \texttt{fminsearch} is a direct method.
+
+\subsection{MATLAB Function: \texttt{fminsearch}}
+
+\noindent Standard MATLAB has a function \texttt{fminsearch} that can be used to determine the minimum
+of a multidimensional function. It is based on the Nelder-Mead method, which is a
+direct-search method that uses only function values (does not require derivatives) and
+handles non-smooth objective functions. A simple expression of its syntax is
+\smallskip
+
+\texttt{\texttt{fminsearch}}
+\smallskip
+
+\noindent where \texttt{xmin} and \texttt{fval} are the location and value of the minimum, \texttt{function} is the name of
+the function being evaluated, and \texttt{x0} is the initial guess. Note that \texttt{x0} can be a scalar, vector,
+or a matrix.
+
+Here is a simple MATLAB session that uses \texttt{fminsearch} to determine minimum for
+the function we just graphed in Example 7.4:
+
+\begin{lstlisting}[numbers=none,frame=none]
+	>> f=@(x) 2+x(1)-x(2)+2*x(1)^2+2*x(1)*x(2)+x(2)^2;
+	>> [x,fval]=fminsearch(f,[-0.5,0.5])
+	x =
+		-1.0000 1.5000
+	fval =
+		0.7500
+\end{lstlisting}
+
+\section{\textbf{CASE STUDY} - EQUILIBRIUM AND MINIMUM POTENTIAL ENERGY}
+\label{sec:sec_7_4}
+
+\textbf{Background.} As in Fig. 7.10a, an unloaded spring can be attached to a wall mount.
+When a horizontal force is applied, the spring stretches. The displacement is related to the
+force by $Hookes law$, $F = kx$. The potential $energy$ of the deformed state consists of the difference
+between the strain energy of the spring and the work done by the force:\medskip
+
+$PE(x) = 0.5kx^2-Fx$ \hfill{7.11}
+\medskip
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\linewidth]{fig_7_10}
+	\caption{\textsf{(a) An unloaded spring attached to a wall mount. (b) Application of a horizontal force stretches
+	the spring where the relationship between force and displacement is described by Hooke's law.}}
+	\label{fig:fig_7_10}
+\end{figure}
+
+Equation (7.11) defines a parabola. Since the potential energy will be at a minimum at
+equilibrium, the solution for displacement can be viewed as a one-dimensional optimization
+problem. Because this equation is so easy to differentiate, we can solve for the displacement
+as $x = F/k$. For example, if $k = 2 N/cm$ and $F = 5 N, x = 5N/(2 N/cm) = 2.5 cm.$
+
+A more interesting two-dimensional case is shown in Fig. 7.11. In this system, there
+are two degrees of freedom in that the system can move both horizontally and vertically.
+In the same way that we approached the one-dimensional system, the equilibrium deformations
+are the values of $x_1$ and $x_2$ that minimize the potential energy: \medskip
+
+$PE(x_1,x_2)=0.5k_a(\sqrt{x_1^2 + (L_a-x_2)^2}-L_a)^2 + 0.5k_b(\sqrt{x_1^2+(L_b+x_2)^2}-L_b)^2-F_1x_1-F_2x_2$ \hfill{7.12}
+\smallskip
+
+\noindent If the parameters are $k_a$ = 9 N/cm, $k_b$ = 2 N/cm, $L_a$ = 10 cm, $L_b$= 10 cm, $F_1$= 2 N, and
+$F_2$ = 4 N, use MATLAB to solve for the displacements and the potential energy.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\linewidth]{fig_7_11}
+	\caption{\textsf{A two-spring system: (a) unloaded and (b) loaded.}}
+	\label{fig:fig_7_11}
+\end{figure}
+
+\noindent\textbf{Solution.} An M-file can be developed to hold the potential energy function:
+
+\begin{lstlisting}[numbers=none,frame=none]
+	function p=PE(x,ka,kb,La,Lb,F1,F2)
+	PEa=0.5*ka*(sqrt(x(1)^2+(La-x(2))^2)-La)^2;
+	PEb=0.5*kb*(sqrt(x(1)^2+(Lb+x(2))^2)-Lb)^2;
+	W=F1*x(1)+F2*x(2);
+	p=PEa+PEb-W;
+\end{lstlisting}
+
+\noindent The solution can be obtained with the \texttt{fminsearch} function:
+
+\begin{lstlisting}[numbers=none,frame=none]
+	>> ka=9;kb=2;La=10;Lb=10;F1=2;F2=4;
+	>> [x,f]=fminsearch(@PE,[-0.5,0.5],[],ka,kb,La,Lb,F1,F2)
+	x =
+		4.9523 	1.2769
+	f =
+		-9.6422
+\end{lstlisting}
+
+Thus, at equilibrium, the potential energy is -9.6422 N· cm. The connecting point is
+located 4.9523 cm to the right and 1.2759 cm above its original position.\bigskip
+\newpage
+
+\noindent\textbf{PROBLEMS}
+
+\begin{multicols}{2}
+	\noindent\textbf{7.1} Perform three iterations of the Newton-Raphson method
+	to determine the root of Eq. (E7.1.1). Use the parameter values
+	from Example 7.1 along with an initial guess of $t$ = 3 s.
+
+	\noindent\textbf{7.2} Given the formula
+
+	\noindent $f(x) = -x^2 + 8x - 12$
+
+	\noindent(a) Determine the maximum and the corresponding value of
+	$x$ for this function analytically (i.e., using differentiation).
+	(b) Verify that Eq. (7.10) yields the same results based on
+	initial guesses of $x_1$ = 0, $x_2$ = 2, and $x_3$ = 6.
+
+	\noindent\textbf{7.3} Consider the following function:
+
+	\noindent$f(x) = 3 + 6x + 5x^2 + 3x^3 + 4x^4$
+
+	\noindent Locate the minimum by finding the root of the derivative of
+	this function. Use bisection with initial guesses of $x_l= -2$ and $x_u = 1$.
+
+	\noindent\textbf{7.4} Given
+
+	\noindent$f(x) = -1.5x^6 - 2x^4 + 12x$
+
+	\noindent  (a) Plot the function.
+
+	\noindent(b) Use analytical methods to prove that the function is concave
+	for all values of $x$.
+
+	\noindent(c) Differentiate the function and then use a root-location
+	method to solve for the maximum $f(x)$ and the corresponding value of $x$.
+
+	\noindent\textbf{7.5} Solve for the value of x that maximizes $f(x)$ in Prob. 7.4
+	using the golden-section search. Employ initial guesses of $x_l$ = 0 and $x_u$ = 2, 
+	and perform three iterations.
+
+	\noindent\textbf{7.6} Repeat Prob. 7.5, except use parabolic interpolation.
+	Employ initial guesses of $x_1$ = 0, $x_2$ = 1, and $x_3$ = 2, and perform three iterations.
+
+	\noindent\textbf{7.7} Employ the following methods to find the maximum of
+
+	\noindent $f (x) = 4x - 1.8x^2 + 1.2x^3 - 0.3x^4$
+
+	\noindent(a)Golden-section search ($x_l$ = - 2, $x_u$ = 4, $\epsilon_s$ = 1\%). 
+
+	\noindent(b)Parabolic interpolation ($x_1$ = 1.75, $x_2$ = 2, $x_3$ = 2.5, iterations = 5).
+
+	\noindent\textbf{7.8}Consider the following function:
+
+	\noindent $f(x) = x^4 + 2x^3 + 8x^2 + 5x$
+
+	\noindent Use analytical and graphical methods to show the function
+	has a minimum for some value of $x$ in the range
+
+	$-2 \le x \le 1.$
+
+	\noindent\textbf{7.9}Employ the following methods to find the minimum of
+	the function from Prob. 7.8:
+
+	\noindent (a) Golden-section search ($x_l$ = -2, $x_u$= 1, $\epsilon_s$ = 1\%).
+
+	\noindent (b) Parabolic interpolation ($x_1$= -2, $x_2$= -1, $x_3$= 1, iterations = 5).
+
+	\noindent\textbf{7.10}Consider the following function:
+
+	\noindent$f(x)=2x+\dfrac{3}{x}$
+
+	\noindent Perform 10 iterations of parabolic interpolation to locate
+	the minimum. Comment on the convergence of your results
+	($x_1$ = 0.1, $x_2$ = 0.5, $x_3$ = 5)
+
+	\noindent\textbf{7.11}Develop a single script to (a) generate contour and
+	mesh subplots of the following temperature field in a similar
+	fashion to Example 7.4:
+
+	\noindent $T(x, y) = 2x^2 + 3y^2 - 4xy - y - 3x$
+
+	\noindent and (b) determine the minimum with \texttt{fminsearch}.
+
+	\noindent\textbf{7.12}The head of a groundwater aquifer is described in
+	Cartesian coordinates by
+
+	\noindent $h(x,y) = \dfrac{1}{1+x^2 + y^2 + x +xy}$
+
+	\noindent Develop a single script to (a) generate contour and mesh
+	subplots of the function in a similar fashion to Example 7.4,
+	and (b) determine the maximum with fminsearch.
+
+	\noindent\textbf{7.13}Recent interest in competitive and recreational cycling
+	has meant that engineers have directed their skills toward the
+	design and testing of mountain bikes (Fig. P7.13a). Suppose
+	that you are given the task of predicting the horizontal
+	and vertical displacement of a bike bracketing system in
+	response to a force. Assume the forces you must analyze can
+	be simplified as depicted in Fig. P7.13b. You are interested
+
+	\begin{center}
+	\includegraphics[width=1\linewidth]{fig_P7_13}
+	\textsf{(a) A mountain bike along with (b) a free-body diagram
+	for a part of the frame.}
+	\end{center}
+
+	\noindent in testing the response of the truss to a force exerted in any
+	number of directions designated by the angle $\theta$. The
+	parameters for the problem are $E$ = Young's modulus
+	= $2 \times 10^11$ Pa, A = cross-sectional area = 0.0001 $m^2$, $w$ =
+	width = 0.44 m, $l$ = length = 0.56 m, and $h$ = height
+	= 0.5 m. The displacements $x$ and $y$ can be solved by determining
+	the values that yield a minimum potential energy.
+	Determine the displacements for a force of 10,000 N and a
+	range of $\theta$'s from 0° (horizontal) to 90° (vertical).
+
+	\noindent \textbf{7.14} As electric current moves through a wire (Fig. P7.14), heat generated by resistance is conducted through a layer of insulation and then convected to the surrounding air. The steady-state temperature of the wire can be computed as
+	$$
+	T=T_{\mathrm{air}}+\frac{q}{2 \pi}\left[\frac{1}{k} \ln \left(\frac{r_{w}+r_{i}}{r_{w}}\right)+\frac{1}{h} \frac{1}{r_{w}+r_{i}}\right]
+	$$
+	Determine the thickness of insulation $r_{i}(\mathrm{~m})$ that minimizes the wire's temperature given the following parameters: $q=$ heat generation rate $=75 \mathrm{~W} / \mathrm{m}, r_{w}=$ wire radius $=6 \mathrm{~mm}$, $k=$ thermal conductivity of insulation $=0.17 \mathrm{~W} /(\mathrm{m} \mathrm{K})$,
+	$h=$ convective heat transfer coefficient $=12 \mathrm{~W} /\left(\mathrm{m}^{2} \mathrm{~K}\right)$, and $T_{\text {air }}=$ air temperature $=293 \mathrm{~K}$.
+	
+	\begin{center}
+	\includegraphics[width=0.65\linewidth]{fig_P7_14}
+
+	\textsf{Cross-section of an insulated wire.}
+	\end{center}
+
+	\newpage
+	\noindent \textbf{7.15} Develop an M-file that is expressly designed to locate a maximum with the golden-section search. In other words, set if up so that it directly finds the maximum rather than finding the minimum of $-f(x)$. The function should have the following features:
+
+	- Iterate until the relative error falls below a stopping criterion or exceeds a maximum number of iterations.
+
+	- Return both the optimal $x$ and $f(x)$.
+
+	\noindent Test your program with the same problem as Example 7.1.
+	
+	\noindent \textbf{7.16} Develop an M-file to locate a minimum with the golden-section search. Rather than using the maximum iterations and Eq. (7.9) as the stopping criteria, determine the number of iterations needed to attain a desired tolerance. Test your function by solving Example $7.2$ using $E_{a, d}=0.0001$. 
+	
+	\noindent \textbf{7.17} Develop an M-file to implement parabolic interpolation to locate a minimum. The function should have the following features:
+	\begin{itemize}
+		\item Base it on two initial guesses, and have the program generate the third initial value at the midpoint of the interval.
+		\item Check whether the guesses bracket a maximum. If not, the function should not implement the algorithm, but should return an error message.
+		\item Iterate until the relative error falls below a stopping criterion or exceeds a maximum number of iterations.	
+		\item Return both the optimal $x$ and $f(x)$.
+	\end{itemize}
+	
+	\noindent Test your program with the same problem as Example 7.3.
+	
+	\noindent \textbf{7.18}Pressure measurements are taken at certain points behind an airfoil over time. These data best fit the curve $y=6 \cos x-1.5 \sin x$ from $x=0$ to $6 \mathrm{~s}$. Use four iterations of the golden-search method to find the minimum pressure. Set $x_{l}=2$ and $x_{u}=4$
+	
+	\noindent \textbf{7.19} The trajectory of a ball can be computed with
+	$$
+	y=\left(\tan \theta_{0}\right) x-\frac{g}{2 v_{0}^{2} \cos ^{2} \theta_{0}} x^{2}+y_{0}
+	$$
+	where $y=$ the height $(\mathrm{m}), \theta_{0}=$ the initial angle (radians), $v_{0}=$ the initial velocity $(\mathrm{m} / \mathrm{s}), g=$ the gravitational constant $=9.81 \mathrm{~m} / \mathrm{s}^{2}$, and $y_{0}=$ the initial height ( $\left.\mathrm{m}\right)$. Use the golden-section search to determine the maximum height given $y_{0}=1 \mathrm{~m}, v_{0}=25 \mathrm{~m} / \mathrm{s}$, and $\theta_{0}=50^{\circ}$. Iterate until the approximate error falls below $\varepsilon_{s}=1 \%$ using initial guesses of $x_{l}=0$ and $x_{u}=60 \mathrm{~m}$.
+	
+	\noindent \textbf{7.20} The deflection of a uniform beam subject to a linearly increasing distributed load can be computed as
+	$$
+	y=\frac{w_{0}}{120 E I L}\left(-x^{5}+2 L^{2} x^{3}-L^{4} x\right)
+	$$
+	Given that $L=600 \mathrm{~cm}, E=50,000 \mathrm{kN} / \mathrm{cm}^{2}, I=30,000 \mathrm{~cm}^{4}$, and $w_{0}=2.5 \mathrm{kN} / \mathrm{cm}$, determine the point of maximum deflection (a) graphically, (b) using the golden-section search until the approximate error falls below $\varepsilon_{s}=1 \%$ with initial guesses of $x_{1}=0$ and $x_{u}=L$.
+	
+	\noindent \textbf{7.21} A object with a mass of $90 \mathrm{~kg}$ is projected upward from the surface of the earth at a velocity of $60 \mathrm{~m} / \mathrm{s}$. If the object is subject to linear drag $(c=15 \mathrm{~kg} / \mathrm{s})$, use the goldensection search to determine the maximum height the object attains.
+
+	\noindent \textbf{7.22} The normal distribution is a bell-shaped curve defined by
+	$$
+	y=e^{-x^{2}}
+	$$
+	Use the golden-section search to determine the location of the inflection point of this curve for positive $x$.
+	\noindent \textbf{7.23} Use the fminsearch function to determine the minimum of
+	$$
+	f(x, y)=2 y^{2}-2.25 x y-1.75 y+1.5 x^{2}
+	$$
+	\noindent \textbf{7.24} Use the fminsearch function to determine the maximum of
+	$$
+	f(x, y)=4 x+2 y+x^{2}-2 x^{4}+2 x y-3 y^{2}
+	$$
+	\noindent \textbf{7.25} Given the following function:
+	$$
+	f(x, y)=-8 x+x^{2}+12 y+4 y^{2}-2 x y
+	$$
+	Determine the minimum (a) graphically, (b) numerically with the fminsearch function, and (c) substitute the result of (b) back into the function to determine the minimum $f(x, y)$.
+	
+	\noindent \textbf{7.26} The specific growth rate of a yeast that produces an antibiotic is a function of the food concentration $c$ :
+	$$
+	g=\frac{2 c}{4+0.8 c+c^{2}+0.2 c^{3}}
+	$$
+	As depicted in Fig. P7.26, growth goes to zero at very low concentrations due to food limitation. It also goes to zero at high concentrations due to toxicity effects. Find the value of $c$ at which growth is a maximum.
+	
+	\begin{center}
+	\includegraphics[width=1\linewidth]{fig_P7_26}
+	\textsf{The specific growth rate of a yeast that produces an
+	antibiotic versus the food concentration.}
+	\end{center}
+
+	\noindent \textbf{7.27} A compound A will be converted into B in a stirred tank reactor. The product B and unreacted A are purified in a separation unit. Unreacted $\mathrm{A}$ is recycled to the reactor. A process engineer has found that the initial cost of the system is a function of the conversion $x_{A}$. Find the conversion that will result in the lowest cost system. $C$ is a proportionality constant.
+	$$
+	\text { Cost }=C\left[\left(\frac{1}{\left(1-x_{A}\right)^{2}}\right)^{0.6}+6\left(\frac{1}{x_{A}}\right)^{0.6}\right]
+	$$
+	\newpage
+
+	\noindent \textbf{7.28} A finite-element model of a cantilever beam subject to loading and moments (Fig. P7.28) is given by optimizing
+	$$
+	f(x, y)=5 x^{2}-5 x y+2.5 y^{2}-x-1.5 y
+	$$
+	where $x=$ end displacement and $y=$ end moment. Find the values of $x$ and $y$ that minimize $f(x, y)$.
+	
+	\begin{center}
+	\includegraphics[width=0.7\linewidth]{fig_P7_28}
+
+	\textsf{A cantilever beam.}
+	\end{center}
+
+	\noindent \textbf{7.29} The Streeter-Phelps model can be used to compute the dissolved oxygen concentration in a river below a point discharge of sewage (Fig. P7.29),
+	$$
+	\begin{aligned}
+	o=& o_{s}-\frac{k_{d} L_{o}}{k_{d}+k_{s}-k_{a}}\left(e^{-k_{a} t}-e^{-\left(k_{d}+k_{s}\right) t}\right) \\
+	&-\frac{S_{b}}{k_{a}}\left(1-e^{-k_{a} t}\right)
+	\end{aligned}
+	$$
+	where $o=$ dissolved oxygen concentration $(\mathrm{mg} / \mathrm{L}), o_{s}=$ oxygen saturation concentration $(\mathrm{mg} / \mathrm{L}), t=$ travel time $(\mathrm{d})$, $L_{o}=$ biochemical oxygen demand (BOD) concentration at the mixing point $(\mathrm{mg} / \mathrm{L}), k_{d}=$ rate of decomposition of BOD $\left(\mathrm{d}^{-1}\right), k_{s}=$ rate of settling of BOD $\left(\mathrm{d}^{-1}\right), k_{a}=$ reaeration rate $\left(\mathrm{d}^{-1}\right)$, and $S_{b}=$ sediment oxygen demand $(\mathrm{mg} / \mathrm{L} / \mathrm{d})$.
+	As indicated in Fig. P7.29, Eq. (P7.29) produces an oxygen "sag" that reaches a critical minimum level $o_{c}$, some travel time $t_{c}$ below the point discharge. This point is called "critical" because it represents the location where biota that depend on oxygen (like fish) would be the most stressed. Determine the critical travel time and concentration, given the following values:
+	$$
+	\begin{array}{lll}
+	o_{s}=10 \mathrm{mg} / \mathrm{L} & k_{d}=0.1 \mathrm{~d}^{-1} & k_{a}=0.6 \mathrm{~d}^{-1} \\
+	k_{s}=0.05 \mathrm{~d}^{-1} & L_{o}=50 \mathrm{mg} / \mathrm{L} & S_{b}=1 \mathrm{mg} / \mathrm{L} / \mathrm{d}
+	\end{array}
+	$$
+
+	\begin{center}
+	\includegraphics[width=0.7\linewidth]{fig_P7_29}
+	
+	\textsf{A dissolved oxygen “sag” below a point discharge of
+	sewage into a river.}
+	\end{center}
+
+	\noindent \textbf{7.30} The two-dimensional distribution of pollutant concentration in a channel can be described by
+	$c(x, y)=7.9+0.13 x+0.21 y-0.05 x^{2}$ $-0.016 y^{2}-0.007 x y$ the function and the knowledge that the peak lies within the bounds $-10 \leq x \leq 10$ and $0 \leq y \leq 20$.
+	
+	\noindent \textbf{7.31} A total charge $Q$ is uniformly distributed around a ringshaped conductor with radius $a$. A charge $q$ is located at a distance $x$ from the center of the ring (Fig. P7.31). The force exerted on the charge by the ring is given by
+	$$
+	F=\frac{1}{4 \pi e_{0}} \frac{q Q x}{\left(x^{2}+a^{2}\right)^{3 / 2}}
+	$$
+	where $e_{0}=8.85 \times 10^{-12} \mathrm{C}^{2} /\left(\mathrm{N} \mathrm{m}{ }^{2}\right), q=Q=2 \times 10^{-5} \mathrm{C}$, and $a=0.9 \mathrm{~m}$. Determine the distance $x$ where the force is a maximum.
+	
+	\begin{center}
+	\includegraphics[width=0.7\linewidth]{fig_P7_31}
+	\end{center}
+
+	\noindent \textbf{7.32} The torque transmitted to an induction motor is a function of the slip between the rotation of the stator field and the rotor speed $s$, where slip is defined as
+	$$
+	s=\frac{n-n_{R}}{n}
+	$$
+	where $n=$ revolutions per second of rotating stator speed and $n_{R}=$ rotor speed. Kirchhoff's laws can be used to show that the torque (expressed in dimensionless form) and slip are related by
+	$$
+	T=\frac{15 s(1-s)}{(1-s)\left(4 s^{2}-3 s+4\right)}
+	$$
+	Figure P7.32 shows this function. Use a numerical method to determine the slip at which the maximum torque occurs. 
+	
+	\begin{center}
+	\includegraphics[width=0.7\linewidth]{fig_P7_32}
+		
+	\textsf{Torque transmitted to an inductor as a function of slip.}
+	\end{center}
+
+	\noindent \textbf{7.33} The total drag on an airfoil can be estimated by
+	$$
+	D=0.01 \sigma V^{2}+\frac{0.95}{\sigma}\left(\frac{W}{V}\right)^{2}
+	$$
+	Friction Lift
+	where $D=$ drag, $\sigma=$ ratio of air density between the flight altitude and sea level, $W=$ weight, and $V=$ velocity. As seen in Fig. P7.33, the two factors contributing to drag are affected differently as velocity increases. Whereas friction drag increases with velocity, the drag due to lift decreases. The combination of the two factors leads to a minimum drag.
+	
+	(a) If $\sigma=0.6$ and $W=16,000$, determine the minimum drag and the velocity at which it occurs.
+	
+	(b) In addition, develop a sensitivity analysis to determine how this optimum varies in response to a range of $W=12,000$ to 20,000 with $\sigma=0.6$.
+	
+	\begin{center}
+	\includegraphics[width=0.7\linewidth]{fig_P7_33}
+			
+	\textsf{Plot of drag versus velocity for an airfoil.}
+	\end{center}
+
+	\noindent \textbf{7.34} Roller bearings are subject to fatigue failure caused by large contact loads $F$ (Fig. P7.34). The problem of finding the location of the maximum stress along the $x$ axis can be shown to be equivalent to maximizing the function:
+	$$
+	f(x)=\frac{0.4}{\sqrt{1+x^{2}}}-\sqrt{1+x^{2}}\left(1-\frac{0.4}{1+x^{2}}\right)+x
+	$$
+	Find the $x$ that maximizes $f(x)$.
+
+	\begin{center}
+	\includegraphics[width=0.7\linewidth]{fig_P7_34}
+				
+	\textsf{Plot of drag versus velocity for an airfoil.}
+	\end{center}
+
+	\noindent \textbf{7.35} In a similar fashion to the case study described in Sec. 7.4, develop the potential energy function for the system depicted in Fig. P7.35. Develop contour and surface
+	plots in MATLAB. Minimize the potential energy function to determine the equilibrium displacements $x_{1}$ and $x_{2}$ given the forcing function $F=100 \mathrm{~N}$ and the parameters $k_{a}=20$ and $k_{b}=15 \mathrm{~N} / \mathrm{m}$.
+	
+	\begin{center}
+	\includegraphics[width=0.7\linewidth]{fig_P7_35}
+				
+	\textsf{Two frictionless masses connected to a wall by a pair of
+	linear elastic springs.}
+	\end{center}
+
+	\noindent \textbf{7.36} As an agricultural engineer, you must design a trapezoidal open channel to carry irrigation water (Fig. P7.36). Determine the optimal dimensions to minimize the wetted perimeter for a cross-sectional area of $50 \mathrm{~m}^{2}$. Are the relative dimensions universal?
+	
+	\begin{center}
+	\includegraphics[width=0.7\linewidth]{fig_P7_36}
+	\end{center}
+
+	\noindent \textbf{7.37} Use the function \texttt{fminsearch} to determine the length of the shortest ladder that reaches from the ground over the fence to the building's wall (Fig. P7.37). Test it for the case where $h=d=4 \mathrm{~m}$.
+
+	\begin{center}
+	\includegraphics[width=0.7\linewidth]{fig_P7_37}
+					
+	\textsf{A ladder leaning against a fence and just touching a wall.}
+	\end{center}
+
+	\noindent \textbf{7.38} The length of the longest ladder that can negotiate the corner depicted in Fig. P7.38 can be determined by computing the value of $\theta$ that minimizes the following function:
+	$$
+	L(\theta)=\frac{w_{1}}{\sin \theta}+\frac{w_{2}}{\sin (\pi-\alpha-\theta)}
+	$$
+	For the case where $w_{1}=w_{2}=2 \mathrm{~m}$, use a numerical method described in this chapter (including MATLAB's built-in capabilities) to develop a plot of $L$ versus a range of $\alpha$ 's from 45 to $135^{\circ}$.
+
+	\begin{center}
+	\includegraphics[width=0.7\linewidth]{fig_P7_38}
+						
+	\textsf{A ladder negotiating a corner formed by two hallways.}
+	\end{center}
+
+
+
+
+\end{multicols}
 
 \end{document}

@@ -309,9 +309,8 @@ $\epsilon_s = (0.5 \times 10^{2-n})\%$
     computation is terminated. However, notice that, rather than three significant figures, the
     result is accurate to five! This is because, for this case, both Eqs. (4.5) and (4.7) are conservative.
     That is, they ensure that the result is at least as good as they specify. Although,
-    this is not always the case for Eq. (4.5), it is true most of the time.
+    this is not always the case for Eq. (4.5), it is true most of the time.\\
 \end{example}
-\newpage
 
 \subsection{Computer Algorithm for Iterative Calculations}
 
@@ -342,7 +341,36 @@ assigns default values.
 \newline
 
 \begin{figure}[h]
-    \includegraphics{./images/fig_4_2}
+    \begin{lstlisting}[numbers=none]
+ function [fx, ea, iter] = IterMeth(x,es,maxit)
+ % Maclaurin series of exponential function
+ %   [fx,ea,iter] = IterMeth(x,es,maxit)
+ % input:
+ %   x = value at which series evaluated
+ %   es = stopping criterion (default = 0.0001)
+ %   maxit = maximum iterations (default = 50)
+ % output:
+ %   fx = estimated value
+ %   ea = approximate relative error (%)
+ %   iter = number of iterations    
+ % defaults:
+ if nargin<2|isempty(es), es=0.0001; end
+ if nargin<3|isempty(maxit), maxit=50; end
+ % initialization
+ iter = 1; sol = 1; ea = 100;
+ % iterative calculation
+ while (1)
+     solold = sol;
+     sol = sol + x ^ iter / factorial(iter);
+     iter = iter + 1;
+     if sol~=0
+         ea=abs((sol - solold)/sol)*100;
+     end
+     if ea<=es | iter>=maxit,break,end
+ end
+ fx = sol
+ end
+    \end{lstlisting}
     \caption{An M-file to solve an iterative calculation. This example is set up to evaluate the Maclaurin series
     expansion for ex as described in Example 4.1.}
 \end{figure}
@@ -594,8 +622,7 @@ decimal world.\\
     commonly used constant such as $\pi (=3.14159\hdots)$ would have to be represented as $3.1\times 10^0$
     or 3.1. For this case, the relative error is\\
 
-    $\dfrac{3.14159-3.1}{3.14159} = 0.0132$
-    \newpage
+    $\dfrac{3.14159-3.1}{3.14159} = 0.0132$\\
 
     \noindent
     Although adding significand digits can improve the approximation, such quantities will
@@ -758,7 +785,6 @@ even though an individual roundoff error could be small, the cumulative effect
 over the course of a large computation can be significant. Avery simple case involves summing
 a round base-10 number that is not round in base-2. Suppose that the following M-file
 is constructed:\\
-\vspace{1cm}
 
 \texttt{function sout = sumdemo()\\
 \indent s = 0;\\
@@ -1106,7 +1132,6 @@ if a function $f (x)$ and its first derivative are continuous over an interval f
     \includegraphics[width=0.55\linewidth]{./images/fig_4_9}
     \caption{Graphical depiction of the derivative mean-value theorem.}
 \end{figure}
-\newpage
 
 \noindent
 there exists at least one point on the function that has a slope, designated by $f'(\xi)$, that is
@@ -1203,14 +1228,14 @@ $f'(x_i)=\dfrac{f(x_{i+1})-f(x_i)}{h} + O(h)$
 \noindent
 where $h$ is called the step size---that is, the length of the interval over which the approximation
 is made, $x_{i+1} - x_i$ . It is termed a ``forward'' difference because it utilizes data at $i$
-and $i + 1$ to estimate the derivative (Fig. 4.10a).
+and $i + 1$ to estimate the derivative (Fig. 4.10a).\\
+\newpage
 
 \begin{figure}[h]
     \includegraphics[width=0.5\linewidth]{./images/fig_4_10}
     \caption{Graphical depiction of (a) forward, (b) backward, and (c) centered finite-difference
     approximations of the first derivative.}
 \end{figure}
-\newpage
 
 This forward difference is but one of many that can be developed from the Taylor
 series to approximate derivatives numerically. For example, backward and centered difference
@@ -1504,7 +1529,6 @@ $h_{opt}=\sqrt[3]{\dfrac{3\epsilon}{M}}$
     title('Plot of Error Versus Step Size')\\
     format short\\}
 
-    \newpage
     \noindent
     The M-file can then be run using the following commands:\\
   
@@ -1551,13 +1575,13 @@ $h_{opt}=\sqrt[3]{\dfrac{3\epsilon}{M}}$
     $h_{opt} = \sqrt[3]{\dfrac{3(0.5\times 10^{-16})}{2.1}} = 4.3\times 10^{-6}$\\
 
     \noindent
-    which is on the same order as the result of $1\times 10^{-6}$ obtained with MATLAB.
+    which is on the same order as the result of $1\times 10^{-6}$ obtained with MATLAB.\\
 
     \begin{figure}[h]
         \includegraphics[width=0.75\linewidth]{./images/fig_4_12}
     \end{figure}
 \end{example}
-\newpage
+
 
 \subsection{Control of Numerical Errors}
 \noindent

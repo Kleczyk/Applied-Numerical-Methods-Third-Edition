@@ -256,7 +256,41 @@ a sign change occurs, the upper and lower bounds are stored in an array \texttt{
 \newpage
 
 \begin{figure}[h]
-    \includegraphics[width=0.8\linewidth]{./images/fig_5_4}
+    \begin{lstlisting}[numbers=none]
+ function xb = incsearch(func,xmin,xmax,ns)
+ % incsearch: incremental search root locator
+ %    xb = incsearch(func,xmin,xmax,ns):
+ %       finds brackets of x that contain sign changes
+ %       of a function on an interval
+ % input:
+ %    func = name of function
+ %    xmin, xmax = endpoints of interval
+ %    ns = number of subintervals (default = 50)
+ % output:
+ %    xb(k,1) is the lower bound of the kth sign change
+ %    xb(k,2) is the upper bound of the kth sign change
+ %    If no brackets found, xb = [].
+ if nargin < 3, error('at least 3 arguments required'), end
+ if nargin < 4, ns = 50; end %if ns blank set to 50
+ % Incremental search
+ x = linspace(xmin,xmax,ns);
+ f = func(x);
+ nb = 0; xb = []; %xb is null unless sign change detected
+ for k = 1:length(x)-1
+    if sign(f(k)) ~= sign(f(k+1)) %check for sign change
+       nb = nb + 1;
+       xb(nb,1) = x(k);
+       xb(nb,2) = x(k+1);
+    end
+ end
+ if isempty(xb) %display that no brackets were found
+    disp('no brackets found')
+    disp('check interval or increase ns')
+ else
+    disp('number of brackets:') %display number of brackets
+    disp(nb)
+ end
+    \end{lstlisting}
     \caption{An M-file to implement an incremental search.}
 \end{figure}
 
@@ -419,7 +453,8 @@ $\epsilon_s$, the computation is terminated.\\
     \begin{figure}[h]
         \includegraphics[width=0.75\linewidth]{./images/example_5_4_1}
     \end{figure}
-    \newpage
+    \vspace{1cm}
+    
     \noindent Thus after eight iterations $\left\lvert \epsilon_a \right\rvert $ finally falls below $\epsilon_s = 0.5\%$, and the computation can be
     terminated.
 
@@ -472,7 +507,6 @@ $E^1_a = \dfrac{\Delta x^0}{2}$\\
 the number of iterations $n$ is\\
 
 $E^n_a = \dfrac{\Delta x^0}{2^n}$\\
-\newpage
 
 \noindent If $E_{a,d}$ is the desired error, this equation can be solved for\footnote{MATLAB provides the \texttt{log2} function to evaluate the base-2 logarithm directly. If the pocket calculator or
 computer language you are using does not include the base-2 logarithm as an intrinsic function, this equation
@@ -534,12 +568,51 @@ the root as\\
 error of $\epsilon_a = 0.00005345\%$, and a function value close to zero.
 
 \begin{figure}[h]
-    \includegraphics[width=0.8\linewidth]{./images/fig_5_7}
+    \begin{lstlisting}[numbers=none]
+ function [root,fx,ea,iter]=bisect(func,xl,xu,es,maxit,varargin)
+ % bisect: root location zeroes
+ %    [root,fx,ea,iter]=bisect(func,xl,xu,es,maxit,p1,p2,...):
+ %       uses bisection method to find the root of func
+ % input:
+ %    func = name of function
+ %    xl, xu = lower and upper guesses
+ %    es = desired relative error (default = 0.0001%)
+ %    maxit = maximum allowable iterations (default = 50)
+ %    p1,p2,... = additional parameters used by func
+ % output:
+ %    root = real root
+ %    fx = function value at root
+ %    ea = approximate relative error (%)
+ %    iter = number of iterations
+ if nargin<3,error('at least 3 input arguments required'),end
+ test = func(xl,varargin{:})*func(xu,varargin{:});
+ if test>0,error('no sign change'),end
+ if nargin<4|isempty(es), es=0.0001;end
+ if nargin<5|isempty(maxit), maxit=50;end
+ iter = 0; xr = xl; ea = 100;
+ while (1)
+    xrold = xr;
+    xr = (xl + xu)/2;
+    iter = iter + 1;
+    if xr ~= 0,ea = abs((xr - xrold)/xr) * 100;end
+    test = func(xl,varargin{:})*func(xr,varargin{:});
+    if test < 0
+       xu = xr;
+    elseif test > 0
+       xl = xr;
+    else
+       ea = 0;
+    end
+    if ea <= es | iter >= maxit,break,end
+ end
+ root = xr; fx = func(xr, varargin{:});
+    \end{lstlisting}
     \caption{An M-file to implement the bisection method.}
 \end{figure}
 \vspace{1.5 cm}
 
 \newpage
+
 \section[FALSE POSITIVE]{FALSE POSITIVE}
 \noindent \emph{False position} (also called the linear interpolation method) is another well-known bracketing
 method. It is very similar to bisection with the exception that it uses a different strategy
@@ -602,7 +675,6 @@ bisection (Fig. 5.7) with the exception that Eq. (5.7) is used.\\
 Although false position often performs better than bisection, there are other cases
 where it does not. As in the following example, there are certain cases where bisection
 yields superior results.\\
-\newpage
 
 \begin{example} A Case Where Bisection Is Preferable to False Position\\
 
@@ -636,7 +708,6 @@ yields superior results.\\
         \caption{Plot of $f (x) = x^{10} - 1$, illustrating slow convergence of the false-position method.}
     \end{figure}
 \end{example}
-\newpage
 
 The foregoing example illustrates that blanket generalizations regarding rootlocation
 methods are usually not possible. Although a method such as false position is
@@ -694,7 +765,6 @@ $c_T=\dfrac{K_H p_{CO_2}}{10^6}+[HCO^-_3]+[CO^{-2}_3]$
 
 $0=[HCO^-_3]+2[CO^{-2}_3]+[OH^-]-[H^+]$
 \hfill (5.13)\\
-\newpage
 
 \noindent where $K_H$ = Henry's constant, and $K_1$, $K_2$, and $K_w$ are equilibrium coefficients. The five
 unknowns are $c_T$ = total inorganic carbon, $[HCO^-_3 ]$ = bicarbonate, $[CO^{-2}_3 ]$ = carbonate,
@@ -772,7 +842,6 @@ limit (\texttt{maxit}) is reached first so that exactly 11 iterations are implem
 \indent\indent 0.08676\\
 \indent iter =\\
 \indent\indent 11\\}
-\newpage
 
 \noindent Thus, the pH is computed as 5.6279 with a relative error of $0.0868\%$. We can be confident
 that the rounded result of 5.63 is correct to two decimal places. This can be verified by performing
