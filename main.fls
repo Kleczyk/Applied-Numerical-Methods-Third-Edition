@@ -1258,16 +1258,20 @@ INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmb8t.vf
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmb8r.tfm
 INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmb8t.vf
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmb8r.tfm
-INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmri8t.tfm
+INPUT C:\Program Files\MiKTeX\tex\latex\psnfss\t1pcr.fd
+INPUT C:\Program Files\MiKTeX\tex\latex\psnfss\t1pcr.fd
+INPUT C:\Program Files\MiKTeX\tex\latex\psnfss\t1pcr.fd
+INPUT C:\Program Files\MiKTeX\tex\latex\psnfss\t1pcr.fd
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\courier\pcrr8t.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmro8t.tfm
 INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmro8t.vf
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmro8r.tfm
-INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmri8t.vf
-INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmri8r.tfm
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\courier\pcrr8t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\courier\pcrr8r.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmro8t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmro8t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmro8r.tfm
 OUTPUT main.toc
-INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmro8t.tfm
-INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmro8t.vf
-INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmro8r.tfm
 INPUT .\pre\pre.tex
 INPUT .\pre\pre.tex
 INPUT .\pre\pre.tex
@@ -1336,6 +1340,7 @@ INPUT .\images\\fig_1_1.png
 INPUT .\images\\fig_1_1.png
 INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\zptmcm7m.vf
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\psyro.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmri8r.tfm
 INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\zptmcm7t.vf
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\symbol\psyr.tfm
 INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\zptmcm7y.vf
@@ -1394,16 +1399,14 @@ INPUT .\images\\fig_1_2.png
 INPUT .\images\\fig_1_2.png
 INPUT .\images\\fig_1_2.png
 INPUT .\images\\fig_1_2.png
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmri8t.tfm
 INPUT .\images\\fig_1_3.png
 INPUT images\\fig_1_3.png
 INPUT .\images\\fig_1_3.png
 INPUT .\images\\fig_1_3.png
 INPUT .\images\\fig_1_3.png
 INPUT .\images\\fig_1_3.png
-INPUT C:\Program Files\MiKTeX\tex\latex\psnfss\t1pcr.fd
-INPUT C:\Program Files\MiKTeX\tex\latex\psnfss\t1pcr.fd
-INPUT C:\Program Files\MiKTeX\tex\latex\psnfss\t1pcr.fd
-INPUT C:\Program Files\MiKTeX\tex\latex\psnfss\t1pcr.fd
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmri8t.vf
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\courier\pcrr8t.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\courier\pcrr8t.tfm
 INPUT .\ch4\ch4.tex
@@ -1463,15 +1466,12 @@ INPUT C:\Program Files\MiKTeX\fonts\tfm\public\yhmath\yhcmex10.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\public\yhmath\yhcmex10.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\public\latex-fonts\lasy10.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\public\latex-fonts\lasy9.tfm
-INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\courier\pcrr8t.tfm
 INPUT .\images\fig_4_2.png
 INPUT images\fig_4_2.png
 INPUT .\images\fig_4_2.png
 INPUT .\images\fig_4_2.png
 INPUT .\images\fig_4_2.png
 INPUT .\images\fig_4_2.png
-INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\courier\pcrr8t.vf
-INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\courier\pcrr8r.tfm
 INPUT .\images\fig_4_3.png
 INPUT images\fig_4_3.png
 INPUT .\images\fig_4_3.png
@@ -1917,9 +1917,27 @@ INPUT .\images\\fig_14_13.png
 INPUT .\images\\fig_14_13.png
 INPUT .\images\\fig_14_13.png
 INPUT .\images\\fig_14_13.png
-INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmbi8t.tfm
-INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmbi8t.vf
-INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmbi8r.tfm
+INPUT .\images\\fig_14_14.png
+INPUT images\\fig_14_14.png
+INPUT .\images\\fig_14_14.png
+INPUT .\images\\fig_14_14.png
+INPUT .\images\\fig_14_14.png
+INPUT .\images\\fig_14_14.png
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\courier\pcrb8t.tfm
+INPUT .\images\\fig_14_5_1_u_1.png
+INPUT images\\fig_14_5_1_u_1.png
+INPUT .\images\\fig_14_5_1_u_1.png
+INPUT .\images\\fig_14_5_1_u_1.png
+INPUT .\images\\fig_14_5_1_u_1.png
+INPUT .\images\\fig_14_5_1_u_1.png
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\courier\pcrb8t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\courier\pcrb8r.tfm
+INPUT .\images\\fig_14_5_1_u_2.png
+INPUT images\\fig_14_5_1_u_2.png
+INPUT .\images\\fig_14_5_1_u_2.png
+INPUT .\images\\fig_14_5_1_u_2.png
+INPUT .\images\\fig_14_5_1_u_2.png
+INPUT .\images\\fig_14_5_1_u_2.png
 INPUT .\images\\fig_14_16.png
 INPUT images\\fig_14_16.png
 INPUT .\images\\fig_14_16.png
@@ -1944,12 +1962,121 @@ INPUT .\images\\fig_15_1.png
 INPUT .\images\\fig_15_1.png
 INPUT .\images\\fig_15_1.png
 INPUT .\images\\fig_15_1.png
+INPUT .\images\\fig_15_2.png
+INPUT images\\fig_15_2.png
+INPUT .\images\\fig_15_2.png
+INPUT .\images\\fig_15_2.png
+INPUT .\images\\fig_15_2.png
+INPUT .\images\\fig_15_2.png
 INPUT .\images\\fig_15_3.png
 INPUT images\\fig_15_3.png
 INPUT .\images\\fig_15_3.png
 INPUT .\images\\fig_15_3.png
 INPUT .\images\\fig_15_3.png
 INPUT .\images\\fig_15_3.png
+INPUT .\images\\fig_15_4.png
+INPUT images\\fig_15_4.png
+INPUT .\images\\fig_15_4.png
+INPUT .\images\\fig_15_4.png
+INPUT .\images\\fig_15_4.png
+INPUT .\images\\fig_15_4.png
+INPUT .\images\\fig_15_5.png
+INPUT images\\fig_15_5.png
+INPUT .\images\\fig_15_5.png
+INPUT .\images\\fig_15_5.png
+INPUT .\images\\fig_15_5.png
+INPUT .\images\\fig_15_5.png
+INPUT .\images\\fig_16_1.png
+INPUT images\\fig_16_1.png
+INPUT .\images\\fig_16_1.png
+INPUT .\images\\fig_16_1.png
+INPUT .\images\\fig_16_1.png
+INPUT .\images\\fig_16_1.png
+INPUT .\images\\fig_16_2.png
+INPUT images\\fig_16_2.png
+INPUT .\images\\fig_16_2.png
+INPUT .\images\\fig_16_2.png
+INPUT .\images\\fig_16_2.png
+INPUT .\images\\fig_16_2.png
+INPUT .\images\\fig_16_3.png
+INPUT images\\fig_16_3.png
+INPUT .\images\\fig_16_3.png
+INPUT .\images\\fig_16_3.png
+INPUT .\images\\fig_16_3.png
+INPUT .\images\\fig_16_3.png
+INPUT .\images\\fig_16_5.png
+INPUT images\\fig_16_5.png
+INPUT .\images\\fig_16_5.png
+INPUT .\images\\fig_16_5.png
+INPUT .\images\\fig_16_5.png
+INPUT .\images\\fig_16_5.png
+INPUT .\images\\fig_16_6.png
+INPUT images\\fig_16_6.png
+INPUT .\images\\fig_16_6.png
+INPUT .\images\\fig_16_6.png
+INPUT .\images\\fig_16_6.png
+INPUT .\images\\fig_16_6.png
+INPUT .\images\\fig_16_7.png
+INPUT images\\fig_16_7.png
+INPUT .\images\\fig_16_7.png
+INPUT .\images\\fig_16_7.png
+INPUT .\images\\fig_16_7.png
+INPUT .\images\\fig_16_7.png
+INPUT .\images\\fig_16_8.png
+INPUT images\\fig_16_8.png
+INPUT .\images\\fig_16_8.png
+INPUT .\images\\fig_16_8.png
+INPUT .\images\\fig_16_8.png
+INPUT .\images\\fig_16_8.png
+INPUT .\images\\fig_16_9.png
+INPUT images\\fig_16_9.png
+INPUT .\images\\fig_16_9.png
+INPUT .\images\\fig_16_9.png
+INPUT .\images\\fig_16_9.png
+INPUT .\images\\fig_16_9.png
+INPUT .\images\\fig_16_10.png
+INPUT images\\fig_16_10.png
+INPUT .\images\\fig_16_10.png
+INPUT .\images\\fig_16_10.png
+INPUT .\images\\fig_16_10.png
+INPUT .\images\\fig_16_10.png
+INPUT .\images\\fig_17_1.png
+INPUT images\\fig_17_1.png
+INPUT .\images\\fig_17_1.png
+INPUT .\images\\fig_17_1.png
+INPUT .\images\\fig_17_1.png
+INPUT .\images\\fig_17_1.png
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr8t.tfm
+INPUT .\images\\fig_17_2.png
+INPUT images\\fig_17_2.png
+INPUT .\images\\fig_17_2.png
+INPUT .\images\\fig_17_2.png
+INPUT .\images\\fig_17_2.png
+INPUT .\images\\fig_17_2.png
+INPUT .\images\\fig_17_5.png
+INPUT images\\fig_17_5.png
+INPUT .\images\\fig_17_5.png
+INPUT .\images\\fig_17_5.png
+INPUT .\images\\fig_17_5.png
+INPUT .\images\\fig_17_5.png
+INPUT .\images\\fig_17_7.png
+INPUT images\\fig_17_7.png
+INPUT .\images\\fig_17_7.png
+INPUT .\images\\fig_17_7.png
+INPUT .\images\\fig_17_7.png
+INPUT .\images\\fig_17_7.png
+INPUT .\images\\fig_17_8.png
+INPUT images\\fig_17_8.png
+INPUT .\images\\fig_17_8.png
+INPUT .\images\\fig_17_8.png
+INPUT .\images\\fig_17_8.png
+INPUT .\images\\fig_17_8.png
+INPUT .\images\\fig_17_10.png
+INPUT images\\fig_17_10.png
+INPUT .\images\\fig_17_10.png
+INPUT .\images\\fig_17_10.png
+INPUT .\images\\fig_17_10.png
+INPUT .\images\\fig_17_10.png
 INPUT .\ch17\ch17.tex
 INPUT .\ch17\ch17.tex
 INPUT .\ch17\ch17.tex
@@ -1963,14 +2090,8 @@ INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmb8r.tfm
 INPUT .\images\\fig_17_1.png
 INPUT images\\fig_17_1.png
 INPUT .\images\\fig_17_1.png
-INPUT .\images\\fig_17_1.png
-INPUT .\images\\fig_17_1.png
-INPUT .\images\\fig_17_1.png
 INPUT .\images\\fig_17_2.png
 INPUT images\\fig_17_2.png
-INPUT .\images\\fig_17_2.png
-INPUT .\images\\fig_17_2.png
-INPUT .\images\\fig_17_2.png
 INPUT .\images\\fig_17_2.png
 INPUT .\images\\fig_17_3.png
 INPUT images\\fig_17_3.png
@@ -1987,9 +2108,6 @@ INPUT .\images\\fig_17_4.png
 INPUT .\images\\fig_17_5.png
 INPUT images\\fig_17_5.png
 INPUT .\images\\fig_17_5.png
-INPUT .\images\\fig_17_5.png
-INPUT .\images\\fig_17_5.png
-INPUT .\images\\fig_17_5.png
 INPUT .\images\\fig_17_6.png
 INPUT images\\fig_17_6.png
 INPUT .\images\\fig_17_6.png
@@ -1999,14 +2117,8 @@ INPUT .\images\\fig_17_6.png
 INPUT .\images\\fig_17_7.png
 INPUT images\\fig_17_7.png
 INPUT .\images\\fig_17_7.png
-INPUT .\images\\fig_17_7.png
-INPUT .\images\\fig_17_7.png
-INPUT .\images\\fig_17_7.png
 INPUT .\images\\fig_17_8.png
 INPUT images\\fig_17_8.png
-INPUT .\images\\fig_17_8.png
-INPUT .\images\\fig_17_8.png
-INPUT .\images\\fig_17_8.png
 INPUT .\images\\fig_17_8.png
 INPUT .\images\\fig_17_9.png
 INPUT images\\fig_17_9.png
@@ -2016,9 +2128,6 @@ INPUT .\images\\fig_17_9.png
 INPUT .\images\\fig_17_9.png
 INPUT .\images\\fig_17_10.png
 INPUT images\\fig_17_10.png
-INPUT .\images\\fig_17_10.png
-INPUT .\images\\fig_17_10.png
-INPUT .\images\\fig_17_10.png
 INPUT .\images\\fig_17_10.png
 INPUT .\images\\fig_17_11.png
 INPUT images\\fig_17_11.png
@@ -2093,7 +2202,6 @@ INPUT .\images\\fig_18_7.png
 INPUT .\images\\fig_18_7.png
 INPUT .\images\\fig_18_7.png
 INPUT .\images\\fig_18_7.png
-INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr8t.tfm
 INPUT .\images\\fig_18_8.png
 INPUT images\\fig_18_8.png
 INPUT .\images\\fig_18_8.png
@@ -2550,9 +2658,9 @@ INPUT bibliography\bibliography.tex
 INPUT main.aux
 INPUT .\main.out
 INPUT .\main.out
+INPUT C:\Users\Żurek\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi600\ecss0700.pk
+INPUT C:\Users\Żurek\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi600\ecss0700.pk
 INPUT C:\Program Files\MiKTeX\fonts\enc\dvips\base\8r.enc
-INPUT C:\Users\Żurek\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi600\ecss0700.pk
-INPUT C:\Users\Żurek\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi600\ecss0700.pk
 INPUT C:\Users\Żurek\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi600\ecss1000.pk
 INPUT C:\Users\Żurek\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi600\ecss1000.pk
 INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmex10.pfb
@@ -2575,8 +2683,6 @@ INPUT C:\Program Files\MiKTeX\fonts\type1\urw\symbol\usyr.pfb
 INPUT C:\Program Files\MiKTeX\fonts\type1\urw\symbol\usyr.pfb
 INPUT C:\Program Files\MiKTeX\fonts\type1\urw\times\utmb8a.pfb
 INPUT C:\Program Files\MiKTeX\fonts\type1\urw\times\utmb8a.pfb
-INPUT C:\Program Files\MiKTeX\fonts\type1\urw\times\utmbi8a.pfb
-INPUT C:\Program Files\MiKTeX\fonts\type1\urw\times\utmbi8a.pfb
 INPUT C:\Program Files\MiKTeX\fonts\type1\urw\times\utmr8a.pfb
 INPUT C:\Program Files\MiKTeX\fonts\type1\urw\times\utmr8a.pfb
 INPUT C:\Program Files\MiKTeX\fonts\type1\urw\times\utmr8a.pfb
