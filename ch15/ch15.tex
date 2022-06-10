@@ -1,0 +1,4256 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\part{CurveFitting}
+
+\section{OVERVIEW}
+
+\noindent \textbf{What Is Curve Fitting?}
+
+\noindent Data are often given for discrete values along a continuum. However, you may require estimates at points between the discrete values. Chapters 14 through 18 describe techniques to
+fit curves to such data to obtain intermediate estimates. In addition, you may require a simplified version of a complicated function. One way to do this is to compute values of the
+function at a number of discrete values along the range of interest. Then, a simpler function
+may be derived to fit these values. Both of these applications are known as \textit{curve fitting}.
+
+There are two general approaches for curve fitting that are distinguished from each
+other on the basis of the amount of error associated with the data. First, where the data
+exhibit a significant degree of error or ``scatter,'' the strategy is to derive a single curve that
+represents the general trend of the data. Because any individual data point may be incorrect, we make no effort to intersect every point. Rather, the curve is designed to follow the
+pattern of the points taken as a group. One approach of this nature is called \textit{least-squares
+regression} (Fig. PT4.1a).
+
+Second, where the data are known to be very precise, the basic approach is to fit a
+curve or a series of curves that pass directly through each of the points. Such
+data usually originate from tables. Examples are values for the density of water
+or for the heat capacity of gases as a
+function of temperature. The estimation
+of values between well-known discrete
+points is called \textit{interpolation} (Fig.
+PT4.1b and c).
+
+\noindent \textbf{Curve Fitting and Engineering and
+Science. }  Your first exposure to curve
+fitting may have been to determine intermediate values from tabulated data- for instance, from interest tables for
+engineering economics or from steam tables for thermodynamics. Throughout the remainder of your career, you will have frequent occasion to estimate intermediate values from such tables.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_4_1pt}
+	\caption{\textsf{Three attempts to fit a ``best'' curve through five data points: (a) least-squares regression, (b) linear
+	interpolation, and (c) curvilinear interpolation.}}
+	\label{fig:fig_4_1pt}
+\end{figure}
+
+Although many of the widely used engineering and scientific properties have been tabulated, there are a great many more that are not available in this convenient form. Special
+cases and new problem contexts often require that you measure your own data and develop
+your own predictive relationships. Two types of applications are generally encountered
+when fitting experimental data: trend analysis and hypothesis testing.
+
+\textit{Trend analysis} represents the process of using the pattern of the data to make predictions. For cases where the data are measured with high precision, you might utilize interpolating polynomials. Imprecise data are often analyzed with least-squares regression.
+
+Trend analysis may be used to predict or forecast values of the dependent variable. This
+can involve extrapolation beyond the limits of the observed data or interpolation within the
+range of the data. All fields of engineering and science involve problems of this type.
+
+A second application of experimental curve fitting is \textit{hypothesis testing}. Here, an
+existing mathematical model is compared with measured data. If the model coefficients are unknown, it may be necessary to determine values that best fit the observed data. On the
+other hand, if estimates of the model coefficients are already available, it may be appropriate to compare predicted values of the model with observed values to test the adequacy of
+the model. Often, alternative models are compared and the ``best'' one is selected on the
+basis of empirical observations.
+
+In addition to the foregoing engineering and scientific applications, curve fitting is important in other numerical methods such as integration and the approximate solution of differential equations. Finally, curve-fitting techniques can be used to derive simple functions
+to approximate complicated functions.
+
+\section{PART ORGANIZATION}
+
+\noindent After a brief review of statistics, Chap. 14 focuses on \textit{linear regression}; that is, how to determine the ``best'' straight line through a set of uncertain data points. Besides discussing how to
+calculate the slope and intercept of this straight line, we also present quantitative and visual
+methods for evaluating the validity of the results. In addition, we describe \textit{random number
+generation} as well as several approaches for the linearization of nonlinear equations.
+
+Chapter 15 begins with brief discussions of polynomial and multiple linear regression.
+\textit{Polynomial regression} deals with developing a best fit of parabolas, cubics, or higher-order
+polynomials. This is followed by a description of \textit{multiple linear regression}, which is designed for the case where the dependent variable $y$ is a linear function of two or more
+independent variables $x_1, x_2, \dots , x_m$. This approach has special utility for evaluating experimental data where the variable of interest is dependent on a number of different factors.
+
+After multiple regression, we illustrate how polynomial and multiple regression are
+both subsets of a \textit{general linear least-squares model}. Among other things, this will allow
+us to introduce a concise matrix representation of regression and discuss its general statistical properties. Finally, the last sections of Chap. 15 are devoted to \textit{nonlinear regression}.
+This approach is designed to compute a least-squares fit of a nonlinear equation to data.
+
+\textit{Chapter 16} deals with \textit{Fourier analysis} which involves fitting periodic functions to
+data. Our emphasis will be on the \textit{fast Fourier transform} or \textit{FFT}. This method, which is
+readily implemented with MATLAB, has many engineering applications, ranging from
+vibration analysis of structures to signal processing.
+
+In \textit{Chap. 17}, the alternative curve-fitting technique called \textit{interpolation} is described.
+As discussed previously, interpolation is used for estimating intermediate values between
+precise data points. In Chap. 17, polynomials are derived for this purpose. We introduce the
+basic concept of polynomial interpolation by using straight lines and parabolas to connect
+points. Then, we develop a generalized procedure for fitting an nth-order polynomial. Two
+formats are presented for expressing these polynomials in equation form. The first, called
+\textit{Newton's interpolating polynomial}, is preferable when the appropriate order of the polynomial is unknown. The second, called the \textit{Lagrange interpolating polynomial}, has advantages when the proper order is known beforehand.
+
+Finally, \textit{Chap. 18} presents an alternative technique for fitting precise data points. This
+technique, called \textit{spline interpolation}, fits polynomials to data but in a piecewise fashion.
+As such, it is particularly well suited for fitting data that are generally smooth but exhibit
+abrupt local changes. The chapter ends with an overview of how piecewise interpolation is
+implemented in MATLAB.
+
+\label{cha:cha_P_14} 
+\chapter{General Linear Least-Squares and Nonlinear Regression}
+\textbf{CHAPTER OBJECTIVES}
+
+\noindent The primary objective of this chapter is to introduce you to how least-squares
+regression can be used to fit a straight line to measured data. Specific objectives and
+topics covered are
+
+\begin{itemize}
+	\item Familiarizing yourself with some basic descriptive statistics and the normal
+	distribution.
+	\item	 Knowing how to compute the slope and intercept of a best-fit straight line with
+	linear regression.
+	\item	 Knowing how to generate random numbers with MATLAB and how they can be
+	employed for Monte Carlo simulations.
+	\item	 Knowing how to compute and understand the meaning of the coefficient of
+	determination and the standard error of the estimate.
+	\item	 Understanding how to use transformations to linearize nonlinear equations so that
+	they can be fit with linear regression.
+	\item	 Knowing how to implement linear regression with MATLAB.
+\end{itemize}
+
+\noindent\textbf{YOU'VE GOT A PROBLEM}
+
+\noindent In Chap. 1, we noted that a free-falling object such as a bungee jumper is subject to the upward force of air resistance. As a first approximation, we assumed that this force was proportional to the square of velocity as in
+
+\begin{equation}
+	\tag{14.1}
+	F_U = c_d v^2
+\end{equation}
+
+\noindent where $F_U$ = the upward force of air resistance [N = kg m/s$^2$], $c_d$ = a drag coefficient
+(kg/m), and $v$ = velocity [m/s].
+
+Expressions such as Eq. (14.1) come from the field of fluid mechanics. Although such
+relationships derive in part from theory, experiments play a critical role in their formulation. One such experiment is depicted in Fig. 14.1. An individual is suspended in a wind tunnel (any volunteers?) and the force measured for various levels of wind velocity. The
+result might be as listed in Table 14.1.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_14_1}
+	\caption{\textsf{Wind tunnel experiment to measure how the force of air resistance depends on velocity.}}
+	\label{fig:fig_14_1}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_14_2}
+	\caption{\textsf{Plot of force versus wind velocity for an object suspended in a wind tunnel.}}
+	\label{fig:fig_14_2}
+\end{figure}
+
+\noindent \textbf{TABLE 14.1} Experimental data for force (N) and velocity (m/s) from a wind tunnel
+experiment.
+
+\begin{tabular}{l c c c ccccc}
+	\textbf{$v$, m/s} & 10 & 20 & 30 & 40 & 50 & 60 & 70 & 80 \\
+	\textbf{F, N} & 25 & 70 & 380 & 550 & 610 & 1220 & 830 & 1450
+\end{tabular}
+
+The relationship can be visualized by plotting force versus velocity. As in Fig. 14.2,
+several features of the relationship bear mention. First, the points indicate that the force
+increases as velocity increases. Second, the points do not increase smoothly, but exhibit
+rather significant scatter, particularly at the higher velocities. Finally, although it may not
+be obvious, the relationship between force and velocity may not be linear. This conclusion
+becomes more apparent if we assume that force is zero for zero velocity.
+
+In Chaps. 14 and 15, we will explore how to fit a ``best'' line or curve to such data. In
+so doing, we will illustrate how relationships like Eq. (14.1) arise from experimental data.
+
+
+\label{cha:cha_P_14_1}
+\section{STATISTICS REVIEW}
+
+\noindent Before describing least-squares regression, we will first review some basic concepts
+from the field of statistics. These include the mean, standard deviation, residual sum of
+the squares, and the normal distribution. In addition, we describe how simple descriptive
+statistics and distributions can be generated in MATLAB. If you are familiar with these
+subjects, feel free to skip the following pages and proceed directly to Section 14.2. If you
+are unfamiliar with these concepts or are in need of a review, the following material is
+designed as a brief introduction.
+
+\label{cha:cha_P_14_1_1}
+\subsection{Descriptive Statistics}
+
+\noindent Suppose that in the course of an engineering study, several measurements were made of a
+particular quantity. For example, Table 14.2 contains 24 readings of the coefficient of thermal expansion of a structural steel. Taken at face value, the data provide a limited amount
+of information-that is, that the values range from a minimum of 6.395 to a maximum of
+6.775. Additional insight can be gained by summarizing the data in one or more wellchosen statistics that convey as much information as possible about specific characteristics of
+the data set. These descriptive statistics are most often selected to represent (1) the location
+of the center of the distribution of the data and (2) the degree of spread of the data set.
+
+\noindent \textbf{Measure of Location.} \quad The most common measure of central tendency is the arithmetic
+mean. The arithmetic mean ($\bar{y}$) of a sample is defined as the sum of the individual data
+points ($y_i$) divided by the number of points ($n$), or
+
+\begin{equation}
+	\tag{14.2}
+	\bar{y} = \frac{\sum y_i}{n}
+\end{equation}
+
+where the summation (and all the succeeding summations in this section) is from $i$ = 1
+through $n$.
+
+There are several alternatives to the arithmetic mean. The \textit{median} is the midpoint of a
+group of data. It is calculated by first putting the data in ascending order. If the number of
+measurements is odd, the median is the middle value. If the number is even, it is the arithmetic mean of the two middle values. The median is sometimes called the \textit{50th percentile}.
+
+The mode is the value that occurs most frequently. The concept usually has direct utility only when dealing with discrete or coarsely rounded data. For continuous variables such
+as the data in Table 14.2, the concept is not very practical. For example, there are actually four modes for these data: 6.555, 6.625, 6.655, and 6.715, which all occur twice. If the numbers had not been rounded to 3 decimal digits, it would be unlikely that any of the values
+would even have repeated twice. However, if continuous data are grouped into equispaced
+intervals, it can be an informative statistic. We will return to the mode when we describe histograms later in this section.
+
+\noindent \textbf{TABLE 14.2}	 \quad Measurements of the coefficient of thermal expansion of structural steel.
+
+\begin{tabular}{ccccccccc}
+	6.495 & 6.595 & 6.615 & 6.635 & 6.485 & 6.555 \\
+	6.665 & 6.505 & 6.435 & 6.625 & 6.715 & 6.655 \\
+	6.755 & 6.625 & 6.715 & 6.575 & 6.655 & 6.605 \\
+	6.565 & 6.515 & 6.555 & 6.395 & 6.775 & 6.685
+\end{tabular}
+
+\noindent \textbf{Measures of Spread. } \quad  The simplest measure of spread is the \textit{range}, the difference between the largest and the smallest value. Although it is certainly easy to determine, it is not
+considered a very reliable measure because it is highly sensitive to the sample size and is
+very sensitive to extreme values.
+
+The most common measure of spread for a sample is the \textit{standard deviation} ($s_ y$) about
+the mean:
+
+\begin{equation}
+	\tag{14.3}
+	s_y = \sqrt{\frac{S_t}{n-1}}
+\end{equation}
+
+\noindent where $S_t$ is the total sum of the squares of the residuals between the data points and the
+mean, or
+
+\begin{equation}
+	\tag{14.4}
+	S_t = \sum (y_i - \bar{y})^2
+\end{equation}
+
+\noindent Thus, if the individual measurements are spread out widely around the mean, $S_t$ (and, consequently, $s_y$) will be large. If they are grouped tightly, the standard deviation will be small.
+The spread can also be represented by the square of the standard deviation, which is called
+the \textit{variance}:
+
+\begin{equation}
+	\tag{14.5}
+	s^2_y = \frac{\sum (y_i - \bar{y})^2}{n-1}
+\end{equation}
+
+Note that the denominator in both Eqs. (14.3) and (14.5) is $n - 1$. The quantity $n - 1$
+is referred to as the \textit{degrees of freedom}. Hence $S_t$ and $s_y$ are said to be based on $n - 1$ degrees of freedom. This nomenclature derives from the fact that the sum of the quantities
+upon which $S_t$ is based (i.e., $\bar{y} - y_1 , \bar{y} - y_2 , \dots , \bar{y} - y_n$) is zero. Consequently, if $\bar{y}$ is
+known and $n - 1$ of the values are specified, the remaining value is fixed. Thus, only $n - 1$
+of the values are said to be freely determined. Another justification for dividing by $n - 1$ is
+the fact that there is no such thing as the spread of a single data point. For the case where
+$n = 1$, Eqs. (14.3) and (14.5) yield a meaningless result of infinity.
+
+We should note that an alternative, more convenient formula is available to compute
+the variance:
+
+\begin{equation}
+	\tag{14.6}
+	s^2_y = \frac{\sum y_i^2 -(\sum y_i)^2 / n}{n-1}
+\end{equation}
+
+\noindent This version does not require precomputation of $\bar{y}$ and yields an identical result as Eq. (14.5).
+
+A final statistic that has utility in quantifying the spread of data is the coefficient of
+variation (c.v.). This statistic is the ratio of the standard deviation to the mean. As such, it
+provides a normalized measure of the spread. It is often multiplied by 100 so that it can be
+expressed in the form of a percent:
+
+\begin{equation}
+	\tag{14.7}
+	\text{c.v.} = \frac{s_y}{\bar{y}} \times 100\%
+\end{equation}
+
+\begin{example} Simple Statistics of a Sample
+	
+	\noindent \textbf{Problem Statement.} \quad Compute the mean, median, variance, standard deviation, and coefficient of variation for the data in Table 14.2.
+
+	\noindent \textbf{Solution.} \quad   The data can be assembled in tabular form and the necessary sums computed
+	as in Table 14.3.
+
+	The mean can be computed as [Eq. (14.2)],
+
+	$$
+		\bar{y} = \frac{158.4}{24} = 6.6
+	$$
+
+	\noindent Because there are an even number of values, the median is computed as the arithmetic
+	mean of the middle two values: (6.605 + 6.615)/2 = 6.61.
+
+	As in Table 14.3, the sum of the squares of the residuals is 0.217000, which can be
+used to compute the standard deviation [Eq. (14.3)]:
+
+	$$
+		s_y = \sqrt{\frac{0.217000}{24 - 1}}  = 0.097133
+	$$
+
+	\noindent \textbf{TABLE 14.3} \quad Data and summations for computing simple descriptive statistics for the
+	coefficients of thermal expansion from Table 14.2.
+
+	\begin{tabular}{cccc}
+		$i$ & $y_i$ & $(y_i - \bar{y})^2$ & $y_i^2$\\
+		\hline
+		1 & 6.395 & 0.04203 & 40.896 \\
+		2 & 6.435 & 0.02723 & 41.409 \\
+		3 & 6.485 & 0.01323 & 42.055 \\
+		4 & 6.495 & 0.01103 & 42.185 \\
+		5 & 6.505 & 0.00903 & 42.315 \\
+		6 & 6.515 & 0.00723 & 42.445 \\
+		7 & 6.555 & 0.00203 & 42.968 \\
+		8 & 6.555 & 0.00203 & 42.968 \\
+		9 & 6.565 & 0.00123 & 43.099 \\ 
+		10 & 6.575 & 0.00063 & 43.231 \\
+		11 & 6.595 & 0.00003 & 43.494 \\
+		12 & 6.605 & 0.00002 & 43.626 \\ 
+		13 & 6.615 & 0.00022 & 43.758 \\
+		14 & 6.625 & 0.00062 & 43.891 \\
+		15 & 6.625 & 0.00062 & 43.891 \\ 
+		16 & 6.635 & 0.00122 & 44.023 \\
+		17 & 6.655 & 0.00302 & 44.289 \\
+		18 & 6.655 & 0.00302 & 44.289 \\ 
+		19 & 6.665 & 0.00422 & 44.422 \\
+		20 & 6.685 & 0.00722 & 44.689 \\
+		21 & 6.715 & 0.01322 & 45.091 \\ 
+		22 & 6.715 & 0.01322 & 45.091 \\
+		23 & 6.755 & 0.02402 & 45.630 \\
+		24 & 6.775 & 0.03062 & 45.901 \\ 
+		$\sum$ &158.400 & 0.21700 & 1045.657
+	\end{tabular}
+
+	\noindent the variance [Eq. (14.5)]:
+
+	$$
+	s^2_y = (0.097133)^2 = 0.009435
+	$$
+
+	\noindent and the coefficient of variation [Eq. (14.7)]:
+
+	$$
+		\text{c.v.} = \frac{0.097133}{6.6 } \times 100\% = 1.47\%
+	$$
+
+	\noindent The validity of Eq. (14.6) can also be verified by computing
+
+	$$
+		s^2_y = \frac{1045.657 - (158.400)^2 /24}{24 - 1} = 0.009435
+	$$
+
+\end{example}
+
+\label{cha:cha_P_14_1_2}
+\subsection{The Normal Distribution}
+
+\noindent Another characteristic that bears on the present discussion is the data distribution-that is,
+the shape with which the data are spread around the mean. A histogram provides a simple
+visual representation of the distribution. A \textit{histogram} is constructed by sorting the measurements into intervals, or \textit{bins}. The units of measurement are plotted on the abscissa and
+the frequency of occurrence of each interval is plotted on the ordinate.
+
+As an example, a histogram can be created for the data from Table 14.2. The result
+(Fig. 14.3) suggests that most of the data are grouped close to the mean value of 6.6.
+Notice also, that now that we have grouped the data, we can see that the bin with the most
+values is from 6.6 to 6.64. Although we could say that the mode is the midpoint of this bin,
+6.62, it is more common to report the most frequent range as the \textit{modal class interval}.
+
+If we have a very large set of data, the histogram often can be approximated by a
+smooth curve. The symmetric, bell-shaped curve superimposed on Fig. 14.3 is one such
+characteristic shape-the \textit{normal distribution}. Given enough additional measurements, the
+histogram for this particular case could eventually approach the normal distribution.
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_14_3}
+	\caption{\textsf{A histogram used to depict the distribution of data. As the number of data points increases, the
+	histogram often approaches the smooth, bell-shaped curve called the normal distribution.}}
+	\label{fig:fig_14_3}
+\end{figure}
+
+The concepts of the mean, standard deviation, residual sum of the squares, and normal distribution all have great relevance to engineering and science. A very simple exam-
+ple is their use to quantify the confidence that can be ascribed to a particular measurement.
+If a quantity is normally distributed, the range defined by $\bar{y} - s_y$ to $\bar{y} + s_y$ will encompass
+approximately 68\% of the total measurements. Similarly, the range defined by $\bar{y} -  2s_y$ to
+$\bar{y} + 2s_ y$ will encompass approximately 95\%.
+
+For example, for the data in Table 14.2, we calculated in Example 14.1 that $\bar{y} = 6.6$
+and $s_y = 0.097133$. Based on our analysis, we can tentatively make the statement that
+approximately 95\% of the readings should fall between 6.405734 and 6.794266. Because it
+is so far outside these bounds, if someone told us that they had measured a value of 7.35, we
+would suspect that the measurement might be erroneous.
+
+\label{cha:cha_P_14_1_3}
+\subsection{Descriptive Statistics in MATLAB}
+
+\noindent Standard MATLAB has several functions to compute descriptive statistics. For example,
+the arithmetic mean is computed as \texttt{mean(x)}. If \texttt{x} is a vector, the function returns the mean
+of the vector's values. If it is a matrix, it returns a row vector containing the arithmetic
+mean of each column of \texttt{x}. The following is the result of using mean and the other statistical functions to analyze a column vector s that holds the data from Table 14.2:
+
+\begin{lstlisting}[numbers=none]
+	>> format short g
+	>> mean(s),median(s),mode(s)
+	ans =
+		6.6
+	ans =
+		6.61
+	ans =
+		6.555
+	>> min(s),max(s)
+	ans =
+		6.395
+	ans =
+		6.775
+	>> range=max(s)-min(s)
+	range =
+		0.38
+	>> var(s),std(s)
+	ans =
+		0.0094348
+	ans =
+		0.097133
+\end{lstlisting}
+
+\noindent These results are consistent with those obtained previously in Example 14.1. Note that
+although there are four values that occur twice, the mode function only returns the first of
+the values: 6.555.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_14_4}
+	\caption{\textsf{Histogram generated with the MATLAB \texttt{hist} function.}}
+	\label{fig:fig_14_4}
+\end{figure}
+
+MATLAB can also be used to generate a histogram based on the \texttt{hist}  function. The
+hist function has the syntax
+
+\begin{lstlisting}[numbers=none]
+	[n, x] = hist(y, x)
+\end{lstlisting}
+
+\noindent where \texttt{n} = the number of elements in each bin, \texttt{x} = a vector specifying the midpoint of
+each bin, and \texttt{y} is the vector being analyzed. For the data from Table 14.2, the result is
+
+\begin{lstlisting}[numbers=none]
+	>> [n,x] =hist(s)
+	n =	
+		1	1	3	1	4	3	5	2	2	2
+	x =
+		6.414 6.452 6.49 6.528 6.566 6.604 6.642 6.68 6.718 6.756
+\end{lstlisting}
+
+The resulting histogram depicted in Fig. 14.4 is similar to the one we generated by hand in
+Fig. 14.3. Note that all the arguments and outputs with the exception of \texttt{y} are optional. For
+example, \texttt{hist(y)} without output arguments just produces a histogram bar plot with
+10 bins determined automatically based on the range of values in \texttt{y}.
+
+\label{cha:cha_P_14_2}
+\section{RANDOM NUMBERS AND SIMULATION}
+\noindent In this section, we will describe two MATLAB functions that can be used to produce a
+sequence of random numbers. The first (\texttt{rand}) generates numbers that are uniformly
+distributed, and the second (\texttt{randn}) generates numbers that have a normal distribution.
+
+\label{cha:cha_P_14_2_1}
+\subsection{MATLAB Function: \texttt{rand}}
+
+\noindent This function generates a sequence of numbers that are uniformly distributed between 0
+and 1. A simple representation of its syntax is
+
+\begin{lstlisting}[numbers=none]
+	r = rand(m, n)
+\end{lstlisting}
+
+\noindent where \texttt{r} = an \texttt{m}-by-\texttt{n} matrix of random numbers. The following formula can then be used
+to generate a uniform distribution on another interval:
+
+\begin{lstlisting}[numbers=none]
+	runiform = low + (up - low) * rand(m, n)
+\end{lstlisting}
+
+\noindent where \texttt{low} = the lower bound and \texttt{up} = the upper bound.
+
+\begin{example} Generating Uniform Random Values of Drag
+
+	\noindent \textbf{Problem Statement. } \quad  If the initial velocity is zero, the downward velocity of the free-falling
+	bungee jumper can be predicted with the following analytical solution (Eq. 1.9):
+
+	$$
+		v= \sqrt{\frac{gm}{c_d} } \tanh \left(\sqrt{\frac{gc_d}{m} t}\right)
+	$$
+
+	\noindent Suppose that $g = 9.81$ m/s$^2$ , and $m$ = 68.1 kg, but $c_d$ is not known precisely. For example,
+	you might know that it varies uniformly between 0.225 and 0.275 (i.e., $\pm 10\%$ around a
+	mean value of 0.25 kg/m). Use the \texttt{rand} function to generate 1000 random uniformly
+	distributed values of $c_d$ and then employ these values along with the analytical solution to
+	compute the resulting distribution of velocities at $t$ = 4 s.
+
+	\noindent \textbf{Solution. } \quad  Before generating the random numbers, we can first compute the mean velocity:
+
+	$$
+		v_{\text{mean}} = \sqrt{\frac{9.81(68.1)}{0.25}} \tanh \left(\sqrt{\frac{9.81(0.25)}{68.1}} 4 \right) = 33.1118 \frac{m}{s}
+	$$
+
+	\noindent We can also generate the range:
+
+	$$
+		v_{\text{low}} = \sqrt{\frac{9.81(68.1)}{0.275}} \tanh \left(\sqrt{\frac{9.81(0.275)}{68.1}} 4 \right) = 32.6223 \frac{m}{s}
+	$$
+
+	$$
+		v_{\text{high}} = \sqrt{\frac{9.81(68.1)}{0.225}} \tanh \left(\sqrt{\frac{9.81(0.225)}{68.1}} 4 \right) = 33.6198 \frac{m}{s}
+	$$
+
+	\noindent Thus, we can see that the velocity varies by
+
+	$$
+		\Delta v = \frac{33.6198 - 32.6223}{2(33.1118)} \times 100 \% = 1.5063\%
+	$$
+
+	\noindent The following script generates the random values for $c_d$ , along with their mean, standard
+	deviation, percent variation, and a histogram:
+
+	\begin{lstlisting}[numbers=none]
+		clc,format short g
+		n=1000;t=4;m=68.1;g=9.81;
+		cd=0.25;cdmin=cd-0.025,cdmax=cd+0.025
+		r=rand(n,1);
+		cdrand=cdmin+(cdmax-cdmin)*r;
+		meancd=mean(cdrand),stdcd=std(cdrand)
+		Deltacd=(max(cdrand)-min(cdrand))/meancd/2*100.
+		subplot(2,1,1)
+		hist(cdrand),title('(a) Distribution of drag')
+		xlabel('cd (kg/m)')
+	\end{lstlisting}
+
+	\noindent The results are
+
+	\begin{lstlisting}[numbers=none]
+		meancd =
+			0.25018
+		stdcd =
+			0.014528
+		Deltacd =
+			9.9762
+	\end{lstlisting}
+
+	\noindent These results, as well as the histogram (Fig. 14.5a) indicate that \texttt{rand} has yielded 1000
+	uniformly distributed values with the desired mean value and range. The values can then be
+	employed along with the analytical solution to compute the resulting distribution of velocities at $t$ = 4 s.
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\linewidth]{fig_14_5}
+		\caption{\textsf{Histograms of (a) uniformly distributed drag coefficients and (b) the resulting distribution of velocity.}}
+		\label{fig:fig_14_5}
+	\end{figure}
+
+	\begin{lstlisting}[numbers=none]
+		vrand=sqrt(g*m./cdrand).*tanh(sqrt(g*cdrand/m)*t);
+		meanv=mean(vrand)
+		Deltav=(max(vrand)-min(vrand))/meanv/2*100.
+		subplot(2,1,2)
+		hist(vrand),title('(b) Distribution of velocity')
+		xlabel('v (m/s)')
+	\end{lstlisting}
+
+	\noindent The results are
+
+	\begin{lstlisting}[numbers=none]
+		meanv =
+			33.1151
+		Deltav =
+			1.5048
+	\end{lstlisting}
+
+	\noindent These results, as well as the histogram (Fig. 14.5b), closely conform to our hand calculations.
+\end{example}
+
+The foregoing example is formally referred to as a \textit{Monte Carlo simulation}. The term,
+which is a reference to Monaco's Monte Carlo casino, was first used by physicists working
+on nuclear weapons projects in the 1940s. Although it yields intuitive results for this simple
+example, there are instances where such computer simulations yield surprising outcomes
+and provide insights that would otherwise be impossible to determine. The approach is feasible only because of the computer's ability to implement tedious, repetitive computations
+in an efficient manner.
+
+\label{cha:cha_P_14_2_2}
+\subsection{MATLAB Function: \texttt{randn}}
+
+\noindent This function generates a sequence of numbers that are normally distributed with a mean
+of 0 and a standard deviation of 1. A simple representation of its syntax is
+
+\begin{lstlisting}[numbers=none]
+	r = randn(m, n)
+\end{lstlisting}
+
+\noindent where \texttt{r} = an \texttt{m}-by-\texttt{n} matrix of random numbers. The following formula can then be used
+to generate a normal distribution with a different mean (\texttt{mn}) and standard deviation (s),
+
+\begin{lstlisting}[numbers=none]
+	rnormal = mn + s * randn(m, n)
+\end{lstlisting}
+
+\begin{example} Generating Normally-Distributed Random Values of Drag
+	
+	\noindent \textbf{Problem Statement. } \quad Analyze the same case as in Example 14.2, but rather than employing a uniform distribution, generate normally-distributed drag coefficients with a mean of
+	0.25 and a standard deviation of 0.01443.
+
+	\noindent \textbf{Solution. } \quad The following script generates the random values for $c_d$ , along with their mean,
+	standard deviation, coefficient of variation (expressed as a \%), and a histogram:
+
+	\begin{lstlisting}[numbers=none]
+		clc,format short g
+		n=1000;t=4;m=68.1;g=9.81;
+		cd=0.25;
+		stdev=0.01443;
+		r=randn(n,1);
+		cdrand=cd+stdev*r;
+		meancd=mean(cdrand),stdevcd=std(cdrand)
+		cvcd=stdevcd/meancd*100.
+		subplot(2,1,1)
+		hist(cdrand),title('(a) Distribution of drag')
+		xlabel('cd (kg/m)')
+	\end{lstlisting}
+
+	\noindent  The results are
+
+	\begin{lstlisting}[numbers=none]
+		meancd =
+			0.24988
+		stdevcd =
+			0.014465
+		cvcd =
+			5.7887
+	\end{lstlisting}
+
+	\noindent These results, as well as the histogram (Fig. 14.6a) indicate that randn has yielded 1000
+	uniformly distributed values with the desired mean, standard deviation, and coefficient
+	of variation. The values can then be employed along with the analytical solution to compute the resulting distribution of velocities at $t$ = 4 s.
+
+	\begin{lstlisting}[numbers=none]
+		vrand=sqrt(g*m./cdrand).*tanh(sqrt(g*cdrand/m)*t);
+		meanv=mean(vrand),stdevv=std(vrand)
+		cvv=stdevv/meanv*100.
+		subplot(2,1,2)
+		hist(vrand),title('(b) Distribution of velocity')
+		xlabel('v (m/s)')
+	\end{lstlisting}
+
+	\noindent The results are
+
+	\begin{lstlisting}[numbers=none]
+		meanv =
+			33.117
+		stdevv =
+			0.28839
+		cvv =
+			0.8708
+	\end{lstlisting}
+
+	\noindent These results, as well as the histogram (Fig. 14.6b), indicate that the velocities are also normally distributed with a mean that is close to the value that would be computed using the
+	mean and the analytical solution. In addition, we compute the associated standard deviation
+	which corresponds to a coefficient of variation of $\pm 0.8708\%$.
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\linewidth]{fig_14_6}
+		\caption{\textsf{Histograms of (a) normally-distributed drag coefficients and (b) the resulting distribution of velocity.}}
+		\label{fig:fig_14_6}
+	\end{figure}
+\end{example}
+
+Although simple, the foregoing examples illustrate how random numbers can be easily generated within MATLAB. We will explore additional applications in the end-of-chapter problems.
+
+\label{cha:cha_P_14_3}
+\section{LINEAR LEAST-SQUARES REGRESSION}
+
+\noindent Where substantial error is associated with data, the best curve-fitting strategy is to derive
+an approximating function that fits the shape or general trend of the data without necessarily matching the individual points. One approach to do this is to visually inspect the
+plotted data and then sketch a ``best'' line through the points. Although such ``eyeball''
+approaches have commonsense appeal and are valid for ``back-of-the-envelope'' calculations, they are deficient because they are arbitrary. That is, unless the points define a perfect
+straight line (in which case, interpolation would be appropriate), different analysts would
+draw different lines.
+
+To remove this subjectivity, some criterion must be devised to establish a basis for the
+fit. One way to do this is to derive a curve that minimizes the discrepancy between the data
+points and the curve. To do this, we must first quantify the discrepancy. The simplest example is fitting a straight line to a set of paired observations: $(x_1 , y_1 ), (x_2 , y_2 ), \dots , (x_n , y_n )$.
+The mathematical expression for the straight line is
+
+\begin{equation}
+	tag{14.8}
+	y = a_0 + a_1 x +e
+\end{equation}
+
+where $a_0$ and $a_1$ are coefficients representing the intercept and the slope, respectively, and
+e is the error, or \textit{residual}, between the model and the observations, which can be represented by rearranging Eq. (14.8) as
+
+\begin{equation}
+	\tag{14.9}
+	e = y - a_0 - a_1 x
+\end{equation}
+
+\noindent Thus, the residual is the discrepancy between the true value of $y$ and the approximate value,
+$a_0 + a_1 x$, predicted by the linear equation.
+
+\label{cha:cha_P_14_3_1}
+\subsection{Criteria for a ``Best'' Fit}
+
+\noindent One strategy for fitting a ``best'' line through the data would be to minimize the sum of the
+residual errors for all the available data, as in
+
+\begin{equation}
+	\tag{14.10}
+	\sum_{i=1}^n e_i = \sum^n_{i=1} (y_i - a_0 - a_1 x_i)
+\end{equation}
+
+where $n$ = total number of points. However, this is an inadequate criterion, as illustrated by
+Fig. 14.7a, which depicts the fit of a straight line to two points. Obviously, the best fit is the
+line connecting the points. However, any straight line passing through the midpoint of the
+connecting line (except a perfectly vertical line) results in a minimum value of Eq. (14.10)
+equal to zero because positive and negative errors cancel.
+
+One way to remove the effect of the signs might be to minimize the sum of the absolute values of the discrepancies, as in
+
+\begin{equation}
+	\tag{14.11}
+	\sum_{i=1}^n \left| e_i \right| = \sum^n_{i=1} \left| y_i - a_0 - a_1 x_i \right|
+\end{equation}
+
+\noindent Figure 14.7b demonstrates why this criterion is also inadequate. For the four points shown,
+any straight line falling within the dashed lines will minimize the sum of the absolute values of the residuals. Thus, this criterion also does not yield a unique best fit.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_14_7} % ups
+	\caption{\textsf{Examples of some criteria for ``best fit'' that are inadequate for regression: (a) minimizes the sum
+	of the residuals, (b) minimizes the sum of the absolute values of the residuals, and (c) minimizes
+	the maximum error of any individual point.}}
+	\label{fig:fig_14_7}
+\end{figure}
+
+A third strategy for fitting a best line is the \textit{minimax} criterion. In this technique, the line
+is chosen that minimizes the maximum distance that an individual point falls from the line.
+As depicted in Fig. 14.7c, this strategy is ill-suited for regression because it gives undue
+influence to an outlier-that is, a single point with a large error. It should be noted that
+the minimax principle is sometimes well-suited for fitting a simple function to a complicated function (Carnahan, Luther, and Wilkes, 1969).
+
+A strategy that overcomes the shortcomings of the aforementioned approaches is to
+minimize the sum of the squares of the residuals:
+
+\begin{equation}
+	\tag{14.12}
+	S_r = \sum_{i=1}^n e_i^2 = \sum^n_{i=1} (y_i - a_0 - a_1 x_i)^2
+\end{equation}
+
+\noindent This criterion, which is called \textit{least squares}, has a number of advantages, including that it
+yields a unique line for a given set of data. Before discussing these properties, we will present a technique for determining the values of $a_0$ and $a_1$ that minimize Eq. (14.12).
+
+\label{cha:cha_P_14_3_2}
+\subsection{Least-Squares Fit of a Straight Line}
+
+\noindent To determine values for $a_0$ and $a_1$ , Eq. (14.12) is differentiated with respect to each
+unknown coefficient:
+
+\begin{equation}
+	\notag
+	\frac{\partial S_r}{\partial a_0} = -2 \sum (y_i - a_0 - a_1 x_i)
+\end{equation}
+
+\begin{equation}
+	\notag
+	\frac{\partial S_r}{\partial a_1} = -2 \sum [(y_i - a_0 - a_1 x_i) x_i]
+\end{equation}
+
+\noindent Note that we have simplified the summation symbols; unless otherwise indicated, all summations are from $i = 1$ to $n$. Setting these derivatives equal to zero will result in a minimum
+$S_r$. If this is done, the equations can be expressed as
+
+\begin{equation}
+	\notag
+	0 = \sum y_i - \sum a_0 - \sum a_1 x_i
+\end{equation}
+
+\begin{equation}
+	\notag
+	0 = \sum x_i y_i - \sum a_0 x_i - \sum a_1 x_i^2
+\end{equation}
+
+\noindent Now, realizing that $\sum a_0 = na_0$, we can express the equations as a set of two simultaneous
+linear equations with two unknowns ($a_0$ and $a_1$):
+
+\begin{equation}
+	\tag{14.13}
+	n \quad a_0 + \left( \sum x_i \right) a_1 = \sum y_i
+\end{equation}
+
+\begin{equation}
+	\tag{14.14}
+	\left( \sum x_i \right) a_0 + \left( \sum x_i^2 \right) a_1 = \sum x_i y_i
+\end{equation}
+
+\noindent These are called the \textit{normal equations}. They can be solved simultaneously for
+
+\begin{equation}
+	\tag{14.15}
+	a_1 = \frac{n \sum x_i y_i - \sum x_i \sum y_i}{n \sum x^2_i - \left( \sum x_i \right) ^ 2}
+\end{equation}
+
+\noindent This result can then be used in conjunction with Eq. (14.13) to solve for
+
+\begin{equation}
+	\tag{14.16}
+	a_0 = \bar{y} - a_1 \bar{x}
+\end{equation}
+
+\noindent where $\bar{y}$ and $\bar{x}$ are the means of $y$ and $x$, respectively.
+
+\begin{example} Linear Regression
+	
+	\noindent \textbf{Problem Statement. } \quad  Fit a straight line to the values in Table 14.1.
+
+	\noindent \textbf{Solution. } \quad   In this application, force is the dependent variable ($y$) and velocity is the
+	independent variable ($x$). The data can be set up in tabular form and the necessary sums
+	computed as in Table 14.4.
+
+	\noindent \textbf{TABLE 14.4} \quad Data and summations needed to compute the best-fit line for the data
+	from Table 14.1.
+
+	\begin{tabular}{lrrrr}
+		$i$ & $x_i$ & $y_i$ & $x^2_i$ & $x_i y_i$ \\
+		\hline
+		1 & 10 & 25 & 100 & 250 \\
+		2 & 20 & 70 & 400 & 1,400 \\
+		3 & 30 & 380 & 900 & 11,400 \\
+		4 & 40 & 550 & 1,600 & 22,000 \\
+		5 & 50 & 610 & 2,500 & 30,500 \\
+		6 & 60 & 1,220 & 3,600 & 73,200 \\
+		7 & 70 & 830 & 4,900 & 58,100 \\
+		8 & 80 & 1,450 & 6,400 & 116,000 \\
+		$\sum$ &360 & 5,135 & 20,400 & 312,850
+	\end{tabular}
+
+	The means can be computed as
+
+	$$
+		\bar{x} = \frac{360}{8} = 45 \quad \bar{y} = \frac{5,135}{8 } = 641.875
+	$$
+
+	\noindent The slope and the intercept can then be calculated with Eqs. (14.15) and (14.16) as
+
+	$$
+		a_1 = \frac{8(312,850) - 360(5,135)}{8(20,400) - (360)^2} = 19.47024
+	$$
+
+	$$
+		a_0 = 641.875 - 19.47024(45) = -234.2857
+	$$
+
+	\noindent Using force and velocity in place of y and x, the least-squares fit is
+
+	$$
+	F = -234.2857 + 19.47024v
+	$$
+
+	\noindent The line, along with the data, is shown in Fig. 14.8.
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\linewidth]{fig_14_8}
+		\caption{\textsf{Least-squares fit of a straight line to the data from Table 14.1}}
+		\label{fig:fig_14_8}
+	\end{figure}
+
+	Notice that although the line fits the data well, the zero intercept means that the equation predicts physically unrealistic negative forces at low velocities. In Section 14.4, we
+will show how transformations can be employed to derive an alternative best-fit line that is
+more physically realistic.
+
+\end{example}
+
+
+
+\label{cha:cha_P_14_3_3}
+\subsection{Quantification of Error of Linear Regression}
+
+\noindent Any line other than the one computed in Example 14.4 results in a larger sum of the squares of the residuals. Thus, the line is unique and in terms of our chosen criterion is a ``best'' line through the points. A number of additional properties of this fit can be elucidated by examining more closely the way in which residuals were computed. Recall that the sum of the squares is defined as [Eq. (14.12)]
+
+\begin{equation}
+	\tag{14.17}
+	S_r = \sum^n_{i=1} (y_i - a_0 - a_1 x_i)^2
+\end{equation}
+
+Notice the similarity between this equation and Eq. (14.4)
+
+\begin{equation}
+\tag{14.18}
+S_t = \sum (y_i - \bar{y})^2
+\end{equation}
+In Eq. (14.18), the square of the residual represented the square of the discrepancy between the data and a single estimate of the measure of central tendency-the mean. In Eq. (14.17), the square of the residual represents the square of the vertical distance between the data and another measure of central tendency-the straight line (\ref{fig:fig_14_9}).
+
+\begin{wrapfigure}{l}{0.25\textwidth}
+    \centering
+    \includegraphics[width=0.25\textwidth]{fig_14_9}
+   \caption{\textsf{The residual in linear regression represents the vertical distance between a data point and the straight line.}}
+   \label{fig:fig_14_9}
+\end{wrapfigure}
+
+The analogy can be extended further for cases where (1) the spread of the points around the line is of similar magnitude along the entire range of the data and (2) the distribution of these points about the line is normal. It can be demonstrated that if these criteria are met, least-squares regression will provide the best (i.e., the most likely) estimates of $a_0$ and $a_1$ (Draper and Smith, 1981). This is called the maximum likelihood principle in statistics. In addition, if these criteria are met, a ``standard deviation'' for the regression line can be determined as [compare with Eq. (14.3)]
+
+\begin{equation}
+	\tag{14.19}
+	s_{y/x} = \sqrt{\frac{S_r}{n-2}}
+\end{equation}
+
+\noindent where $s_{y/x}$ is called the \textit{standard error of the estimate}. The subscript notation ``$y/x$'' designates that the error is for a predicted value of $y$ corresponding to a particular value of $x$.
+Also, notice that we now divide by $n - 2$ because two data-derived estimates - $a_0$ and $a_1$ - were used to compute $S_r$; thus, we have lost two degrees of freedom. As with our discussion of the standard deviation, another justification for dividing by $n - 2$ is that there is no such thing as the ``spread of data'' around a straight line connecting two points. Thus, for the case where $n = 2$, Eq. (14.19) yields a meaningless result of infinity.
+
+Just as was the case with the standard deviation, the standard error of the estimate quantifies the spread of the data. However, $s_{y/x}$ quantifies the spread \textit{around the regression line} as shown in \ref{fig:fig_14_10b} in contrast to the standard deviation $s_y$ that quantified the \textit{spread around the mean} (\ref{fig:fig_14_10a}).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_14_10}
+	\caption{\textsf{Regression data showing (a) the spread of the data around the mean of the dependent variable and (b) the spread of the data around the best-fit line. The reduction in the spread in going from (a) to (b), as indicated by the bell-shaped curves at the right, represents the improvement due to linear regression.}}
+	\label{fig:fig_14_10}
+	\label{fig:fig_14_10a}
+	\label{fig:fig_14_10b}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_14_11}
+	\caption{\textsf{Examples of linear regression with (a) small and (b) large residual errors.}}
+	\label{fig:fig_14_11}
+	\label{fig:fig_14_11a}
+	\label{fig:fig_14_11b}
+\end{figure}
+
+These concepts can be used to quantify the ``goodness'' of our fit. This is particularly useful for comparison of several regressions (\ref{fig:fig_14_11a}). To do this, we return to the original data and determine the total sum of the squares around the mean for the dependent variable (in our case, $y$). As was the case for Eq. (14.18), this quantity is designated $S_t$. This is the magnitude of the residual error associated with the dependent variable prior to regression. After performing the regression, we can compute $S_r$, the sum of the squares of the residuals around the regression line with Eq. (14.17). This characterizes the residual error that remains after the regression. It is, therefore, sometimes called the unexplained sum of the squares. The difference between the two quantities, $S_t - S_r$, quantifies the improvement or error reduction due to describing the data in terms of a straight line rather than as an average value. Because the magnitude of this quantity is scale-dependent, the difference is normalized to $S_t$ to yield
+
+\begin{equation}
+	\tag{14.20}
+	r^2 = \frac{S_t - S_r}{S_t}
+\end{equation}
+
+\noindent where $r^2$ is called the \textit{coefficient of determination} and $r$ is the \textit{correlation coefficient} ($=\sqrt{r^2}$). For a perfect fit, $S_r = 0$ and $r^2 = 1$, signifying that the line explains 100\% of the variability of the data. For $r^2 = 0$, $S_r = S_t$ and the fit represents no improvement. An alternative formulation for $r$ that is more convenient for computer implementation is
+
+\begin{equation}
+	\tag{14.21}
+	r = \frac{n \sum (x_i y_i) - (\sum x_i) (\sum y_i)}{\sqrt{n \sum x^2_i - (\sum x_i)^2} \sqrt{n \sum y^2_i - (\sum y_i)^2}}
+\end{equation}
+
+\begin{example} Estimation of Errors for the Linear Least-Squares Fit
+
+    \noindent\textbf{Problem Statement.}\quad Compute the total standard deviation, the standard error of the estimate, and the correlation coefficient for the fit in Example 14.4.
+
+    \noindent\textbf{Solution.}\quad  The data can be set up in tabular form and the necessary sums computed as in Table 14.5.
+
+    \noindent \textbf{TABLE 14.5} \quad Data and summations needed to compute the goodness-of-fit statistics
+	for the data from Table 14.1.
+
+	\begin{tabular}{lrrrrr}
+		$i$ & $x_i$ & $y_i$ & $a_0 + a_1 x_i$ & $( y_i - \bar{y})^2$ & $( y_i - a_0 - a_1 x_i)^2$ \\
+		1 & 10 & 25 & -39.58 & 380,535 & 4,171 \\
+		2 & 20 & 70 & 155.12 & 327,041 & 7,245 \\
+		3 & 30 & 380 & 349.82 & 68,579 & 911 \\
+		4 & 40 & 550 & 544.52 & 8,441 & 30 \\
+		5 & 50 & 610 & 739.23 & 1,016 & 16,699 \\
+		6 & 60 & 1,220 & 933.93 & 334,229 & 81,837 \\
+		7 & 70 & 830 & 1,128.63 & 35,391 & 89,180 \\
+		8 & 80 & 1,450 & 1,323.33 & 653,066 & 16,044 \\
+		$\sum$ & 360 & 5,135 & & 1,808,297 & 216,118
+
+	\end{tabular}
+
+    The standard deviation is [Eq. (14.3)]
+
+	\begin{equation}
+		\notag
+		s_y = \frac{1,808,297}{8-1}=508.26
+	\end{equation}
+
+	\noindent and the standard error of the estimate is [Eq. (14.19)]
+
+	\begin{equation}
+		\notag
+		s_{y/x} = \frac{216,118}{8-2}189.79
+	\end{equation}
+
+	\noindent Thus, because $s_{y/x} < s_y$, the linear regression model has merit. The extent of the improvement is quantified by [Eq. (14.20)]
+
+	\begin{equation}
+		\notag
+		r^2 = \frac{1,808,297 - 216,118}{1,808,297} = 0.8805
+	\end{equation}
+
+	\noindent or $r = \sqrt{0.8805} = 0.9383$. These results indicate that 88.05\% of the original uncertainty has been explained by the linear model.
+\end{example}
+
+Before proceeding, a word of caution is in order. Although the coefficient of determination provides a handy measure of goodness-of-fit, you should be careful not to ascribe more meaning to it than is warranted. Just because $r^2$ is ``close'' to 1 does not mean that the fit is necessarily ``good''. For example, it is possible to obtain a relatively high value of $r^2$ when the underlying relationship between $y$ and $x$ is not even linear. Draper and Smith (1981) provide guidance and additional material regarding assessment of results for linear regression. In addition, at the minimum, you should always inspect a plot of the data along with your regression curve.
+
+A nice example was developed by Anscombe (1973). As in Fig. 14.12, he came up with four data sets consisting of 11 data points each. Although their graphs are very different, all have the same best-fit equation, $y = 3 + 0.5 x$, and the same coefficient of determination, $r^2 = 0.67$! This example dramatically illustrates why developing plots is so valuable.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_14_12}
+	\caption{\textsf{Anscombe's four data sets along with the best-fit line, $y = 3 + 0.5x$.}}
+	\label{fig:fig_14_12}
+\end{figure}
+
+
+\label{cha:cha_P_14_4}
+\section{LINEARIZATION OF NONLINEAR RELATIONSHIPS}
+
+Linear regression provides a powerful technique for fitting a best line to data. However, it is predicated on the fact that the relationship between the dependent and independent variables is linear. This is not always the case, and the first step in any regression analysis should be to plot and visually inspect the data to ascertain whether a linear model applies. In some cases, techniques such as polynomial regression, which is described in Chap. 15, are appropriate. For others, transformations can be used to express the data in a form that is compatible with linear regression.
+
+One example is the \textit{exponential model}:
+
+\begin{equation}
+	\tag{14.22}
+	y = a_1 e^{\beta_1 x}
+\end{equation}
+
+\noindent where $\alpha$ and $\beta_1$ are constants. This model is used in many fields of engineering and science to characterize quantities that increase (positive $\beta_1$) or decrease (negative $\beta_1$) at a rate that is directly proportional to their own magnitude. For example, population growth or radioactive decay can exhibit such behavior. As depicted in Fig. 14.13a, the equation represents a nonlinear relationship (for $\beta_1 \neq 0$) between $y$ and $x$.
+
+Another example of a nonlinear model is the simple \textit{power equation:}
+
+\begin{equation}
+	\tag{14.23}
+	y = a_2 x^{\beta_2}
+\end{equation}
+
+\noindent where $\alpha_2$ and $\beta_2$ are constant coefficients. This model has wide applicability in all fields of engineering and science. It is very frequently used to fit experimental data when the underlying model is not known. As depicted in Fig. 14.13b, the equation (for $\beta_2 \neq 0$) is nonlinear.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_14_13}
+	\caption{\textsf{(a) The exponential equation, (b) the power equation, and (c) the saturation-growth-rate equation. Parts (d), (e), and (f) are linearized versions of these equations that result from simple transformations.}}
+	\label{fig:fig_14_13}
+	\label{fig:fig_14_13a}
+	\label{fig:fig_14_13b}
+	\label{fig:fig_14_13c}
+	\label{fig:fig_14_13d}
+	\label{fig:fig_14_13e}
+	\label{fig:fig_14_13f}
+\end{figure}
+
+
+A third example of a nonlinear model is the \textit{saturation-growth-rate equation}:
+
+\begin{equation}
+	\tag{14.24}
+	y = \alpha_3 \frac{x}{\beta_3 + x}
+\end{equation}
+
+\noindent where $\alpha_3$ and $\beta_3$ are constant coefficients. This model, which is particularly well-suited for characterizing population growth rate under limiting conditions, also represents a nonlinear relationship between y and x (Fig. 14.13c) that levels off, or “saturates,” as $x$ increases. It has many applications, particularly in biologically related areas of both engineering and science.
+
+Nonlinear regression techniques are available to fit these equations to experimental data directly. However, a simpler alternative is to use mathematical manipulations to trans form the equations into a linear form. Then linear regression can be employed to fit the equations to data.
+
+For example, Eq. (14.22) can be linearized by taking its natural logarithm to yield
+
+\begin{equation}
+	\tag{14.25}
+	\ln{y} = \ln{\alpha_1} + \beta_1 x
+\end{equation}
+
+\noindent Thus, a plot of $\ln{y}$ versus $x$ will yield a straight line with a slope of $\beta_1$ and an intercept of $\ln{\alpha_1}$ (Fig. 14.13d).
+
+Equation (14.23) is linearized by taking its base-10 logarithm to give
+
+\begin{equation} % Page 346
+	\tag{14.26}
+	\log y = \log \alpha_2 + \beta_2 \log x
+\end{equation} 
+
+\noindent Thus, a plot of log y versus log x will yield a straight line with a slope of $\beta_2$ and an intercept of $\log \alpha_2$ (Fig. 14.13e). Note that any base logarithm can be used to linearize this model. However, as done here, the base-10 logarithm is most commonly employed.
+
+Equation (14.24) is linearized by inverting it to give
+
+\begin{equation}
+	\tag{14.27}
+	\frac{1}{y} = \frac{1}{\alpha_3} + \frac{\beta_3}{\alpha_3} \frac{1}{x}
+\end{equation}
+
+\noindent Thus, a plot of $1/y$ versus $1/x$ will be linear, with a slope of $\beta_3 / \alpha_3$ and an intercept of $1 / \alpha_3$ (Fig. 14.13f).
+
+In their transformed forms, these models can be fit with linear regression to evaluate the constant coefficients. They can then be transformed back to their original state and used for predictive purposes. The following illustrates this procedure for the power model.
+
+\begin{example} Estimation of Errors for the Linear Least-Squares Fit
+
+    \noindent\textbf{Problem Statement.}\quad CFit Eq. (14.23) to the data in Table 14.1 using a logarithmic transformation.
+
+    \noindent\textbf{Solution.}\quad  The data can be set up in tabular form and the necessary sums computed as in Table 14.6.
+
+	The means can be computed as
+	
+	\begin{equation}
+		\notag
+		\bar{x} = \frac{12.606}{8}=1.5757 \quad \bar{y} = \frac{20.515}{8} = 2.5644
+	\end{equation}
+
+	\noindent\textbf{TABLE 14.6}\quad Data and summations needed to fit the power model to the data from
+	Table 14.1
+
+	\begin{tabular}{rrrrrrr}
+		$i$ & $x_i$ & $y_i$ & $\log x_i$ & $\log y_i$ & $(\log x_i )^2$ & $\log x_i \log y_i$ \\
+		\hline
+		1 & 10 & 25 & 1.000 & 1.398 & 1.000 & 1.398 \\
+		2 & 20 & 70 & 1.301 & 1.845 & 1.693 & 2.401 \\
+		3 & 30 & 380 & 1.477 & 2.580 & 2.182 & 3.811 \\
+		4 & 40 & 550 & 1.602 & 2.740 & 2.567 & 4.390 \\
+		5 & 50 & 610 & 1.699 & 2.785 & 2.886 & 4.732 \\
+		6 & 60 & 1220 & 1.778 & 3.086 & 3.162 & 5.488 \\
+		7 & 70 & 830 & 1.845 & 2.919 & 3.404 & 5.386 \\
+		8 & 80 & 1450 & 1.903 & 3.161 & 3.622 & 6.016 \\
+		$\sum$ &&&12.606 & 20.515 & 20.516 & 33.622
+
+	\end{tabular}
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\linewidth]{fig_14_14}
+		\caption{\textsf{Least-squares fit of a power model to the data from Table 14.1. (a) The fit of the transformed data.
+		(b) The power equation fit along with the data.}}
+		\label{fig:fig_14_14}
+	\end{figure}
+
+	\noindent The slope and the intercept can then be calculated with Eqs. (14.15) and (14.16) as
+
+	\begin{equation}
+		\notag
+		a_1 = \frac{8(33.622) - 12.606(20.515)}{8(20.516) - (12.606)^2} = 1.9842
+	\end{equation}
+
+	\begin{equation}
+		\notag
+		a_0 = 2.5644 - 1.9842(1.5757) = -0.5620
+	\end{equation}
+
+	\noindent The least-squares fit is
+
+	\begin{equation}
+		\notag
+		\log y = -0.5620 + 1.9842 \log x
+	\end{equation}
+
+	\noindent The fit, along with the data, is shown in Fig. 14.14a.
+
+	We can also display the fit using the untransformed coordinates. To do this, the coefficients of the power model are determined as $\alpha_2 = 10^{-0.5620} = 0.2741$ and $\beta_2 = 1.9842$. Using force and velocity in place of $y$ and $x$, the least-squares fit is
+
+	\begin{equation}
+		\notag
+		F = 0.2741 v ^ {1.9842}		
+	\end{equation}
+
+	\noindent This equation, along with the data, is shown in Fig. 14.14b.
+\end{example}
+
+
+The fits in Example 14.6 (Fig. 14.14) should be compared with the one obtained previously in Example 14.4 (Fig. 14.8) using linear regression on the untransformed data. Although both results would appear to be acceptable, the transformed result has the advantage that it does not yield negative force predictions at low velocities. Further, it is known from the discipline of fluid mechanics that the drag force on an object moving through a fluid is often well described by a model with velocity squared. Thus, knowledge from the field you are studying often has a large bearing on the choice of the appropriate model equation you use for curve fitting.
+
+
+\label{cha:cha_P_14_4_1}
+\subsection{General Comments on Linear Regression}
+
+\noindent Before proceeding to curvilinear and multiple linear regression, we must emphasize the introductory nature of the foregoing material on linear regression. We have focused on the simple derivation and practical use of equations to fit data. You should be cognizant of the fact that there are theoretical aspects of regression that are of practical importance but are beyond the scope of this book. For example, some statistical assumptions that are inherent in the linear least-squares procedures are
+
+\begin{enumerate}
+	\item Each $x$ has a fixed value; it is not random and is known without error.
+	\item The $y$ values are independent random variables and all have the same variance.
+	\item The $y$ values for a given $x$ must be normally distributed.
+\end{enumerate}
+
+Such assumptions are relevant to the proper derivation and use of regression. For example, the first assumption means that (1) the $x$ values must be error-free and (2) the regression of $y$ versus $x$ is not the same as $x$ versus $y$. You are urged to consult other references such as Draper and Smith (1981) to appreciate aspects and nuances of regression that are beyond the scope of this book.
+
+\label{cha:cha_P_14_5}
+\section{COMPUTER APPLICATIONS}
+
+\noindent Linear regression is so commonplace that it can be implemented on most pocket calculators. In this section, we will show how a simple M-file can be developed to determine the slope and intercept as well as to create a plot of the data and the best-fit line. We will also show how linear regression can be implemented with the built-in \texttt{polyfit} function.
+
+\label{cha:cha_P_14_5_1}
+\subsection{MATLAB M-file: \texttt{linregr}}
+\noindent An algorithm for linear regression can be easily developed (Fig. 14.15). The required summations are readily computed with MATLAB's \texttt{sum} function. These are then used to compute the slope and the intercept with Eqs. (14.15) and (14.16). The routine displays the intercept and slope, the coefficient of determination, and a plot of the best-fit line along with the measurements.
+
+A simple example of the use of this M-file would be to fit the force-velocity data analyzed in Example 14.4:
+
+\begin{lstlisting}[numbers=none]
+	>> x = [10 20 30 40 50 60 70 80];
+	>> y = [25 70 380 550 610 1220 830 1450];
+	>> linregr(x,y)
+	r2 =
+		0.8805
+	ans =
+		19.4702 -234.2857
+\end{lstlisting}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_14_5_1_u_1}
+\end{figure}
+
+It can just as easily be used to fit the power model (Example 14.6) by applying the
+\texttt{log10} function to the data as in
+
+\begin{lstlisting}[numbers=none]
+	>> linregr(log10(x),log10(y))
+	r2 =
+		0.9481
+	ans =
+		1.9842	-0.5620
+\end{lstlisting}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_14_5_1_u_2}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\begin{lstlisting}[numbers=none]
+		function [a, r2] = linregr(x,y)
+		% linregr: linear regression curve fitting
+		%	[a, r2] = linregr(x,y): Least squares fit of straight
+		%		line to data by solving the normal equations
+
+		% input:
+		%	x = independent variable
+		%	y = dependent variable
+		% output:
+		%	a = vector of slope, a(1), and intercept, a(2)
+		%	r2 = coefficient of determination
+
+		n = length(x);
+		if length(y)~=n, error('x and y must be same length'); end
+		x = x(:); y = y(:);
+		% convert to column vectors
+		sx = sum(x); sy = sum(y);
+		sx2 = sum(x.*x); sxy = sum(x.*y); sy2 = sum(y.*y);
+		a(1) = (n*sxy-sx*sy)/(n*sx2-sx^2);
+		a(2) = sy/n-a(1)*sx/n;
+		r2 = ((n*sxy-sx*sy)/sqrt(n*sx2-sx^2)/sqrt(n*sy2-sy^2))^2;
+		% create plot of data and best fit line
+		xp = linspace(min(x),max(x),2);
+		yp = a(1)*xp+a(2);
+		plot(x,y,'o',xp,yp)
+		grid on
+	\end{lstlisting}
+	\caption{\textsf{An M-file to implement linear regression.}}
+	\label{fig:fig_14_15}
+\end{figure}
+
+\label{cha:cha_P_14_5_2} %351
+\subsection{MATLAB Functions: \texttt{polyfit} and \texttt{polyval}}
+
+\noindent MATLAB has a built-in function \texttt{polyfit} that fits a least-squares \textit{n}th-order polynomial to data. It can be applied as in
+
+\begin{lstlisting}[numbers=none]
+>> p = polyfit(x, y, n)
+\end{lstlisting}
+
+\noindent where $x$ and $y$ are the vectors of the independent and the dependent variabless, respectively, and $n =$ the order of the polynomial. The function returns a vector $p$ containing the polynomial's coefficients. We should note that it represents the polynomial using decreasing powers of $x$ as in the following representation:
+
+\begin{equation}
+	\notag
+	f(x) = p_1x^n + p_2x^{n-1} + \cdots + p_n x + p_{n + 1}
+\end{equation}
+
+Because a straight line is a first-order polynomial, \verb|polyfit(x,y,1)| will return the slope and the intercept of the best-fit straight line.
+
+\begin{lstlisting}[numbers=none]
+>> x = [10 20 30 40 50 60 70 80];
+>> y = [25 70 380 550 610 1220 830 1450];
+>> a = polyfit(x,y,1)
+a =
+	19.4702 -234.2857
+\end{lstlisting}
+
+\noindent Thus, the slope is 19.4702 and the intercept is -234.2857.
+
+Another function, \texttt{polyval}, can then be used to compute a value using the coefficients. It has the general format:
+
+\begin{lstlisting}[numbers=none]
+>> y = polyval(p, x)
+\end{lstlisting}
+
+\noindent where $p =$ the polynomial coefficients, and $y =$ the best-fit value at $x$. For example,
+
+\begin{lstlisting}[numbers=none]
+>> y = polyval(a,45)
+y =
+	641.8750
+\end{lstlisting}
+
+\bigskip
+
+% ENZYME KINETICS
+\textbf{Background.} \textit{Enzymes} act as catalysts to speed up the rate of chemical reactions in living cells. In most cases, they convert one chemical, the \textit{substrate},into another, the \textit{product}. The \textit{Michaelis-Menten} equation is commonly used to describe such reactions:
+
+\begin{equation}
+	\tag{14.28}
+	v = \frac{v_m[S]}{k_s + [S]}
+\end{equation}
+
+\noindent where $v =$ the initial reaction velocity, $v_m =$ the maximum initial reaction velocity, $[S] =$ substrate concentration, and $k_s =$ a half-saturation constant. As in Fig. 14.16, the equation describes a saturating relationship which levels off with increasing $[S]$. The graph also illustrates that the \textit{half-saturation constant} corresponds to the substrate concentration at which the velocity is half the maximum.
+
+\begin{figure}[H] % Page 352
+	\centering
+	\includegraphics[width=1\linewidth]{fig_14_16}
+	\caption{\textsf{Two versions of the Michaelis-Menten model of enzyme kinetics.}}
+	\label{fig:fig_14_16}
+\end{figure}
+
+Although the Michaelis-Menten model provides a nice starting point, it has been refined and extended to incorporate additional features of enzyme kinetics. One simple extension involves so-called \textit{allosteric enzymes}, where the binding of a substrate molecule at one site leads to enhanced binding of subsequent molecules at other sites. For cases with two interacting bonding sites, the following second-order version often results in a better fit:
+
+\begin{equation}
+	\tag{14.29}
+	v = \frac{v_m {[S]}^2}{k^2_s + {[S]}^2}
+\end{equation}
+
+\noindent This model also describes a saturating curve but, as depicted in Fig. 14.16, the squared concentrations tend to make the shape more \textit{sigmoid},or S-shaped.
+
+Suppose that you are provided with the following data:
+
+\begin{tabular}{l c c c c c c c c c}
+	[S] &1.3 & 1.8 & 3  &  4.5  & 6  &   8   & 9 \\
+	v  & 0.07 &0.13 &0.22 &0.275& 0.335& 0.35 &0.36
+\end{tabular}
+
+\noindent Employ linear regression to fit these data with linearized versions of Eqs. (14.28) and (14.29). Aside from estimating the model parameters, assess the validity of the fits with both statistical measures and graphs.
+
+\textbf{Solution.} Equation (14.28), which is in the format of the saturation-growth-rate model (Eq. 14.24), can be linearized by inverting it to give (recall Eq. 14.27)
+
+\begin{equation}
+	\notag
+	\frac{1}{v} = \frac{1}{v_m} + \frac{k_s}{v_m} \frac{1}{[S]}
+\end{equation}
+
+\noindent The \texttt{linregr} function from Fig. 14.15 can then be used to determine the least-squares fit:
+
+\begin{lstlisting}[numbers=none] 
+>> S=[1.3 1.8 3 4.5 6 8 9];
+>> v=[0.07 0.13 0.22 0.275 0.335 0.35 0.36];
+>> [a,r2]=linregr(1./S,1./v)
+a =
+16.4022
+ 0.1902
+r2 =
+0.9344
+\end{lstlisting}
+
+\noindent The model coefficients can then be calculated as
+
+\begin{lstlisting}[numbers=none] 
+>> vm=1/a(2)
+vm =
+5.2570
+>> ks=vm*a(1)
+ks =
+86.2260
+\end{lstlisting}
+
+\noindent Thus, the best-fit model is
+
+\begin{equation}
+	\notag
+	v = \frac{5.2570[S]}{86.2260 + [S]}
+\end{equation}
+
+Although the high value of $r^2$ might lead you to believe that this result is acceptable, inspection of the coefficients might raise doubts. For example, the maximum velocity (5.2570) is much greater than the highest observed velocity (0.36). In addition, the half-saturation rate (86.2260) is much bigger than the maximum substrate concentration (9).
+
+The problem is underscored when the fit is plotted along with the data. Figure 14.17a shows the transformed version. Although the straight line follows the upward trend, the data clearly appear to be curved. When the original equation is plotted along with the data in the untransformed version (Fig. 14.17b), the fit is obviously unacceptable. The data are clearly leveling off at about 0.36 or 0.37. If this is correct, an eyeball estimate would suggest that $v_m$ should be about 0.36, and $k_s$ should be in the range of 2 to 3.
+
+Beyond the visual evidence, the poorness of the fit is also reflected by statistics like the coefficient of determination. For the untransformed case, a much less acceptable result of $r^2 = 0.6406$ is obtained.
+
+
+The foregoing analysis can be repeated for the second-order model. Equation (14.28) can also be linearized by inverting it to give
+
+\begin{equation}
+	\notag
+	\frac{1}{v} = \frac{1}{v_m} + \frac{k^2_s}{v_m} \frac{1}{[S]^2}
+\end{equation}
+
+The \texttt{linregr} function from Fig. 14.15 can again be used to determine the least-squares fit:
+
+\begin{lstlisting}[numbers=none] 
+>> [a,r2]=linregr(1./S.^2,1./v)
+a =
+19.3760
+ 2.4492
+r2 =
+0.9929
+\end{lstlisting}
+
+% Page 354
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=1\linewidth]{fig_14_17}
+	\caption{\textsf{Plots of least-squares fit (line) of the Michaelis-Menten model along with data (points). The plot in (a) shows the transformed fit, and (b) shows how the fit looks when viewed in the untransformed, original form.}}
+	\label{fig:fig_14_17}
+\end{figure}
+
+\noindent The model coefficients can then be calculated as
+
+\begin{lstlisting}[numbers=none] 
+>> vm=1/a(2)
+vm =
+0.4083
+>> ks=sqrt(vm*a(1))
+ks =
+2.8127
+\end{lstlisting}
+
+\noindent Substituting these values into Eq. (14.29) gives
+
+\begin{equation}
+	\notag
+	v = \frac{0.4083[S]^2}{7.911 + [S]^2}
+\end{equation}
+
+Although we know that a high $r^2$ does not guarantee of a good fit, the fact that it is very high (0.9929) is promising. In addition, the parameters values also seem consistent with the trends in the data; that is, the $k_m$ is slightly greater than the highest observed velocity and the half-saturation rate is lower than the maximum substrate concentration (9).
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=1\linewidth]{fig_14_18}
+	\caption{\textsf{Plots of least-squares fit (line) of the second-order Michaelis-Menten model along with data (points). The plot in (a) shows the transformed fit, and (b) shows the untransformed, original form.}}
+	\label{fig:fig_14_18}
+\end{figure}
+
+The adequacy of the fit can be assessed graphically. As in Fig. 14.18a, the transformed results appear linear. When the original equation is plotted along with the data in the untransformed version (Fig. 14.18b), the fit nicely follows the trend in the measurements. Beyond the graphs, the goodness of the fit is also reflected by the fact that the coefficient of determination for the untransformed case can be computed as $r^2 = 0.9896$.
+
+Based on our analysis, we can conclude that the second-order model provides a good fit of this data set. This might suggest that we are dealing with an allosteric enzyme. 
+
+Beyond this specific result, there are a few other general conclusions that can be drawn from this case study. First, we should never solely rely on statistics such as $r^2$ as the sole basis of assessing goodness of fit. Second, regression equations should always be assessed graphically. And for cases where transformations are employed, a graph of the untransformed model and data should always be inspected. 
+
+Finally, although transformations may yield a decent fit of the transformed data, this does not always translate into an acceptable fit in the original format. The reason that this might occur is that minimizing squared residuals of transformed data is not the same as for the untransformed data. Linear regression assumes that the scatter of points around the best-fit line follows a Gaussian distribution,  and that the standard deviation is the same at every value of the dependent variable. These assumptions are rarely true after transforming data. 
+
+As a consequence of the last conclusion, some analysts suggest that rather than using linear transformations, nonlinear regression should be employed to fit curvilinear data. In this approach, a best-fit curve is developed that directly minimizes the untransformed residuals. We will describe how this is done in Chap. 15.
+
+
+\bigskip
+\noindent\textbf{PROBLEMS}\\
+
+\begin{multicols}{2}
+    \noindent\textbf{14.1} Given the data
+
+	\noindent \begin{tabular}{ c c c c c }
+		0.90 & 1.42 & 1.30 & 1.55 & 1.63 \\
+		1.32 & 1.35 & 1.47 & 1.95 & 1.66 \\
+		1.96 & 1.47 & 1.92 & 1.35 & 1.05 \\
+		1.85 & 1.74 & 1.65 & 1.78 & 1.71 \\
+		2.29 & 1.82 & 2.06 & 2.14 & 1.27
+	\end{tabular}
+
+	\noindent Determine \textbf{(a)} the mean, \textbf{(b)} median, \textbf{(c)} mode, \textbf{(d)} range,
+	\textbf{(e)} standard deviation, \textbf{(f)} variance, and \textbf{(g)} coefficient of
+	variation.	
+
+
+	\noindent\textbf{14.2}  Construct a histogram from the data from Prob. 14.1. Use a range from 0.8 to 2.4 with intervals of 0.2.
+
+	\noindent\textbf{14.3} Given the data
+
+	\noindent \begin{tabular}{c c c c c c c}
+		29.65 & 28.55 & 28.65 & 30.15 & 29.35 & 29.75 & 29.25 \\
+		30.65 & 28.15 & 29.85 & 29.05 & 30.25 & 30.85 & 28.75 \\
+		29.65 & 30.45 & 29.15 & 30.45 & 33.65 & 29.35 & 29.75 \\
+		31.25 & 29.45 & 30.15 & 29.65 & 30.55 & 29.65 & 29.25
+	\end{tabular}
+
+	\noindent Determine \textbf{(a)} the mean, \textbf{(b)} median, \textbf{(c)} mode, \textbf{(d)} range,
+	\textbf{(e)} standard deviation, \textbf{(f)} variance, and \textbf{(g)} coefficient of
+	variation.
+	\textbf{(h)} Construct a histogram. Use a range from 28 to 34 with
+	increments of 0.4.
+	\textbf{(i)} Assuming that the distribution is normal, and that your
+	estimate of the standard deviation is valid, compute the
+	range (i.e., the lower and the upper values) that encompasses 68\% of the readings. Determine whether this is a
+	valid estimate for the data in this problem.
+
+	\noindent\textbf{14.4} Using the same approach as was employed to derive
+	Eqs. (14.15) and (14.16), derive the least-squares fit of the
+	following model:
+
+	$$y = a_1 x + e$$
+
+	\noindent That is, determine the slope that results in the leastsquares fit for a straight line with a zero intercept. Fit the following data with this model and display the result graphically.
+
+	\noindent \begin{tabular}{c c c c c c c c c c }
+	 	\textbf{x} & 2 & 4 & 6 & 7 & 10 & 11 & 		14 & 		17 & 		20 \\
+	  	\textbf{y} & 4 & 5 & 6 & 5 & 8 & 8 & 6 & 9 & 		12
+	\end{tabular}
+
+	\noindent\textbf{14.5} Use least-squares regression to fit a straight line to
+
+	\noindent \begin{tabular}{c c c c c c c c c c c  }
+ 		x & 0 & 2 & 4 & 6 & 9 & 11 & 12 & 15 & 17 & 19 \\
+ 		y & 5 & 6 & 7 & 6 & 9 & 8 & 8 & 10 & 12 & 12
+   	\end{tabular}
+
+   	\noindent Along with the slope and intercept, compute the standard
+	   error of the estimate and the correlation coefficient. Plot the
+	   data and the regression line. Then repeat the problem, but
+	   regress $x$ versus $y$ - that is, switch the variables. Interpret
+	   your results.
+
+	\noindent\textbf{14.6} Fit a power model to the data from Table 14.1, but use
+	natural logarithms to perform the transformations.
+
+	\noindent\textbf{14.7} The following data were gathered to determine the
+	relationship between pressure and temperature of a fixed
+	volume of 1 kg of nitrogen. The volume is 10 m$^3$.
+
+	\noindent \begin{tabular}{l c c c c c c c c c c  }
+		\textbf{T, $^\circ$C} & -40 & 0 & 40 & 80 & 120 & 160 \\
+		\textbf{p, N/m$^2$} & 6900 & 8100 & 9350 & 10,500 & 11,700 & 12,800
+  	\end{tabular}
+
+	\noindent Employ the ideal gas law $pV = nRT$ to determine $R$ on the
+	basis of these data. Note that for the law, $T$ must be expressed
+	in kelvins.
+
+	\noindent\textbf{14.8} Beyond the examples in Fig. 14.13, there are other
+	models that can be linearized using transformations. For
+	example,
+
+	$$y = a_4 x e^{\beta_4 x}$$
+
+	\noindent Linearize this model and use it to estimate $\alpha_4$ and $\beta_4$ based
+	on the following data. Develop a plot of your fit along with
+	the data.
+
+	\noindent \begin{tabular}{c c c c c c c c c c}
+		\textbf{x} & 0.1 & 0.2 & 0.4 & 0.6 & 0.9 & 1.3 & 1.5 & 1.7 & 1.8 \\
+		\textbf{y} & 0.75 & 1.25 & 1.45 & 1.25 & 0.85 & 0.55 & 0.35 & 0.28 & 0.18	
+  	\end{tabular}
+
+	\noindent\textbf{14.9} The concentration of \textit{E. coli} bacteria in a swimming
+	area is monitored after a storm:
+
+	\noindent \begin{tabular}{l c c c c c c}
+		\textbf{t (hr)} & 4 & 8 & 12 & 16 & 20 & 24 \\
+		\textbf{c (CFU/100 mL)} & 1600 & 1320 & 1000 & 890 & 650 & 560
+  	\end{tabular}
+
+	\noindent The time is measured in hours following the end of the storm
+	and the unit CFU is a ``colony forming unit.'' Use this data to
+	estimate \textbf{(a)} the concentration at the end of the storm ($t = 0$)
+	and \textbf{(b)} the time at which the concentration will reach
+	200 CFU/100 mL. Note that your choice of model should
+	be consistent with the fact that negative concentrations are
+	impossible and that the bacteria concentration always decreases with time.
+
+	\noindent\textbf{14.10} Rather than using the base-$e$ exponential model
+	(Eq. 14.22), a common alternative is to employ a base-10
+	model:
+
+	$$y = \alpha_5 10^{\beta_5 x}$$
+
+	\noindent When used for curve fitting, this equation yields identical
+	results to the base-$e$ version, but the value of the exponent
+	parameter ($\beta_5$) will differ from that estimated with Eq.14.22
+	($\beta_1$). Use the base-10 version to solve Prob. 14.9. In addition, develop a formulation to relate $\beta_1$ to $\beta_5$ .
+
+	\noindent\textbf{14.11} Determine an equation to predict metabolism rate as a
+	function of mass based on the following data. Use it to predict the metabolism rate of a 200-kg tiger.
+
+	\noindent \begin{tabular}{l c c }
+		\textbf{Animal} & \textbf{Mass (kg)} & \textbf{Metabolism (watts)} \\
+		\hline
+		Cow &  400 &  270 \\
+		Human &  70 &  82 \\ 
+		Sheep &  45 &  50 \\ 
+		Hen &  2 &  4.8 \\ 
+		Rat &  0.3 &  1.45 \\ 
+		Dove &  0.16 &  0.97
+  	\end{tabular}
+
+	\noindent\textbf{14.12} On average, the surface area $A$ of human beings is
+	related to weight $W$ and height $H$. Measurements on a number of individuals of height 180 cm and different weights
+	(kg) give values of $A$ (m$^2$) in the following table:
+
+	\noindent \begin{tabular}{l c c c c c c c c c}
+		\textbf{W (kg)} & 70 & 75 & 77 & 80 & 82 & 84 & 87 & 90 \\
+		\textbf{A (m2)} & 2.10 & 2.12 & 2.15 & 2.20 & 2.22 & 2.23 & 2.26 & 2.30 &
+  	\end{tabular}
+
+	\noindent Show that a power law $A = aW^b$ fits these data reasonably
+	well. Evaluate the constants $a$ and $b$, and predict what the
+	surface area is for a 95-kg person.
+
+	\noindent\textbf{14.13} Fit an exponential model to
+
+	\noindent \begin{tabular}{l c c c c c c }
+		\textbf{x} & 0.4 & 0.8 & 1.2 & 1.6 & 2 & 2.3 \\
+		\textbf{y} & 800 & 985 & 1490 & 1950 & 2850 & 3600
+  	\end{tabular}
+
+	\noindent Plot the data and the equation on both standard and semilogarithmic graphs with the MATLAB \texttt{subplot} function.
+
+	\noindent\textbf{14.14} An investigator has reported the data tabulated below
+	for an experiment to determine the growth rate of bacteria
+	$k$ (per d) as a function of oxygen concentration $c$ (mg/L). It
+	is known that such data can be modeled by the following
+	equation:
+
+	$$k = \frac{k_{\text{max}} c^2}{c_s + c^2}$$
+
+	\noindent where $c_s$ and $k_{\text{max}}$ are parameters. Use a transformation to
+	linearize this equation. Then use linear regression to estimate $c_s$ and $k_{\text{max}}$ and predict the growth rate at $c$ = 2 mg/L.
+
+	\noindent \begin{tabular}{l c c c c c}
+		\textbf{c} & 0.5 & 0.8 & 1.5 & 2.5 \\
+		\textbf{k} & 1.1 & 2.5 & 5.3 & 7.6 & 8.9
+  	\end{tabular}
+
+	\noindent\textbf{14.15} Develop an M-file function to compute descriptive
+	statistics for a vector of values. Have the function determine
+	and display number of values, mean, median, mode, range,
+	standard deviation, variance, and coefficient of variation. In
+	addition, have it generate a histogram. Test it with the data
+	from Prob. 14.3.
+
+	\noindent\textbf{14.16}  Modify the \texttt{linregr} function in Fig. 14.15 so that it
+	\textbf{(a)} computes and returns the standard error of the estimate,
+	and \textbf{(b)} uses the \texttt{subplot} function to also display a plot of
+	the residuals (the predicted minus the measured $y$) versus $x$.
+
+	\noindent\textbf{14.17} Develop an M-file function to fit a power model.
+	Have the function return the best-fit coefficient $\alpha_2$ and
+	power $\beta_2$ along with the $r^2$ for the untransformed model. In
+	addition, use the \texttt{subplot} function to display graphs of both
+	the transformed and untransformed equations along with the
+	data. Test it with the data from Prob. 14.11.
+
+	\noindent\textbf{14.18} The following data show the relationship between the
+	viscosity of SAE 70 oil and temperature. After taking the log
+	of the data, use linear regression to find the equation of the
+	line that best fits the data and the $r^2$ value.
+
+	\noindent \begin{tabular}{l c c c c}
+		\textbf{Temperature, $^\circ$C} & 26.67 & 93.33 & 148.89 & 315.56 \\
+		\textbf{Viscosity, $\mu$, N $\cdot$ s/m$^2$} & 1.35 & 0.085 & 0.012 & 0.00075
+  	\end{tabular}
+
+	\noindent\textbf{14.19} You perform experiments and determine the following values of heat capacity $c$ at various temperatures $T$ for a gas:
+
+	\noindent \begin{tabular}{l c c c c c c}
+		\textbf{T} & -50 & -30 & 0 & 60 & 90 & 110 \\
+		\textbf{c} & 1250 & 1280 & 1350 & 1480 & 1580 & 1700
+  	\end{tabular}
+
+	\noindent Use regression to determine a model to predict $c$ as a function of $T$.
+
+	\noindent\textbf{14.20} It is known that the tensile strength of a plastic increases as a function of the time it is heat treated. The following data are collected:
+
+	\noindent \begin{tabular}{l c c c c c c c c c c}
+		\textbf{Time} & 10 & 15 & 20 & 25 & 40 & 50 & 55 & 60 & 75 \\
+		\textbf{Tensile Strength} & 5 & 20 & 18 & 40 & 33 & 54 & 70 & 60 & 78
+  	\end{tabular}
+
+	\noindent \textbf{(a)} Fit a straight line to these data and use the equation to
+	determine the tensile strength at a time of 32 min.
+
+
+	\noindent \textbf{(b)} Repeat the analysis but for a straight line with a zero
+	intercept.
+
+	\noindent\textbf{14.21}  The following data were taken from a stirred tank reactor for the reaction $A \rightarrow B$. Use the data to determine the
+	best possible estimates for $k_{01}$ and $E_1$ for the following
+	kinetic model:
+
+	$$- \frac{d A}{d t} = k _{01} e^{-E_1 / RT} A$$
+
+	\noindent where $R$ is the gas constant and equals 0.00198 kcal/mol/K.
+
+	\noindent \begin{tabular}{l c c c c c c c c}
+		\textbf{-dA/dt (moles/L/s)} & 460 & 960 & 2485 & 1600 & 1245 \\ 
+		\textbf{A (moles/L)} & 200 & 150 & 50 & 20 & 10 \\
+		\textbf{T (K)} & 280 & 320 & 450 & 500 & 550
+	\end{tabular}
+
+	\noindent\textbf{14.22} Concentration data were collected at 15 time points
+	for the polymerization reaction:
+
+	$$x A + y B \rightarrow A_x B_y$$
+
+	\noindent We assume the reaction occurs via a complex mechanism
+	consisting of many steps. Several models have been hypothesized, and the sum of the squares of the residuals had been
+	calculated for the fits of the models of the data. The results are shown below. Which model best describes the data (statistically)? Explain your choice.
+
+
+	\noindent \begin{tabular}{l c c c}
+		 & \textbf{Model A} & \textbf{Model B} & \textbf{Model C} \\
+		\hline
+		\textbf{S$_r$} & 135 & 105 & 100 \\
+		\textbf{Number of Model} \\
+		\textbf{Parameters Fit} & 2 & 3 & 5
+  	\end{tabular}
+
+	\noindent\textbf{14.23} Below are data taken from a batch reactor of bacterial
+	growth (after lag phase was over). The bacteria are allowed
+	to grow as fast as possible for the first 2.5 hours, and then
+	they are induced to produce a recombinant protein, the production of which slows the bacterial growth significantly.
+	The theoretical growth of bacteria can be described by
+
+	$$\frac{d X}{dt} = \mu X$$
+
+	\noindent where $X$ is the number of bacteria, and $\mu$ is the specific
+	growth rate of the bacteria during exponential growth. Based
+	on the data, estimate the specific growth rate of the bacteria
+	during the first 2 hours of growth and during the next 4 hours
+	of growth.
+
+	\noindent \begin{tabular}{l c c c c c c c c}
+		\textbf{Time,} \\
+		\textbf{h} &  0 &  1 &  2 &  3 &  4 &  5 &  6 \\
+		\textbf{[Cells],} \\
+		\textbf{g/L} & 0.100 & 0.335 & 1.102 & 1.655 & 2.453 & 3.702 & 5.460
+	\end{tabular}
+
+	\noindent\textbf{14.24} A transportation engineering study was conducted to
+	determine the proper design of bike lanes. Data were gathered on bike-lane widths and average distance between bikes
+	and passing cars. The data from 9 streets are
+
+	\noindent \begin{tabular}{l c c c c c c c c c c c c}
+		\textbf{Distance, m} & 2.4 & 1.5 & 2.4 & 1.8 & 1.8 & 2.9 & 1.2 & 3 & 1.2 \\
+		\textbf{Lane Width, m} & 2.9 & 2.1 & 2.3 & 2.1 & 1.8 & 2.7 & 1.5 & 2.9 & 1.5
+	\end{tabular}
+
+	\noindent \textbf{(a)} Plot the data.
+
+	\noindent \textbf{(b)} Fit a straight line to the data with linear regression. Addthis line to the plot.
+
+	\noindent \textbf{(c)} If the minimum safe average distance between bikes and passing cars is considered to be 1.8 m, determine the corresponding minimum lane width.
+
+	\noindent\textbf{14.25}  In water-resources engineering, the sizing of reser	voirs depends on accurate estimates of water flow in the
+	river that is being impounded. For some rivers, long-term
+	historical records of such flow data are difficult to obtain. In
+	contrast, meteorological data on precipitation are often
+	available for many years past. Therefore, it is often useful to determine a relationship between flow and precipitation.
+	This relationship can then be used to estimate flows for
+	years when only precipitation measurements were made.
+	The following data are available for a river that is to be
+	dammed:
+
+	\noindent \begin{tabular}{l c c c c c c c c c c}
+		\textbf{Precip.,} \\
+		\textbf{cm/yr} & 88.9 & 108.5 & 104.1 & 139.7 & 127 & 94 & 116.8 & 99.1 \\
+		\textbf{Flow,} \\
+		\textbf{m$^3$/s} & 14.6 & 16.7 & 15.3 & 23.2 & 19.5 & 16.1 & 18.1 & 16.6
+	\end{tabular}	
+
+		\noindent \textbf{(a)} Plot the data.
+
+	\noindent \textbf{(b)} Fit a straight line to the data with linear regression.
+Superimpose this line on your plot.
+
+	\noindent \textbf{(c)} Use the best-fit line to predict the annual water flow if
+the precipitation is 120 cm.
+
+	\noindent \textbf{(d)} If the drainage area is 1100 km$^2$, estimate what fraction
+of the precipitation is lost via processes such as evaporation, deep groundwater infiltration, and consumptive
+use.
+
+	\noindent\textbf{14.26}  The mast of a sailboat has a cross-sectional area of
+	10.65 cm$^2$ and is constructed of an experimental aluminum
+	alloy. Tests were performed to define the relationship between stress and strain. The test results are
+
+	\noindent \begin{tabular}{l c c c c c c c c c c}
+		\textbf{Strain,} \\
+		\textbf{cm/cm} & 0.0032 & 0.0045 & 0.0055 & 0.0016 & 0.0085 & 0.0005 \\
+		\textbf{Stress,} \\
+		\textbf{N/cm$^2$} & 4970 & 5170 & 5500 & 3590 & 6900 & 1240
+	\end{tabular}
+
+	\noindent The stress caused by wind can be computed as $F/A_c$ where $F$ = force in the mast and $A_c$ = mast's cross-sectional area. This value can then be substituted into Hooke's law to determine the mast's deflection, $\Delta L$ = strain $\times L$, where $L$ = the mast's length. If the wind force is 25,000 N, use the data to estimate the deflection of a 9-m mast.
+
+	\noindent\textbf{14.27} The following data were taken from an experiment
+	that measured the current in a wire for various imposed voltages:
+
+	\noindent \begin{tabular}{l c c c c c c c c c c}
+		\textbf{$V$, V} & 2 & 3 & 4 & 5 & 7 & 10 \\
+		\textbf{$i$, A} & 5.2 & 7.8 & 10.7 & 13 & 19.3 & 27.5
+	\end{tabular}
+
+	\noindent \textbf{(a)} On the basis of a linear regression of this data, determine
+current for a voltage of 3.5 V. Plot the line and the data
+and evaluate the fit.
+
+\noindent \textbf{(b)} Redo the regression and force the intercept to be zero.
+
+	\noindent\textbf{14.28} An experiment is performed to determine the \% elongation of electrical conducting material as a function of temperature. The resulting data are listed below. Predict the \%
+	elongation for a temperature of $400^\circ$C.
+
+	\noindent \begin{tabular}{l c c c c c c c c c c}
+		\textbf{Temperature, $^\circ$C} & 200 & 250 & 300 & 375 & 425 & 475 & 600 \\
+		\textbf{\% Elongation} & 7.5 & 8.6 & 8.7 & 10 & 11.3 & 12.7 & 15.3
+	\end{tabular}
+
+	\noindent\textbf{14.29} The population $p$ of a small community on the outskirts of a city grows rapidly over a 20-year period:
+
+	\noindent \begin{tabular}{l c c c c c c c c c c}
+		\textbf{t} & 0 & 5 & 10 & 15 & 20 \\
+		\textbf{p} & 100 & 200 & 450 & 950 & 2000
+	\end{tabular}
+
+	\noindent As an engineer working for a utility company, you must
+	forecast the population 5 years into the future in order to an	ticipate the demand for power. Employ an exponential
+	model and linear regression to make this prediction.
+
+	\noindent\textbf{14.30} The velocity u of air flowing past a flat surface is
+	measured at several distances y away from the surface. Fit a
+	curve to this data assuming that the velocity is zero at the
+	surface ($y = 0$). Use your result to determine the shear stress
+	($du/dy$) at the surface.
+
+	\noindent \begin{tabular}{l c c c c c c c c c c}
+		\textbf{$y$, m} & 0.002 & 0.006 & 0.012 & 0.018 & 0.024 \\
+		\textbf{$u$, m/s} & 0.287 & 0.899 & 1.915 & 3.048 & 4.299
+	\end{tabular}
+
+	\noindent\textbf{14.31} \textit{Andrade's equation} has been proposed as a model of the effect of temperature on viscosity:
+
+	$$ \mu = De^{B/T_a}$$
+
+	\noindent where $\mu$ = dynamic viscosity of water ($10^{-3}$ N$\cdot$s/m$^2$), $T_a$ = absolute temperature (K), and $D$ and $B$ are parameters. Fit this model to the following data for water:
+
+	\noindent \begin{tabular}{l c c c c c c c c c c}
+		\textbf{T} & 0 & 5 & 10 & 20 & 30 & 40 \\
+		\textbf{$\mu$} & 1.787 & 1.519 & 1.307 & 1.002 & 0.7975 & 0.6529
+	\end{tabular}
+
+	\noindent\textbf{14.32} Perform the same computation as in Example 14.2,
+	but in addition to the drag coefficient, also vary the mass
+	uniformly by $\pm 10\%$.
+
+	\noindent\textbf{14.33} Perform the same computation as in Example 14.3,
+	but in addition to the drag coefficient, also vary the mass
+	normally around its mean value with a coefficient of variation of 5.7887\%.
+
+	\noindent\textbf{14.34}  Manning's formula for a rectangular channel can be
+	written as
+
+	$$Q = \frac{1}{n_m} \frac{(BH) ^ {5/3}}{(B+2H) ^ {2/3}} \sqrt{S}$$
+
+	\noindent where $Q$ = flow (m$^3$/s), $n_m$ = a roughness coefficient, $B$ =
+	width (m), $H$ = depth (m), and $S$ = slope. You are applying
+	this formula to a stream where you know that the width = 20 m
+	and the depth = 0.3 m. Unfortunately, you know the roughness and the slope to only a $\pm 10\%$ precision. That is, you
+	know that the roughness is about 0.03 with a range from 0.027
+	to 0.033 and the slope is 0.0003 with a range from 0.00027
+	to 0.00033. Assuming uniform distributions, use a Monte
+	Carlo analysis with $n$ = 10,000 to estimate the distribution
+	of flow.
+
+	\noindent\textbf{14.35} A Monte Carlo analysis can be used for optimization.
+	For example, the trajectory of a ball can be computed with
+
+	\begin{equation}
+		\tag{P14.35}
+		y = (\tan \theta_0)x - \frac{g}{2 v^2_0 \cos ^2 \theta_0} x^2 + y_0
+	\end{equation}
+
+	\noindent where $y$ = the height (m), $\theta_0$ = the initial angle (radians),
+	$v_0$ = the initial velocity (m/s), $g$ = the gravitational constant =
+	9.81 m/s$^2$, and $y_0$ = the initial height (m). Given $y_0$ = 1 m,
+	$v_0$ = 25 m/s, and $\theta_0 = 50^\circ$, determine the maximum height
+	and the corresponding $x$ distance (\textbf{a}) analytically with calculus and (\textbf{b}) numerically with Monte Carlo simulation. For
+	the latter, develop a script that generates a vector of 10,000
+	uniformly-distributed values of $x$ between 0 and 60 m. Use
+	this vector and Eq. P14.35 to generate a vector of heights.
+	Then, employ the \texttt{max} function to determine the maximum
+	height and the associated $x$ distance.
+\end{multicols}
+
+\label{cha:cha_P_15} %351
+\chapter{General Linear Least-Squares and Nonlinear Regression}
+\textbf{CHAPTER OBJECTIVES}
+
+\noindent This chapter takes the concept of fitting a straight line and extends it to (a) fitting a polynomial and (b) fitting a variable that is a linear function of two or more independent variables. We will then show how such applications can be generalized and applied to a broader group of problems. Finally, we will illustrate how optimization techniques can be used to implement nonlinear regression. Specific objectives and topics covered are
+
+\begin{itemize}
+	\item Knowing how to implement polynomial regression.
+	\item Knowing how to implement multiple linear regression. 
+	\item Understanding the formulation of the general linear least-squares model.
+	\item Understanding how the general linear least-squares model can be solved with MATLAB using either the normal equations or left division.
+	\item Understanding how to implement nonlinear regression with optimization techniques.
+\end{itemize}
+
+
+\label{cha:cha_P_15_1}
+\section{POLYNOMIAL REGRESSION}
+\noindent In Chap.14, a procedure was developed to derive the equation of a straight line using the least-squares criterion. Some data, although exhibiting a marked pattern such as seen in Fig. 15.1, are poorly represented by a straight line. For these cases, a curve would be better suited to fit the data. As discussed in Chap. 14, one method to accomplish this objective is to use transformations. Another alternative is to fit polynomials to the data using \emph{polynomial regression}.
+
+The least-squares procedure can be readily extended to fit the data to a higher-orderpolynomial. For example,  suppose that we fit a second-order polynomial or quadratic:
+
+\begin{equation}
+	\tag{15.1}
+	y = a_0 + a_1x + a_2x^2 + e
+\end{equation}
+
+\begin{wrapfigure}{l}{0.25\textwidth}
+    \centering
+    \includegraphics[width=0.25\textwidth]{fig_15_1}
+   \caption{\textsf{(a) Data that are ill-suited for linear least-squares regression. (b) Indication that a parabola is preferable.}}
+   \label{fig:fig_15_1}
+\end{wrapfigure}
+
+\noindent For this case the sum of the squares of the residuals is
+
+\begin{equation}
+	\tag{15.2}
+	S_r = \sum^n_{i=1}(y_i - a_0 - a_1x_i - a_2x^2_i)^2
+\end{equation}
+
+To generate the least-squares fit, we take the derivative of Eq. (15.2) with respect to each of the unknown coefficients of the polynomial, as in
+
+\begin{equation}
+	\notag
+	\frac{\partial S_r}{\partial a_0} = -2 \sum (y_i -a_0 -a_1x_i - a_2x_i^2)
+\end{equation}
+
+\begin{equation}
+	\notag
+	\frac{\partial S_r}{\partial a_1} = -2 \sum x_i (y_i -a_0 -a_1x_i - a_2x_i^2)
+\end{equation}
+
+\begin{equation}
+	\notag
+	\frac{\partial S_r}{\partial a_2} = -2 \sum x_i^2 (y_i -a_0 -a_1x_i - a_2x_i^2)
+\end{equation}
+
+\noindent These equations can be set equal to zero and rearranged to develop the following set of normal equations:
+
+\begin{equation}
+	\notag
+	(n)a_0 + (\sum x_i) a_1 + (\sum x^2_i) a_2 = \sum y_i
+\end{equation}
+
+\begin{equation}
+	\notag
+	(\sum x_i)a_0 + (\sum x_i ^ 2) a_1 + (\sum x^3_i) a_2 = \sum x_i y_i
+\end{equation}
+
+\begin{equation}
+	\notag
+	(\sum x_i^2)a_0 + (\sum x_i ^ 3) a_1 + (\sum x^4_i) a_2 = \sum x_i^2 y_i
+\end{equation}
+
+\noindent where all summations are from $i = 1$ through $n$. Note that the preceding three equations are linear and have three unknowns: $a_0$ , $a_1$, and $a_2$. The coefficients of the unknowns can be calculated directly from the observed data.
+
+For this case, we see that the problem of determining a least-squares second-order polynomial is equivalent to solving a system of three simultaneous linear equations. The two-dimensional case can be easily extended to an $m$th-order polynomial as in
+
+\begin{equation}
+	\notag
+	y = a_0 + a_1 x + a_2 x^2 + \cdots + a_m x^m + e
+\end{equation}
+
+The foregoing analysis can be easily extended to this more general case. Thus, we can recognize that determining the coefficients of an $m$th-order polynomial is equivalent to solving a system of $m + 1$ simultaneous linear equations. For this case, the standard error is formulated as
+
+\begin{equation}
+	\tag{15.3}
+	s_{y/x} = \sqrt{\frac{S_r}{n - (m + 1)}}
+\end{equation}
+
+This quantity is divided by $n - (m + 1)$ because $(m + 1)$ data-derived coefficients - $a_0, a_1, ..., a_m$ - were used to compute $S_r$; thus, we have lost $m + 1$ degrees of freedom. In addition to the standard error, a coefficient of determination can also be computed for polynomial regression with Eq. (14.20).
+
+\begin{example} Polynomial Regression
+
+    \textbf{Problem Statement.}\quad Fit a second-order polynomial to the data in the first two columns
+	of Table 15.1.
+
+	\textbf{TABLE 15.1} \quad Computations for an error analysis of the quadratic least-squares fit.
+
+	\begin{tabular}{l c c c c c c c c c c}
+		$x_i$ & $y_i$ & $(y_i - \bar{y})^2$ & $(y_i - a_0 - a_1 x_i - a_2 x_i^2 )^2$ \\
+		0 &  2.1 &  544.44 &  0.14332 \\
+		1 &	 7.7 &  314.47 &  1.00286 \\
+		2 &  13.6 &  140.03 &  1.08160 \\
+		3 &  27.2 &  3.12 &  0.80487 \\
+		4 &  40.9 &  239.22 &  0.61959 \\
+		5 &  61.1 &  1272.11 &  0.09434 \\
+		$\sum$ & 152.6 &  2513.39 &  3.74657
+  	\end{tabular}
+
+	\noindent\textbf{Solution.}\quad The following can be computed from the data:
+$$
+	\begin{matrix}
+		m = 1 & \sum x_i = 15 & \sum x^4_i = 979 \\
+		n= 6 & \sum y_i = 152.6 & \sum x_i y_i = 585.6 \\
+		\bar{x} = 2.5 & \sum x^2_i = 55 & \sum x^2_i y_i = 2488.8 \\
+		\bar{y} = 25.443 & \sum x^3_i = 225
+	\end{matrix}
+$$
+
+	\noindent Therefore, the simultaneous linear equations are
+
+	$$
+		\begin{bmatrix}
+			6 & 15 & 55 \\
+			15 & 55 & 225 \\
+			55 & 225 & 979
+		\end{bmatrix}
+		\begin{Bmatrix}
+			a_0 \\ a_1 \\ a_2
+		\end{Bmatrix}
+		=
+		\begin{Bmatrix}
+			152.6 \\
+			585.6 \\
+			2488.8
+		\end{Bmatrix}
+	$$
+
+	\noindent These equations can be solved to evaluate the coefficients. For example, using MATLAB:
+
+	\begin{lstlisting}[numbers=none]
+		>> N = [6 15 55;15 55 225;55 225 979];
+		>> r = [152.6 585.6 2488.8];
+		>> a = N\r
+
+		a =
+			2.4786
+			2.3593
+			1.8607
+	\end{lstlisting}
+
+	\noindent Therefore, the least-squares quadratic equation for this case is
+
+	$$
+		y= 2.4786 + 2.3593x + 1.8607x^2
+	$$
+
+	\noindent The standard error of the estimate based on the regression polynomial is [Eq. (15.3)]
+
+	$$
+		s_{y/x} = \sqrt{\frac{3.74657}{6 - (2 + 1)}} = 1.1175
+	$$
+
+	\noindent The coefficient of determination is
+
+	$$
+		r^2 = \frac{2513.39 - 3.74657}{2513.39}= 0.99851
+	$$
+
+	\noindent and the correlation coefficient is $r$ = 0.99925.
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\linewidth]{fig_15_2}
+		\caption{\textsf{Fit of a second-order polynomial.}}
+		\label{fig:fig_15_2}
+	\end{figure}
+
+	These results indicate that 99.851 percent of the original uncertainty has been explained by the model. This result supports the conclusion that the quadratic equation
+represents an excellent fit, as is also evident from Fig. 15.2.
+\end{example}
+
+\label{cha:cha_P_15_2} % 365
+\section{MULTIPLE LINEAR REGRESSION}
+
+\noindent Another useful extension of linear regression is the case where $y$ is a linear function of two or more independent variables. For example, $y$ might be a linear function of $x_1$ and $x_2$, as in
+
+\begin{equation}
+	\notag
+	y = a_0 + a_1x_1 + a_2x_2+e
+\end{equation}
+
+\noindent Such an equation is particularly useful when fitting experimental data where the variable being studied is often a function of two other variables. For this two-dimensional case, the regression ``line'' becomes a ``plane'' (Fig. 15.3).
+
+As with the previous cases, the "best" values of the coefficients are determined by formulating the sum of the squares of the residuals:
+
+\begin{equation}
+	\tag{15.4}
+	S_r = \sum_{i=1}^n (y_i - a_0 - a_1x_{1,i} - a_2x_{2,i})^2
+\end{equation}
+
+\noindent and differentiating with respect to each of the unknown coefficients:
+
+\begin{equation}
+	\notag
+	\frac{\partial S_r}{\partial a_0} = -2 \sum (y_i -a_0 -a_1x_{1,i} - a_2x_{2,i}^2)
+\end{equation}
+
+\begin{equation}
+	\notag
+	\frac{\partial S_r}{\partial a_1} = -2 \sum x_{1,i} (y_i -a_0 -a_1x_{1,i} - a_2x_{2,i}^2)
+\end{equation}
+
+\begin{equation}
+	\notag
+	\frac{\partial S_r}{\partial a_2} = -2 \sum x_{2,i}^2 (y_i -a_0 -a_1x_{1,i} - a_2x_{2,i}^2)
+\end{equation}
+
+\begin{wrapfigure}{l}{0.25\textwidth}
+    \centering
+    \includegraphics[width=0.25\textwidth]{fig_15_3}
+   \caption{\textsf{Graphical depiction of multiple linear regression where y is a linear function of $x_1$ and $x_2$.}}
+   \label{fig:fig_15_3}
+\end{wrapfigure}
+
+\noindent The coefficients yielding the minimum sum of the squares of the residuals are obtained by setting the partial derivatives equal to zero and expressing the result in matrix form as 
+
+\begin{equation} % 366
+	\tag{15.5}
+	\begin{bmatrix}
+		n & \sum x_{1,i} & \sum x_{2,i} \\
+		\sum x_{1,i} & \sum x_{1,i}^2 & \sum x_{1,i} x_{2,i} \\
+		\sum x_{2,i} & \sum x_{1,i} x_{2,i} & \sum x_{2,i}^2
+	\end{bmatrix}
+	\begin{Bmatrix}
+		a_0 \\ a_1 \\ a_2
+	\end{Bmatrix} =
+	\begin{Bmatrix}
+		\sum y_i \\ \sum x_{1,i} y_i \\ \sum x_{2,i} y_i
+	\end{Bmatrix}
+\end{equation}
+
+\begin{example} Polynomial Regression
+
+    \textbf{Problem Statement.}\quad The following data were created from the equation $y = 5 + 4x_1 - 3x_2$:
+
+	\begin{tabular}{l c c c c c c c c c c}
+		$x_1$ & $x_2$ & $y$ \\
+		\hline
+		0 & 0 & 5 \\
+		2 & 1 & 10 \\
+		2.5 & 2 & 9 \\
+		1 & 3 & 0 \\
+		4 & 6 & 3 \\
+		7 & 2 & 27
+  	\end{tabular}
+
+	\noindent Use multiple linear regression to fit this data.
+
+	\noindent\textbf{Solution.}\quad The summations required to develop Eq. (15.5) are computed in Table 15.2. Substituting them into Eq. (15.5) gives
+
+	\begin{equation}
+		\tag{15.6}
+		\begin{bmatrix}
+			6 & 16.5 & 14 \\
+			16.5 & 76.25 & 48 \\
+			14 & 48 & 54
+		\end{bmatrix}
+		\begin{Bmatrix}
+			a_0 \\ a_1 \\ a_2
+		\end{Bmatrix}
+		=
+		\begin{Bmatrix}
+			54 \\ 243.5 \\ 100
+		\end{Bmatrix}
+	\end{equation}
+
+	\noindent which can be solved for
+
+	$$a_0 = 5 \quad a_1 = 4 \quad a_2 = -3$$
+
+	\noindent which is consistent with the original equation from which the data were derived.
+\end{example}
+
+The foregoing two-dimensional case can be easily extended to $m$ dimensions, as in
+
+\begin{equation}
+	\notag
+	y = a_0 + a_1 x_1 + a_2 x_2 + \cdots + a_m x_m + e
+\end{equation}
+
+\textbf{TABLE 15.2} \quad Computations required to develop the normal equations for Example 15.2.
+
+\begin{tabular}{c c c c c c c c c c c c c}
+	$y$ & $x_1$ & $x_2$ & $x^2_1$ & $x_2^2$ & $x_1 x_2$ & $x_1 y$ & $x_2 y$ \\ 
+	\hline
+	5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+	10 & 2 & 1 & 4 & 1 & 2 & 20 & 10 \\ 
+	9 & 2.5 & 2 & 6.25 & 4 & 5 & 22.5 & 18 \\ 
+	0 & 1 & 3 & 1 & 9 & 3 & 0 & 0 \\ 
+	3 & 4 & 6 & 16 & 36 & 24 & 12 & 18 \\ 
+	27 & 7 & 2 & 49 & 4 & 14 & 189 & 54 \\ 
+	54 & 16.5 & 14 & 76.25 & 54 & 48 & 243.5 & 100            
+\end{tabular}
+
+\noindent where the standard error is formulated as
+\begin{equation}
+	\notag
+	s_{y/x} = \sqrt{\frac{S_r}{n - (m + 1)}}
+\end{equation}
+
+\noindent and the coefficient of determination is computed with Eq. (14.20).
+
+Although there may be certain cases where a variable is linearly related to two or more other variables, multiple linear regression has additional utility in the derivation of powerequations of the general form 
+
+\begin{equation}
+	\notag
+	y = a_0 x_1 ^ {a_1} x_2 ^ {a_2} \cdots x_m ^ {a_m}
+\end{equation}
+
+\noindent Such equations are extremely useful when fitting experimental data. To use multiple linear regression, the equation is transformed by taking its logarithm to yield
+
+\begin{equation}
+	\notag
+	\log y = \log a_0 + a_1 \log x_1 + a_2 \log x_2 + \cdots + a_m \log x_m
+\end{equation}
+
+\label{cha:cha_P_15_3} %367
+\section{GENERAL LINEAR LEAST SQUARES}
+
+\noindent In the preceding pages, we have introduced three types of regression: simple linear, polynomial, and multiple linear. In fact, all three belong to the following general linear least-squares model:
+
+\begin{equation}
+	\tag{15.7}
+	y = a_0 z_0 + a_1 z_1 + a_2 + z_2 + \cdots + a_m z_m + e
+\end{equation}
+
+\noindent where $z_0, z_1, \ldots, z_m$ are $m + 1$ basis functions. It can easily be seen how simple linear and multiple linear regression fall within this model-that is, $z_0 = 1, z_1 = x_1, z_2 = x_2, \ldots, z_m = xm$. Further, polynomial regression is also included if the basis functions are simple monomials as in $z_0 = 1, z_1 = x, z_2 = x^2, \ldots, z_m = x^m$.
+
+Note that the terminology ``linear'' refers only to the model's dependence on its
+parameters-that is, the $a$'s. As in the case of polynomial regression, the functions themselves can be highly nonlinear. For example, the $z$'s can be sinusoids, as in
+
+\begin{equation}
+	\notag
+	y = a_0 + a_1 \cos (\omega x) + a_2 sin (\omega x)
+\end{equation}
+
+\noindent Such a format is the basis of \textit{Fourier analysis}
+
+On the other hand, a simple-looking model such as
+
+\begin{equation}
+	\notag
+	y = a_0 (1- e^{-a_1 x})
+\end{equation}
+
+\noindent is truly nonlinear because it cannot be manipulated into the format of Eq. (15.7).
+
+Equation (15.7) can be expressed in matrix notation as
+
+\begin{equation}
+	\tag{15.8}
+	{y} = [Z] {a} + {e}
+\end{equation}
+
+\noindent where $[Z]$ is a matrix of the calculated values of the basis functions at the measured values of the independent variables:
+
+\begin{equation}
+	\notag
+	\begin{bmatrix}
+		z_{01} & z_{11} & \cdots & z_{m1} \\ 
+		z_{02} & z_{12} & \cdots & z_{m2} \\ 
+		\vdots & \vdots &        & \vdots \\ 
+		z_{0n} & z_{1n} & \cdots & z_{mn}
+	\end{bmatrix}
+\end{equation}
+
+\noindent where $m$ is the number of variables in the model and $n$ is the number of data points. Because $n \geqslant  m + 1$, you should recognize that most of the time, $[Z]$ is not a square matrix.
+
+The column vector ${y}$ contains the observed values of the dependent variable:
+
+\begin{equation}
+	\notag
+	{y}^T = \lfloor y_1 \quad  y_2 \quad \cdots \quad y_n \rfloor 
+\end{equation}
+
+\noindent The column vector ${a}$ contains the unknown coefficients:
+
+\begin{equation}
+	\notag
+	{a}^T = \lfloor a_1 \quad  a_2 \quad \cdots \quad a_m \rfloor 
+\end{equation}
+
+\noindent and the column vector ${e}$ contains the residuals:
+
+\begin{equation}
+	\notag
+	{e}^T = \lfloor e_1 \quad  e_2 \quad \cdots \quad e_n \rfloor 
+\end{equation}
+
+The sum of the squares of the residuals for this model can be defined as
+
+\begin{equation}
+	\tag{15.9}
+	S_r = \sum^n_{i=1} {(y_i - \sum^m_{j=0} a_j z_{ji})}^2
+\end{equation}
+
+\noindent This quantity can be minimized by taking its partial derivative with respect to each of the
+coefficients and setting the resulting equation equal to zero. The outcome of this process is
+the normal equations that can be expressed concisely in matrix form as
+
+\begin{equation}
+	\tag{15.10}
+	[{[Z]}^T [Z]] \{a\} = \{{[Z]}^T \{y\}\}
+\end{equation}
+
+\noindent It can be shown that Eq. (15.10) is, in fact, equivalent to the normal equations developed
+previously for simple linear, polynomial, and multiple linear regression.
+
+The coefficient of determination and the standard error can also be formulated in terms
+of matrix algebra. Recall that $r^2$ is defined as
+
+\begin{equation}
+	\notag
+	r^2 = \frac{S_t - S_r}{S_t} = 1 - \frac{S_r}{S_t}
+\end{equation}
+
+\noindent Substituting the definitions of $S_r$ and $S_t$ gives
+
+\begin{equation}
+	\notag
+	r^2 = 1 - \frac{\sum {(y_i - \hat{y}_i)} ^ 2}{\sum {(y_i - \bar{y}_i)} ^ 2}
+\end{equation}
+
+\noindent where $\hat{y} =$ the prediction of the least-squares fit. The residuals between the best-fit curve and the data, $y_i - \hat{y}$, can be expressed in vector form as
+
+\begin{equation}
+	\notag
+	\{y\} - [Z] \{a\}
+\end{equation}
+
+Matrix algebra can then be used to manipulate this vector to compute both the coefficient of determination and the standard error of the estimate as illustrated in the following example.
+
+\begin{example} Polynomial Regression with MATLAB
+
+    \textbf{Problem Statement.}\quad Repeat Example 15.1, but use matrix operations as described in this
+	section.
+
+	\noindent\textbf{Solution.}\quad First, enter the data to be fit
+
+	\begin{lstlisting}[numbers=none]
+		>> x = [0 1 2 3 4 5]';
+		>> y = [2.1 7.7 13.6 27.2 40.9 61.1]';
+	\end{lstlisting}
+
+	\noindent Next, create the [Z] matrix:
+
+	\begin{lstlisting}[numbers=none]
+		>> Z = [ones(size(x)) x x.^2]
+		Z = 
+			1  0  0 
+			1  1  1 
+			1  2  4 
+			1  3  9 
+			1  4 16 
+			1  5 25
+	\end{lstlisting}
+
+	\noindent We can verify that [Z]$^T$ [Z] results in the coefficient matrix for the normal equations:
+
+	\begin{lstlisting}[numbers=none]
+		>> Z'*Z
+		ans = 
+			 6  15    55 
+			15  55   225 
+			55  225  979
+	\end{lstlisting}
+
+	\noindent This is the same result we obtained with summations in Example 15.1. We can solve for the	coefficients of the least-squares quadratic by implementing Eq. (15.10):
+
+	\begin{lstlisting}[numbers=none]
+		>> a = (Z'*Z)\(Z'*y)
+		ans =
+			2.4786
+			2.3593
+			1.8607
+	\end{lstlisting}
+
+	\noindent In order to compute $r^2$ and $s_{y/x}$, first compute the sum of the squares of the residuals:
+
+	\begin{lstlisting}[numbers=none]
+		>> Sr = sum((y-Z*a).^2)
+		Sr =
+			3.7466
+	\end{lstlisting}
+
+	\noindent Then $r^2$ can be computed as
+
+	\begin{lstlisting}[numbers=none]
+		>> r2 = 1-Sr/sum((y-mean(y)).^2)
+		r2 =
+			0.9985
+	\end{lstlisting}
+
+	\noindent and $s_{y/x}$ can be computed as
+
+	\begin{lstlisting}[numbers=none]
+		>> syx = sqrt(Sr/(length(x)-length(a)))
+		syx =
+			1.1175
+	\end{lstlisting}
+\end{example}
+
+Our primary motivation for the foregoing has been to illustrate the unity among the
+three approaches and to show how they can all be expressed simply in the same matrix notation. It also sets the stage for the next section where we will gain some insights into the
+preferred strategies for solving Eq. (15.10). The matrix notation will also have relevance
+when we turn to nonlinear regression in Section 15.5.
+
+\bigskip
+\label{cha:cha_P_15_4} %370
+\section{QR FACTORIZATION AND THE BACKSLASH OPERATOR}
+
+\noindent Generating a best fit by solving the normal equations is widely used and certainly adequate
+for many curve-fitting applications in engineering and science. 
+It must be mentioned, however, that the normal equations can be ill-conditioned and hence sensitive to roundoff errors.
+
+Two more advanced methods, QR \textit{factorization} and \textit{singular value decomposition}, are
+more robust in this regard. Although the description of these methods is beyond the scope
+of this text, we mention them here because they can be implemented with MATLAB.
+
+Further, QR factorization is automatically used in two simple ways within MATLAB.
+First, for cases where you want to fit a polynomial, the built-in \texttt{polyfit} function automatically uses QR factorization to obtain its results.
+
+Second, the general linear least-squares problem can be directly solved with the backslash operator. Recall that the general model is formulated as Eq. (15.8)
+
+\begin{equation}
+	\tag{15.11}
+	\{y\} = [Z] \{a\}
+\end{equation}
+
+In Section 10.4, we used left division with the backslash operator to solve systems of linear algebraic equations where the number of equations equals the number of unknowns $(n = m)$.
+For Eq. (15.8) as derived from general least squares, the number of equations is greater than
+the number of unknowns $(n > m)$. Such systems are said to be \textit{overdetermined}. When
+MATLAB senses that you want to solve such systems with left division, it automatically uses
+QR factorization to obtain the solution. The following example illustrates how this is done.
+
+\begin{example} Implementing Polynomial Regression with \texttt{polyfit} and Left Division
+
+    \textbf{Problem Statement.}\quad Repeat Example 15.3, but use the built-in \texttt{polyfit} function and
+	left division to calculate the coefficients.
+
+	\noindent\textbf{Solution.}\quad As in Example 15.3, the data can be entered and used to create the [Z] matrix
+	as in
+
+	\begin{lstlisting}[numbers=none]
+		>> x = [0 1 2 3 4 5]';
+		>> y = [2.1 7.7 13.6 27.2 40.9 61.1]';
+		>> Z = [ones(size(x)) x x.^2];
+	\end{lstlisting}
+
+	\noindent The \texttt{polyfit} function can be used to compute the coefficients:
+
+	\begin{lstlisting}[numbers=none]
+		>> a = polyfit(x,y,2)
+		a =
+			1.8607
+			2.3593
+			2.4786
+	\end{lstlisting}
+
+	The same result can also be calculated using the backslash:
+
+	\begin{lstlisting}[numbers=none]
+		>> a = Z\y
+		a =
+			2.4786
+			2.3593
+			1.8607	
+	\end{lstlisting}
+
+	\noindent As just stated, both these results are obtained automatically with QR factorization.
+\end{example}
+
+\bigskip
+\label{cha:cha_P_15_5} %370
+\section{NONLINEAR REGRESSION}
+
+\noindent There are many cases in engineering and science where nonlinear models must be fit to
+data. In the present context, these models are defined as those that have a nonlinear dependence on their parameters. For example,
+
+\begin{equation}
+	\tag{15.12}
+	y = a_0 (1 - e^{-a_1 x}) + e
+\end{equation}
+
+\noindent This equation cannot be manipulated so that it conforms to the general form of Eq. (15.7).
+
+As with linear least squares, nonlinear regression is based on determining the values
+of the parameters that minimize the sum of the squares of the residuals. However, for the
+nonlinear case, the solution must proceed in an iterative fashion.
+
+There are techniques expressly designed for nonlinear regression. For example, the
+Gauss-Newton method uses a Taylor series expansion to express the original nonlinear
+equation in an approximate, linear form. Then least-squares theory can be used to obtain
+new estimates of the parameters that move in the direction of minimizing the residual.
+Details on this approach are provided elsewhere (Chapra and Canale, 2010).
+
+An alternative is to use optimization techniques to directly determine the least-squares
+fit. For example, Eq. (15.12) can be expressed as an objective function to compute the sum
+of the squares:
+
+\begin{equation}
+	\tag{15.13}
+	f(a_0, a_1) = \sum^n_{i=1} {[y_i - a_0 (1 - e ^ {-a_i x_i})]} ^ 2
+\end{equation}
+
+An optimization routine can then be used to determine the values of $a_0$ and $a_1$ that minimize the function.
+
+As described previously in Section 7.3.1, MATLAB's \texttt{fminsearch} function can be used for this purpose. It has the general syntax
+
+\begin{lstlisting}[numbers=none] 
+	[x, fval] = fminsearch(fun,x0,options,p1,p2,...)
+\end{lstlisting}
+
+\noindent where $x = a$ vector of the values of the parameters that minimize the function \texttt{fun, fval} = the value of the function at the minimum, \texttt{x0 = }a vector of the initial guesses for the parameters, \texttt{options} = a structure containing values of the optimization parameters as created with the \texttt{optimset} function (recall Sec. 6.5), and \texttt{p1, p2, }etc. = additional arguments that are passed to the objective function. 
+Note that if \texttt{options} is omitted, MATLAB uses default values that are reasonable for most problems. If you would like to pass additional arguments (\texttt{p1, p2, }\dots), but do not want to set the options, use empty brackets \texttt{[]} as a place holder.
+
+\begin{example} Nonlinear Regression with MATLAB
+
+    \textbf{Problem Statement.}\quad  Recall that in Example 14.6, we fit the power model to data from
+	Table 14.1 by linearization using logarithms. This yielded the model:
+
+	$$
+		F = 0.2741 v ^{1.942}
+	$$
+
+	\noindent Repeat this exercise, but use nonlinear regression. Employ initial guesses of 1 for the
+	coefficients.
+
+	\noindent\textbf{Solution.}\quad First, an M-file function must be created to compute the sum of the squares.
+	The following file, called \texttt{fSSR.m}, is set up for the power equation:
+
+	\begin{lstlisting}[numbers=none]
+		function f = fSSR(a,xm,ym)
+		yp = a(1)*xm.^a(2);
+		f = sum((ym-yp).^2);
+	\end{lstlisting}
+
+	\noindent In command mode, the data can be entered as
+
+	\begin{lstlisting}[numbers=none]
+		>> x = [10 20 30 40 50 60 70 80];
+		>> y = [25 70 380 550 610 1220 830 1450];
+	\end{lstlisting}
+
+	\noindent The minimization of the function is then implemented by
+
+	\begin{lstlisting}[numbers=none]
+		>> fminsearch(@fSSR, [1, 1], [], x, y)
+		ans=
+			2.5384
+			1.4359	
+	\end{lstlisting}
+
+	\noindent The best-fit model is therefore
+
+	$$
+		F = 2.5384 v^ {1.4359}
+	$$
+
+	Both the original transformed fit and the present version are displayed in Fig. 15.4.
+	Note that although the model coefficients are very different, it is difficult to judge which fit
+	is superior based on inspection of the plot.
+
+	This example illustrates how different best-fit equations result when fitting the same
+	model using nonlinear regression versus linear regression employing transformations. This
+	is because the former minimizes the residuals of the original data whereas the latter minimizes the residuals of the transformed data.
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\linewidth]{fig_15_4}
+		\caption{\textsf{Comparison of transformed and untransformed model fits for force versus velocity data from
+		Table 14.1.}}
+		\label{fig:fig_15_4}
+	\end{figure}
+\end{example}
+
+
+\section[CASE STUDY: FITTING EXPERIMENTAL DATA]{CASE STUDY: FITTING EXPERIMENTAL DATA}
+\noindent\textbf{Background.} \quad As mentioned at the end of Section 15.2, although there are many cases where a variable is linearly related to two or more other variables, multiple linear regression has additional utility in the derivation of multivariable power equations of the general form
+
+\begin{equation}
+	\tag{15.14}
+	y = a_0 x_1^{a_1} x_2^{a_2} \cdots x_m^{a_m} 
+\end{equation}
+
+\noindent Such equations are extremely useful when fitting experimental data. To do this, the equation is transformed by taking its logarithm to yield
+
+\begin{equation}
+	\tag{15.15}
+	\log y = \log a_0 + a_1 \log x_1 + a_2 \log x_2 \cdots + a_m \log x_m
+\end{equation}
+
+\noindent Thus, the logarithm of the dependent variable is linearly dependent on the logarithms of the independent variables.
+
+A simple example relates to gas transfer in natural waters such as rivers, lakes, and estuaries. In particular, it has been found that the mass-transfer coefficient of dissolved oxygen $K_L$ (m/d) is related to a river's mean water velocity $U$ (m/s) and depth $H$ (m) by
+
+\begin{equation}
+	\tag{15.16}
+	K_L = a_0 U^{a_1} H^{a_2}
+\end{equation}
+
+\noindent Taking the common logarithm yields
+
+\begin{equation}
+	\tag{15.17}
+	\log K_L = \log a_0 + a_1 \log U + a_2 \log H
+\end{equation}
+
+The following data were collected in a laboratory flume at a constant temperature of $20^\circ$C:
+
+\begin{tabular}{l c c c c c c c c c}
+	$U$ & 0.5 & 2 & 10 & 0.5 & 2 & 10 & 0.5 & 2 & 10 \\
+	$H$ & 0.15 & 0.15 & 0.15 & 0.3 & 0.3 & 0.3 & 0.5 & 0.5 & 0.5 \\
+	$K_L$ & 0.48 & 3.9 & 57 & 0.85 & 5 & 77 & 0.8 & 9 & 92
+\end{tabular}
+
+\noindent Use these data and general linear least squares to evaluate the constants in Eq. (15.16).
+
+\noindent Solution. In a similar fashion to Example 15.3, we can develop a script to assign the
+data, create the $[Z]$ matrix, and compute the coefficients for the least-squares fit:
+
+\begin{lstlisting}[numbers=none]
+	% Compute best fit of transformed values
+	clc; format short g
+	U=[0.5 2 10 0.5 2 10 0.5 2 10]';
+	H=[0.15 0.15 0.15 0.3 0.3 0.3 0.5 0.5 0.5]';
+	KL=[0.48 3.9 57 0.85 5 77 0.8 9 92]';
+	logU=log10(U);logH=log10(H);logKL=log10(KL);
+	Z=[ones(size(logKL)) logU logH];
+	a=(Z'*Z)\(Z'*logKL)
+\end{lstlisting}
+
+\noindent with the result:
+
+\begin{lstlisting}[numbers=none]
+	a =
+		0.57627
+		1.562
+		0.50742
+\end{lstlisting}
+
+\noindent Therefore, the best-fit model is
+
+\begin{equation}
+	\notag
+	\log K_L = 0.57627 + 1.562 \log U + 0.50742 \log H
+\end{equation}
+
+\noindent or in the untransformed form (note, $a_0 = 10^{0.57627} = 3.7694$),
+
+\begin{equation}
+	\notag
+	K_L = 3.7694 U^{1.560} H ^ {0.5074}
+\end{equation}
+
+\noindent The statistics can also be determined by adding the following lines to the script:
+
+\begin{lstlisting}[numbers=none]
+	% Compute fit statistics
+	Sr=sum((logKL-Z*a).^2)
+	r2=1-Sr/sum((logKL-mean(logKL)).^2)
+	syx=sqrt(Sr/(length(logKL)-length(a)))
+	Sr =
+		0.024171
+	r2 =
+		0.99619
+	syx =
+		0.063471
+\end{lstlisting}
+
+Finally, plots of the fit can be developed. The following statements display the model
+predictions versus the measured values for $K_L$. Subplots are employed to do this for both
+the transformed and untransformed versions.
+
+\begin{lstlisting}[numbers=none]
+	%Generate plots
+	clf
+	KLpred=10^a(1)*U.^a(2).*H.^a(3);
+	KLmin=min(KL);KLmax=max(KL);
+	dKL=(KLmax-KLmin)/100;
+	KLmod=[KLmin:dKL:KLmax];
+	subplot(1,2,1)
+	loglog(KLpred,KL,'ko',KLmod,KLmod,'k-')
+	axis square,title('(a) log-log plot')
+	legend('model prediction','1:1
+	line','Location','NorthWest')
+	xlabel('log(K_L) measured'),ylabel('log(K_L) predicted')
+	subplot(1,2,2)
+	plot(KLpred,KL,'ko',KLmod,KLmod,'k-')
+	axis square,title('(b) untransformed plot')
+	legend('model prediction','1:1
+	line','Location','NorthWest')
+	xlabel('K_L measured'),ylabel('K_L predicted')
+\end{lstlisting}
+
+\noindent The result is shown in Fig. 15.5.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_15_5}
+	\caption{\textsf{Plots of predicted versus measured values of the oxygen mass-transfer coefficient as computed with multiple regression. Results are shown for (a) log transformed and (b) untransformed cases. The 1:1 line, which indicates a perfect correlation, is superimposed on both plots.}}
+	\label{fig:fig_15_5}
+\end{figure}
+
+\noindent\textbf{PROBLEMS}\\
+
+\begin{multicols}{2}
+    \noindent\textbf{15.1}  Fit a parabola to the data from Table 14.1. Determine
+	the r 2 for the fit and comment on the efficacy of the result.
+
+	\noindent\textbf{15.2} Using the same approach as was employed to derive
+	Eqs. (14.15) and (14.16), derive the least-squares fit of the
+	following model:
+
+	$$
+		y = a_1 x + a_2 x^2 + e
+	$$
+
+	\noindent That is, determine the coefficients that result in the leastsquares fit for a second-order polynomial with a zero inter	cept. Test the approach by using it to fit the data from
+	Table 14.1.
+
+	\noindent\textbf{15.3} Fit a cubic polynomial to the following data:
+
+	\noindent
+	\begin{tabular}{l c c c c c c c c}
+		x & 3 & 4 & 5 & 7 & 8 & 9 & 11 & 12 \\
+		y & 1.6 & 3.6 & 4.4 & 3.4 & 2.2 & 2.8 & 3.8 & 4.6
+	\end{tabular}
+
+	\noindent Along with the coefficients, determine $r^2$ and $s_{y/x}$.
+
+	\noindent\textbf{15.4} Develop an M-file to implement polynomial regression. Pass the M-file two vectors holding the $x$ and $y$
+	values along with the desired order $m$. Test it by solving
+	Prob. 15.3.
+
+	\noindent\textbf{15.5}  For the data from Table P15.5, use polynomial
+	regression to derive a predictive equation for dissolved
+	oxygen concentration as a function of temperature for the
+	case where the chloride concentration is equal to zero.
+	Employ a polynomial that is of sufficiently high order that
+	the predictions match the number of significant digits displayed in the table.
+
+	\noindent\textbf{15.6} Use multiple linear regression to derive a predictive
+	equation for dissolved oxygen concentration as a function of
+	temperature and chloride based on the data from Table P15.5.
+	Use the equation to estimate the concentration of dissolved
+	oxygen for a chloride concentration of 15 g/L at $T = 12 ^\circ C$.
+	Note that the true value is 9.09 mg/L. Compute the percent
+
+	\noindent\textbf{TABLE P15.5} Dissolved oxygen concentration in water as a function of temperature ($^\circ C$) and chloride concentration (g/L).
+
+	\noindent
+	\begin{tabular}{c c c c}
+		T, $^\circ C$ & c = 0 g/L & c = 10 g/L & c = 20 g/L \\
+		\hline
+		0 & 14.6 & 12.9 & 11.4 \\
+		5 & 12.8 & 11.3 & 10.3 \\
+		10 & 11.3 & 10.1 & 8.96 \\
+		15 & 10.1 & 9.03 & 8.08 \\
+		20 & 9.09 & 8.17 & 7.35 \\
+		25 & 8.26 & 7.46 & 6.73 \\
+		30 & 7.56 & 6.85 & 6.20
+	\end{tabular}
+
+	\noindent relative error for your prediction. Explain possible causes for
+	the discrepancy.
+
+	\noindent\textbf{15.7} As compared with the models from Probs. 15.5 and
+	15.6, a somewhat more sophisticated model that accounts
+	for the effect of both temperature and chloride on dissolved oxygen saturation can be hypothesized as being of
+	the form
+
+	$$
+		o = f_3 (T ) + f_1(c)
+	$$
+
+	\noindent That is, a third-order polynomial in temperature and a linear
+	relationship in chloride is assumed to yield superior results.
+	Use the general linear least-squares approach to fit this
+	model to the data in Table P15.5. Use the resulting equation
+	to estimate the dissolved oxygen concentration for a chloride
+	concentration of 15 g/L at $T = 12^\circ C$. Note that the true
+	value is 9.09 mg/L. Compute the percent relative error for
+	your prediction.
+
+	\noindent\textbf{15.8} Use multiple linear regression to fit
+
+	\noindent
+	\begin{tabular}{l c c c c c c c c c c c c}
+		\textbf{$x_1$} & 0 & 1 & 1 & 2 & 2 & 3 & 3 & 4 & 4 \\
+		\textbf{$x_2$} & 0 & 1 & 2 & 1 & 2 & 1 & 2 & 1 & 2 \\
+		\textbf{$y$} & 15.1 & 17.9 & 12.7 & 25.6 & 20.5 & 35.1 & 29.7 & 45.4 & 40.2
+	\end{tabular}
+
+	\noindent Compute the coefficients, the standard error of the estimate,
+	and the correlation coefficient.
+
+	\noindent\textbf{15.9} The following data were collected for the steady flow of water in a concrete circular pipe:
+
+	\noindent
+	\begin{tabular}{c c c c}
+		\textbf{Experiment} & \textbf{Diameter, m} & \textbf{Slope, m/m} & \textbf{Flow, m$^3$/s} \\
+		1 & 0.3 & 0.001 & 0.04 \\
+		2 & 0.6 & 0.001 & 0.24 \\
+		3 & 0.9 & 0.001 & 0.69 \\
+		4 & 0.3 & 0.01 & 0.13  \\
+		5 & 0.6 & 0.01 & 0.82 \\
+		6 & 0.9 & 0.01 & 2.38 \\
+		7 & 0.3 & 0.05 & 0.31 \\
+		8 & 0.6 & 0.05 & 1.95 \\
+		9 & 0.9 & 0.05 & 5.66
+	\end{tabular}
+
+	\noindent Use multiple linear regression to fit the following model to this data:
+
+	$$
+		Q = \alpha_0 D^{\alpha_1} S^{\alpha_2}
+	$$
+
+	\noindent where $Q$ = flow, $D$ = diameter, and $S$ = slope.
+
+	\noindent\textbf{15.10} Three disease-carrying organisms decay exponentially in seawater according to the following model:
+
+	$$
+		p(t) = Ae^{-1.5t} + Be^{-0.3t} + Ce^{-0.05t}
+	$$
+
+	\noindent Estimate the initial concentration of each organism ($A$, $B$,
+	and $C$) given the following measurements:
+
+	\noindent
+	\begin{tabular}{l c c c c c c c c c}
+		\textbf{t} & 0.5 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 9 \\
+		\textbf{p(t)} & 6 & 4.4 & 3.2 & 2.7 & 2 & 1.9 & 1.7 & 1.4 & 1.1
+	\end{tabular}
+
+	\noindent\textbf{15.11} The following model is used to represent the effect of
+	solar radiation on the photosynthesis rate of aquatic plants:
+
+	$$
+		P = P_m \frac{I}{I_{\text{sat}}} e ^ {-\frac{I}{I_{\text{sat}}} + 1}
+	$$
+
+	\noindent where $P$ = the photosynthesis rate (mg $m^{-3}$ $d^{-1}$ ),$P_m$ = the
+	maximum photosynthesis rate (mg $m^{-3}$ $d^{-1}$ ), $I$ = solar
+	radiation ($\mu E m^{-2} s^{-1}$), and $I_{\text{sat}}$ = optimal solar radiation
+	($\mu E m^{-2} s^{-1}$). Use nonlinear regression to evaluate $P_m$ and
+	$I_{\text{sat}}$ based on the following data:
+
+	\noindent
+	\begin{tabular}{l c c c c c c c c c c c c}
+		\textbf{I} & 50 & 80 & 130 & 200 & 250 & 350 & 450 & 550 & 700 \\
+		\textbf{P} & 99 & 177 & 202 & 248 & 229 & 219 & 173 & 142 & 72
+	\end{tabular}
+
+	\noindent\textbf{15.12} The following data are provided
+
+	\noindent
+	\begin{tabular}{l c c c c c}
+		\textbf{x} & 1 & 2 & 3 & 4 & 5 \\
+		\textbf{y} & 2.2 & 2.8 & 3.6 & 4.5 & 5.5
+	\end{tabular}
+
+	\noindent Fit the following model to this data using MATLAB and the
+	general linear least-squares model
+
+	$$
+		y= a + bx + \frac{c}{x}
+	$$
+
+	\noindent\textbf{15.13} In Prob. 14.8 we used transformations to linearize
+	and fit the following model:
+
+	$$
+		y = \alpha_4 x e^{\beta_4 x}
+	$$
+
+	\noindent Use nonlinear regression to estimate $\alpha_4$ and $\beta_4$ based on the
+	following data. Develop a plot of your fit along with the data.
+
+	\noindent
+	\begin{tabular}{l c c c c c c c c c c c c c c}
+		\textbf{x}& 0.1& 0.2& 0.4& 0.6& 0.9 &1.3 &1.5 &1.7 &1.8 \\
+		\textbf{y}& 0.75 &1.25 &1.45 &1.25& 0.85& 0.55 &0.35& 0.28& 0.18
+	\end{tabular}
+
+	\noindent\textbf{15.14}  Enzymatic reactions are used extensively to characterize biologically mediated reactions. The following is an example of a model that is used to fit such reactions:
+
+	$$
+		v_0 = \frac{k_m [S]^3}{K + [S]^3}
+	$$
+
+	\noindent where $v_0$ = the initial rate of the reaction (M/s), $[S]$ = the substrate concentration (M), and $k_m$ and $K$ are parameters. The following data can be fit with this model:
+
+	\noindent
+	\begin{tabular}{c c}
+		\textbf{[S], M} & \textbf{$v_0$, M/s} \\
+ 0.01 &  $6.078 \times 10^{-11}$ \\
+0.05 &  $7.595 \times 10^{-9}$ \\
+0.1 &  $6.063 \times 10^{-8}$ \\
+ 0.5 &  $5.788 \times 10^{-6}$ \\
+ 1 &  $1.737 \times 10^{-5}$ \\
+ 5 &  $2.423 \times 10^{-5}$ \\
+10 &  $2.430 \times 10^{-5}$ \\
+50 &  $2.431 \times 10^{-5}$ \\
+ 100 &  $2.431 \times 10^{-5}$ 
+	\end{tabular}
+
+	\noindent \textbf{(a)} Use a transformation to linearize the model and evaluate
+the parameters. Display the data and the model fit on a
+graph.
+
+\noindent \textbf{(b)} Perform the same evaluation as in \textbf{(a)} but use nonlinear
+regression.
+ 
+	\noindent\textbf{15.15} Given the data
+
+	\begin{tabular}{l c c c c c c c c c c }
+		\textbf{x} & 5 & 10 & 15 & 20 & 25 & 30 & 35 & 40 & 45 & 50 \\
+		\textbf{y} & 17 & 24 & 31 & 33 & 37 & 37 & 40 & 40 & 42 & 41
+	\end{tabular}
+
+	\noindent use least-squares regression to fit \textbf{(a)} a straight line, \textbf{(b)} a
+	power equation, \textbf{(c)} a saturation-growth-rate equation, and
+	\textbf{(d)} a parabola. For \textbf{(b)} and \textbf{(c)}, employ transformations to
+	linearize the data. Plot the data along with all the curves. Is
+	any one of the curves superior? If so, justify.
+
+	\noindent\textbf{15.16} The following data represent the bacterial growth in a
+	liquid culture over of number of days:
+
+	\begin{tabular}{l c c c c c c c c}
+		Day & 0 & 4 & 8 & 12 & 16 & 20 \\
+		Amount $\times 10^6$ & 67.38 & 74.67 & 82.74 & 91.69 & 101.60 & 112.58
+	\end{tabular}
+
+	\noindent Find a best-fit equation to the data trend. Try several
+	possibilities—linear, quadratic, and exponential. Determine
+   the best equation to predict the amount of bacteria after
+   30 days.
+
+   \noindent\textbf{15.17}Dynamic viscosity of water $\mu$ ($10^{-3}$ N $\cdot $ s/m$^2$ ) is related to temperature $T$ ($^\circ C$) in the following manner:
+
+	\noindent
+	\begin{tabular}{l c c c c c c}
+		$T$ &	0 &	5 &	10 &	20 &	30 &	40 \\
+		$\mu$ & 1.787 & 1.519 & 1.307 &	1.002 &	0.7975 & 0.6529
+	\end{tabular}
+  
+	\noindent \textbf{(a)} Plot this data.
+	\noindent \textbf{(b)} Use linear interpolation to predict $\mu$ at $T = 7.5 ^\circ C$.
+	\noindent \textbf{(c)} Use polynomial regression to fit a parabola to the data in
+order to make the same prediction.
+
+	\noindent\textbf{15.18}  Use the following set of pressure-volume data to find
+	the best possible virial constants ($A_1$ and $A_2$) for the following equation of state. $R$ = 82.05 mL atm/gmol K, and $T$ =
+	 303 K.
+
+	$$
+		\frac{P V}{R T}=1 + \frac{A_1}{V}+\frac{A_2}{V^2} 
+	$$
+	
+	\noindent
+	\begin{tabular}{l c c c c }
+		\textbf{P (atm)} &		0.985 &		 1.108 &		 1.363 &		 1.631 \\	 
+		\textbf{V (mL)} &		 25,000 &		 22,200 &		 18,000 &		 15,000
+	\end{tabular}
+
+	\noindent\textbf{15.19} Environmental scientists and engineers dealing with
+	the impacts of acid rain must determine the value of the
+	ion product of water $K_w$ as a function of temperature. Scientists have suggested the following equation to model this
+	relationship:
+
+	$$
+		- \log_10 K_w = \frac{a}{T_a} + b \log_10 T_a + c T_a +d
+	$$
+
+	\noindent where $T_a$ = absolute temperature (K), and $a$, $b$, $c$, and $d$ are
+	parameters. Employ the following data and regression to estimate the parameters with MATLAB. Also, generate a
+	plot of predicted $K_w$ versus the data.
+
+	\noindent
+	\begin{tabular}{c c}
+		T ($^\circ C$) & $K_w$ \\
+		0  & $1.164 \times 10^{-15}$ \\
+		10 & $2.950 \times 10^{-15}$ \\
+		20 & $6.846 \times 10^{-15}$ \\
+		30 & $1.467 \times 10^{-14}$ \\
+		40 & $2.929 \times 10^{-14}$ \\
+	\end{tabular}
+
+	\noindent\textbf{15.20} The distance required to stop an automobile consists
+	of both thinking and braking components, each of which is a
+	function of its speed. The following experimental data were
+	collected to quantify this relationship. Develop best-fit equations for both the thinking and braking components. Use
+	these equations to estimate the total stopping distance for a
+	car traveling at 110 km/h.
+
+	\begin{tabular}{l c c c c c c} 
+		\textbf{Speed, km/h} &  30 &  45 &  60 &  75 &  90 &  120 \\
+		\textbf{Thinking, m} &  5.6 &  8.5 &  11.1 &  14.5 &  16.7 &  22.4 \\
+		\textbf{Braking, m} &  5.0 &  12.3 &  21.0 &  32.9 &  47.6 &  84.7
+	\end{tabular}
+
+	\noindent\textbf{15.21} An investigator has reported the data tabulated below.
+	It is known that such data can be modeled by the following
+   equation
+
+   $$
+	x = e^{(y-b) / a}
+   $$
+
+   \noindent where $a$ and $b$ are parameters. Use nonlinear regression to
+   determine $a$ and $b$. Based on your analysis predict $y$ at $x = 2.6$.
+
+   \noindent
+   \begin{tabular}{l c c c c c }
+	\textbf{x} &	1 &	2 &	3 &	4 &	5 \\
+	\textbf{y} &	0.5 &	2 &	2.9 &	3.5 &	4
+   \end{tabular}
+
+   \noindent\textbf{15.22} It is known that the data tabulated below can be modeled by the following equation
+
+   $$
+ 	y = ( \frac{a + \sqrt{x}}{b \sqrt{x}})^2  
+   $$
+
+   \noindent Use nonlinear regression to determine the parameters $a$ and $b$.
+   Based on your analysis predict $y$ at $x = 1.6$.
+
+   \noindent 
+   \begin{tabular}{l c c c c c c}
+	\textbf{x} &	1 &	2 &	3 &	4 &	5 \\
+	\textbf{y} &	0.5 &	2 &	2.9 &	3.5 &	4
+   \end{tabular}
+
+   \noindent\textbf{15.23}  An investigator has reported the data tabulated below
+   for an experiment to determine the growth rate of bacteria $k$
+   (per d), as a function of oxygen concentration $c$ (mg/L). It is
+   known that such data can be modeled by the following
+   equation:
+
+   $$
+ 	k = \frac{k_{\text{max}} c^2}{c_s + c^2}  
+   $$
+
+   \noindent Use nonlinear regression to estimate $c_s$ and $k_{\text{max}}$ and predict
+   the growth rate at $c$ = 2 mg/L.
+   
+   \begin{tabular}{l c c c c c}
+		\textbf{c} &	0.5 &	0.8 &	1.5 &	2.5 &	4 \\
+		\textbf{k} &	1.1 &	2.4 &	5.3 &	7.6 &	8.9
+   \end{tabular}
+
+   \noindent\textbf{15.24} A material is tested for cyclic fatigue failure whereby
+   a stress, in MPa, is applied to the material and the number of
+   cycles needed to cause failure is measured. The results are in
+   the table below. Use nonlinear regression to fit a power
+	model to this data.
+
+	\noindent
+	\begin{tabular}{l c c c c c c c}
+		\textbf{$N$, cycles} &1 & 10 &100 &1000& 10,000& 100,000& 1,000,000\\
+		\textbf{Stress,} \\
+		\textbf{MPa} & 1100 & 1000 & 925 & 800 &	625 &	550 &	420
+	\end{tabular}
+
+	\noindent\textbf{15.25} The following data shows the relationship between the viscosity of SAE 70 oil and temperature. Use nonlinear regression to fit a power equation to this data.
+
+	\noindent
+	\begin{tabular}{l c c c c}
+		\textbf{Temperature}, $T$, $^\circ C$ 26.67 & 93.33 & 148.89 & 315.56 \\
+		\textbf{Viscosity}, $\mu$, N$\cdot$s/m$^2$ 1.35 & 0.085 & 0.012 & 0.00075
+	\end{tabular}
+
+	\noindent\textbf{15.26} The concentration of E. \textit{coli} bacteria in a swimming
+	area is monitored after a storm:
+
+	\noindent
+	\begin{tabular}{l c c c c c c}
+		\textbf{t (hr)} &	4 &	8 &	12 &	16 &	20 &	24 \\
+		\textbf{c(CFU/100 mL)} &	1590 &	1320 &	1000 &	900 &	650 &	560	   
+	\end{tabular}
+
+	\noindent The time is measured in hours following the end of the storm
+and the unit CFU is a ``colony forming unit.'' Employ nonlinear regression to fit an exponential model (Eq. 14.22) to
+this data. Use the model to estimate \textbf{(a)} the concentration at
+the end of the storm ($t = 0$) and \textbf{(b)} the time at which the
+concentration will reach 200 CFU/100 mL.
+
+	\noindent\textbf{15.27} Use the following set of pressure-volume data to
+	find the best possible virial constants ($A_1$ and $A_2$ ) for the
+	equation of state shown below. $R$ = 82.05 mL atm/gmol K
+	and $T$ = 303 K.
+
+	$$
+		\frac{PV}{RT} = 1 + \frac{A_1}{V} + \frac{A_2}{V^2}
+	$$
+   
+	\noindent
+	\begin{tabular}{l c c c c}
+		\textbf{P (atm)} & 0.985 & 1.108 & 1.363 & 1.631 \\
+		\textbf{V (mL)} & 25,000 & 22,200 & 18,000 & 15,000
+	\end{tabular}
+
+	\noindent\textbf{15.28} Three disease-carrying organisms decay exponentially in lake water according to the following model:
+
+	$$
+		p(t) = Ae^{-1.5t} + Ae^{-0.3t} + Ae^{-0.05t}
+	$$
+
+	\noindent  Estimate the initial population of each organism ($A$, $B$,
+	and $C$) given the following measurements:
+
+	\noindent
+	\begin{tabular}{l c c c c c c c c c}
+		\textbf{t, hr} & 0.5 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 9 \\
+		\textbf{p(t)} & 6.0 & 4.4 & 3.2 & 2.7 & 2.2 & 1.9 & 1.7 & 1.4 & 1.1
+	\end{tabular}
+\end{multicols}
+
+
+\label{cha:cha_P_16} %380
+\chapter{Fourier Analysis}
+\textbf{CHAPTER OBJECTIVES}
+
+\noindent The primary objective of this chapter is to introduce you to Fourier analysis. The
+subject, which is named after Joseph Fourier, involves identifying cycles or patterns
+within a time series of data. Specific objectives and topics covered in this chapter are
+
+\begin{itemize}
+	\item Understanding sinusoids and how they can be used for curve fitting.
+	\item Knowing how to use least-squares regression to fit a sinusoid to data.
+	\item Knowing how to fit a Fourier series to a periodic function.
+	\item Understanding the relationship between sinusoids and complex exponentials
+	based on Euler's formula.
+	\item Recognizing the benefits of analyzing mathematical function or signals in the frequency domain (i.e., as a function of frequency).
+	\item Understanding how the Fourier integral and transform extend Fourier analysis to aperiodic functions.
+	\item Understanding how the discrete Fourier transform (DFT) extends Fourier analysis
+	to discrete signals.
+	\item Recognizing how discrete sampling affects the ability of the DFT to distinguish
+	frequencies. In particular, know how to compute and interpret the Nyquist
+	frequency.
+	\item Recognizing how the fast Fourier transform (FFT) provides a highly efficient
+	means to compute the DFT for cases where the data record length is a power of 2.
+	\item Knowing how to use the MATLAB function \texttt{fft} to compute a DFT and
+	understand how to interpret the results.
+	\item Knowing how to compute and interpret a power spectrum.
+\end{itemize}
+
+\noindent\textbf{YOU'VE GOT A PROBLEM}\\
+
+\noindent At the begginning of Chap. 8, we used Newton's second law and force balances to predict the equilibrium positions of three bungee jumpers connected by cords. Then, in Chap. 13, we determined the same systems's eigenvalues and eigenvectors in order to identify its resonant frequences and principal modes of vibration.
+Although this analysis certainly provided useful results, it required detailed system information including
+knowledge of the underlying model and parameters (i.e., the jumpers' masses and the
+cords' spring constants).
+
+So suppose that you have measurements of the jumpers' positions or velocities at discrete, equally spaced times (recall Fig. 13.1). Such information is referred to as a \textit{time series}. However, suppose further that you do not know the underlying model or the parameters needed to compute the eigenvalues. For such cases, is there any way to use the time
+series to learn something fundamental about the system's dynamics?
+
+In this chapter, we describe such an approach, \textit{Fourier analysis}, which provides a way to accomplish this objective. The approach is based on the premise that more complicated functions (e.g., a time series) can be represented by the sum of simpler trigonometric functions. As a prelude to outlining how this is done, it is useful to explore how data can be fit
+with sinusoidal functions.
+
+\label{cha:cha_P_16_1}
+\section{CURVE FITTING WITH SINUSOIDAL FUNCTIONS}
+
+\noindent A periodic function $f(t)$ is one for which
+
+\begin{equation}
+	\tag{16.1}
+	f(t) = f(t + T)
+\end{equation}
+
+\noindent where T is a constant called the \textit{period} that is the smallest value of time for which Eq. (16.1) holds. Common examples include both artificial and natural signals (Fig. 16.1a).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_16_1}
+	\caption{\textsf{Aside from trigonometric functions such as sines and cosines, periodic functions include
+	idealized waveforms like the square wave depicted in (a). Beyond such artificial forms, periodic
+	signals in nature can be contaminated by noise like the air temperatures shown in (b).}}
+	\label{fig:fig_16_1}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_16_2}
+	\caption{\textsf{(a) A plot of the sinusoidal function $y(t) = A_0 + C_1 \cos(\omega_0 t + \theta)$. For this case, $A_0 = 1.7$, $C_1 = 1$, $\omega_0 = 2 \pi / T = 2 \pi / (1.5 s)$, and $\theta = \pi / 3$ radians $= 1.0472$ ($= 0.25 s$). Other	parameters used to describe the curve are the frequency $f = \omega_0 /(2\pi)$, which or this case is 1 cycle $/ (1.5 s) = 0.6667$ Hz and the period $T = 1.5 s$. (b) An alternative expression of the same curve is $y(t) = A_0 + A_1 \cos(\omega_0 t) + B_1 \sin(\omega_0 t)$. The three components of this function are depicted in (b), where $A_1 = 0.5$ and $B_1 = -0.866$. The summation of the three curves in (b) yields the single curve in (a).}}
+	\label{fig:fig_16_2}
+\end{figure}
+
+The most fundamental are sinusoidal functions. In this discussion, we will use the term \textit{sinusoid} to represent any waveform that can be described as a sine or cosine. There is no clear-cut convention for choosing either function, and in any case, the results will be identical because the two functions are simply offset in time by $\pi/2$ radians. For this chapter, we will use the cosine, which can be expressed generally as
+
+\begin{equation}
+	\tag{16.2}
+	f(t) = A_0 + C_1 \cos (\omega_0 t + \theta)
+\end{equation}
+
+\noindent Inspection of Eq. (16.2) indicates that four parameters serve to uniquely characterize the
+sinusoid (Fig. 16.2a):
+
+\begin{itemize}
+	\item The \textit{mean value} $A_0$ sets the average height above the abscissa.
+	\item The \textit{amplitude} $C_1$ specifies the height of the oscillation.
+	\item The \textit{angular frequency} $\omega_0$ characterizes how often the cycles occur.
+	\item The \textit{phase angle} (or \textit{phase shift}) $\theta$ parameterizes the extent to which the sinusoid is shifted horizontally.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_16_3}
+	\caption{\textsf{Graphical depictions of (a) a lagging phase angle and (b) a leading phase angle. Note that the lagging curve in (a) can be alternatively described as $\cos(\omega_0 t + 3 \pi /2)$. In other words, if a curve lags by an angle of $\alpha$, it can also be represented as leading by $2\pi - \alpha$.}}
+	\label{fig:fig_16_3}
+\end{figure}
+
+Note that the \textit{angular frequency} (in radians/time) is related to the \textit{ordinary frequency} $f$ (in cycles/time) by 
+
+\begin{equation}
+	\tag{16.3}
+	\omega_0 = 2 \pi f
+\end{equation}
+
+\noindent and the ordinary frequency in turn is related to the period $T$ by
+
+\begin{equation}
+	\tag{16.4}
+	f = \frac{1}{T}
+\end{equation}
+
+In addition, the \textit{phase angle} represents the distance in radians from $t = 0$ to the point at which the cosine function begins a new cycle. As depicted in Fig. 16.3a, a negative value is referred to as a \textit{lagging phase angle} because the curve $\cos(\omega_0 t - \theta)$ begins a new cycle $\theta$ radians after $\cos(\omega_0 t)$. Thus, $\cos(\omega_0 t - \theta)$ is said to lag $\cos(\omega_0 t)$. Conversely, as in Fig. 16.3b, a positive value is referred to as a \textit{leading phase angle}.
+
+Although Eq. (16.2) is an adequate mathematical characterization of a sinusoid, it is awkward to work with from the standpoint of curve fitting because the phase shift is included in the argument of the cosine function. This deficiency can be overcome by invoking the trigonometric identity:
+
+\begin{equation}
+	\tag{16.5}
+	C_1 \cos(\omega_0 t + \theta) = C_1 [\cos(\omega_0 t + \theta) \cos(\theta) - \sin(\omega_0 t + \theta) \sin(\theta)]
+\end{equation}
+
+\noindent Substituting Eq. (16.5) into Eq. (16.2) and collecting terms gives (Fig. 16.2b)
+
+\begin{equation}
+	\tag{16.6}
+	f(t) = A_0 + A_1 \cos(\omega_0 t) + B_1 \sin(\omega_0 t)
+\end{equation}
+
+\noindent where
+
+\begin{equation}
+	\tag{16.7}
+	A_1 = C_1 \cos(\theta) \quad \quad B_1 = - C_1 \sin(\theta)
+\end{equation}
+
+\noindent Dividing the two parts of Eq. (16.7) gives
+
+\begin{equation}
+	\tag{16.8}
+	\theta = \arctan (- \frac{B_1}{A_1})
+\end{equation}
+
+\noindent where, if $A_1 < 0$, add $\pi$ to $\theta$. Squaring and summing Eq. (16.7) leads to
+
+\begin{equation}
+	\tag{16.9}
+	C_1 = \sqrt{A^2_1 + B ^2_1}
+\end{equation}
+
+\noindent Thus, Eq. (16.6) represents an alternative formulation of Eq. (16.2) that still requires four parameters but that is cast in the format of a general linear model [recall Eq. (15.7)]. As we will
+discuss in the next section, it can be simply applied as the basis for a least-squares fit.
+
+Before proceeding to the next section, however, we should stress that we could have
+employed a sine rather than a cosine as our fundamental model of Eq. (16.2). For example,
+
+\begin{equation}
+	\notag
+	f(t) = A_0 + C_1 \sin(\omega_0 t + \delta)
+\end{equation}
+
+\noindent could have been used. Simple relationships can be applied to convert between the two forms:
+
+\begin{equation}
+	\notag
+	\sin(\omega_0 t + \delta) = \cos(\omega_0 t + \delta - \frac{\pi}{2})
+\end{equation}
+
+\noindent and
+
+\begin{equation}
+	\tag{16.10}
+	\sin(\omega_0 t + \delta) = \sin(\omega_0 t + \delta + \frac{\pi}{2})
+\end{equation}
+
+\noindent In other words, $\theta = \delta - \pi/2$. The only important consideration is that one or the other format
+should be used consistently. Thus, we will use the cosine version throughout our discussion.
+
+\label{cha:cha_P_16_1_1}
+\subsection{Least-Squares Fit of a Sinusoid}
+
+\noindent Equation (16.6) can be thought of as a linear least-squares model:
+
+\begin{equation}
+	\tag{16.11}
+	y = A_0 + A_1 \cos(\omega_0 t) + B_1 \sin(\omega_0 t) + e
+\end{equation}
+
+\noindent which is just another example of the general model [recall Eq. (15.7)]
+
+\begin{equation}
+	\notag
+	y = a_0 z_0 + a_1 z_1 + a_2 z_2 + \cdots + a_m z_m + e
+\end{equation}
+
+\noindent where $z_0 = 1$, $z_1 = \cos(\omega_0 t)$, $z_2 = sin(\omega_0 t)$, and all other $z$'s = 0. Thus, our goal is to determine coefficient values that minimize
+
+\begin{equation}
+	\notag
+	S_r = \sum ^ N _ {i=1} \{ y_i - [A_0 + A_1 \cos(\omega_0 t) + B_1 \sin(\omega_0 t)]\}^2
+\end{equation}
+
+\noindent The normal equations to accomplish this minimization can be expressed in matrix form as [recall Eq. (15.10)]
+
+\begin{equation}
+	\tag{16.12}
+	\begin{bmatrix}
+		N & \sum \ cos(\omega_0 t) & \sum \sin(\omega_0 t) \\
+		\sum \cos(\omega_0 t) & \sum \cos^2 (\omega_0 t) & \sum \cos (\omega_0 t) \sin (\omega_0 t) \\
+		\sum \sin(\omega_0 t) & \sum \cos (\omega_0 t) \sin (\omega_0 t) & \sin^2 (\omega_0 t)
+	\end{bmatrix}
+	\begin{Bmatrix}
+		A_0 \\ B_1 \\ B_1
+	\end{Bmatrix}
+	=
+	\begin{Bmatrix}
+		\sum y \\ \sum y \cos(\omega_0 t) \\ \sum y \sin(\omega_0 t)
+	\end{Bmatrix}
+\end{equation}
+% 385
+
+These equations can be employed to solve for the unknown coefficients. However,
+rather than do this, we can examine the special case where there are N observations equispaced at intervals of $\Delta t$ and with a total record length of $T = (N - 1)\Delta t$. For this situa-
+tion, the following average values can be determined (see Prob. 16.3):
+
+\begin{equation}
+	\tag{16.13}
+	\begin{matrix}
+		\frac{\sum \sin (\omega_0 t)}{N} = 0 & \frac{\sum \cos (\omega_0 t)}{N} = 0 \\
+		\frac{\sum \sin ^2 (\omega_0 t)}{N} = \frac{1}{2} & \frac{\sum \cos ^2 (\omega_0 t)}{N} = \frac{1}{2} \\
+		\frac{\sum \cos (\omega_0 t) \sin(\omega_0 t)}{N} = 0
+	\end{matrix}
+\end{equation}
+
+\noindent Thus, for equispaced points the normal equations become
+
+\begin{equation}
+	\notag
+	\begin{bmatrix}
+		N & 0 & 0 \\
+		0 & N/2 & 0 \\
+		0 & 0 & N/2
+	\end{bmatrix}
+	\begin{Bmatrix}
+		A_0 \\ B_1 \\ B_2
+	\end{Bmatrix}
+	=
+	\begin{bmatrix}
+		\sum y \\
+		\sum y \cos(\omega_0 t) \\
+		\sum y \sin(\omega_0 t)
+	\end{bmatrix}
+\end{equation}
+
+\noindent The inverse of a diagonal matrix is merely another diagonal matrix whose elements are the
+reciprocals of the original. Thus, the coefficients can be determined as
+
+\begin{equation}
+	\notag
+	\begin{Bmatrix}
+		A_0 \\ B_1 \\ B_2
+	\end{Bmatrix}
+	=
+	\begin{bmatrix}
+		1/N & 0 & 0 \\
+		0 & 2/N & 0 \\
+		0 & 0 & 2/N
+	\end{bmatrix}
+	\begin{bmatrix}
+		\sum y \\
+		\sum y \cos(\omega_0 t) \\
+		\sum y \sin(\omega_0 t)
+	\end{bmatrix}
+\end{equation}
+
+\noindent or
+
+\begin{equation}
+	\tag{16.14}
+	A_0 = \frac{\sum y}{N}
+\end{equation}
+
+\begin{equation}
+	\tag{16.15}
+	A_1 =\frac{2}{N} \sum y \cos(\omega_0 t)
+\end{equation}
+
+\begin{equation}
+	\tag{16.16}
+	B_1 = \frac{2}{N} \sum y \sin(\omega_0 t)
+\end{equation}
+
+\noindent Notice that the first coefficient represents the function's average value.
+
+\begin{example} Least-Squares Fit of a Sinusoid
+
+    \noindent\textbf{Problem Statement.}\quad The curve in Fig. 16.2a is described by $y = 1.7 + \cos(4.189t + 1.0472)$. Generate 10 discrete values for this curve at intervals of $\Delta t = 0.15$ for the range
+	t = 0 to 1.35. Use this information to evaluate the coefficients of Eq. (16.11) by a least squares fit.
+
+    \noindent\textbf{Solution.}\quad  The data required to evaluate the coefficients with $\omega = 4.189$ are
+
+	\noindent
+	\begin{tabular}{c c c c}
+		\textbf{t} & \textbf{y} & \textbf{$y \cos(\omega_0 t)$} & \textbf{$y \sin(\omega_0 t)$} \\
+		\hline
+		0 & 2.200 & 2.200 & 0.000 \\
+		0.15 & 1.595 & 1.291 & 0.938 \\
+		0.30 & 1.031 & 0.319 & 0.980 \\
+		0.45 & 0.722 & -0.223 & 0.687 \\
+		0.60 & 0.786 & -0.636 & 0.462 \\
+		0.75 & 1.200 & -1.200 & 0.000 \\
+		0.90 & 1.805 & -1.460 & -1.061 \\
+		1.05 & 2.369 & -0.732 & -2.253 \\
+		1.20 & 2.678 & 0.829 & -2.547 \\
+		1.35 & 2.614 & 2.114 & -1.536 \\
+		\hline
+		$\sum$ = & 17.000 & 2.502 & -4.330
+	\end{tabular}
+
+	\noindent These results can be used to determine [Eqs. (16.14) through (16.16)]
+
+	$$
+		A_0 = \frac{17.000}{10} = 1.7	\quad A_1 = \frac{2}{10} 2.502 = 0.500 \quad B_1 = \frac{2}{10} (-4.330) = -0.866
+	$$
+
+	\noindent Thus, the least-squares fit is
+
+	$$
+		y = 1.7 + 0.500 \cos(\omega_0 t) - 0.866 \sin(\omega_0 t)
+	$$
+
+	\noindent The model can also be expressed in the format of Eq. (16.2) by calculating [Eq. (16.8)]
+
+	$$
+		\theta = \arctan (\frac{-0.866}{0.500}) = 1.0472
+	$$
+
+	\noindent and [Eq. (16.9)]
+
+	$$
+		C_1 = \sqrt{0.5^2 + (-0.866)^2} = 1.00
+	$$
+
+	\noindent to give 
+
+	$$
+		y = 1.7 + \cos(\omega_0 t + 1.0472)
+	$$
+
+	\noindent or alternatively, as a sine by using [Eq. (16.10)]
+
+	$$
+		y = 1.7 + \sin (\omega_0 t + 2.618)
+	$$
+\end{example}
+
+The foregoing analysis can be extended to the general model
+\begin{equation}
+	\notag
+	f(t) = A_0 + A_1 \cos(\omega_0 t) + B_1 \sin(\omega_0 t) + A_2 \cos(2 \omega_0 t) + B_2 \sin(2 \omega_0 t) + \cdots + A_m \cos(m \omega_0 t) + B_m \sin(m \omega_0 t)
+\end{equation}
+
+\noindent where, for equally spaced data, the coefficients can be evaluated by
+
+\begin{equation}
+	\notag
+	A_0 = \frac{\sum y}{N}
+\end{equation}
+
+\begin{equation}
+	\notag
+	\left.
+		\begin{array}{ll}
+			A_j = \frac{2}{N} \sum y \cos(j \omega_0) t \\
+			B_j = \frac{2}{N} \sum y \sin(j \omega_0 t)
+		\end{array}
+	\right \} j = 1,2, \dotsb , m
+\end{equation}
+
+%387
+Although these relationships can be used to fit data in the regression sense (i.e.,$N  > 2 m + 1$), an alternative application is to employ them for interpolation or collocation - that
+is, to use them for the case where the number of unknowns $2m + 1$ is equal to the number
+of data points $N$. This is the approach used in the continuous Fourier series, as described
+next.
+
+\label{cha:cha_P_16_2}
+\section{CONTINUOUS FOURIER SERIES}
+
+In the course of studying heat-flow problems, Fourier showed that an arbitrary periodic
+function can be represented by an infinite series of sinusoids of harmonically related
+frequencies. For a function with period $T$, a continuous Fourier series can be written
+
+\begin{equation}
+	\notag
+	f(t) a_0 + a_1 \cos(\omega_0 t) + b_1 \sin(\omega_0 t) +  a_2 \cos(2 \omega_0 t) + b_2 \sin(2 \omega_0 t) + \cdots
+\end{equation}
+
+\noindent or more concisely,
+
+\begin{equation}
+	\tag{16.17}
+	f(t) = a_0 + \sum ^ \infty _ {k=1} [a_k \cos(k \omega_0 t) + b_k \sin(k \omega_0 t)]
+\end{equation}
+
+\noindent where the angular frequency of the first mode $(\omega_0 = 2 \pi /T)$ is called the fundamental
+frequency and its constant multiples $2 \omega_0, 3 \omega_0$, etc., are called harmonics. Thus, Eq. (16.17)
+expresses $f(t)$ as a linear combination of the basis functions: $1, cos( \omega_0 t), sin(\omega_0 t), cos(2 \omega_0 t),
+sin(2 \omega_0 t), \dots$
+
+The coefficients of Eq. (16.17) can be computed via
+
+\begin{equation}
+	\tag{16.18}
+	a_k = \frac{2}{T} \int ^ T _ 0 f(t) \cos (k \omega_0 t) dt
+\end{equation}
+
+\noindent and
+
+\begin{equation}
+	\tag{16.19}
+	b_k = \frac{2}{T} \int ^ T _ 0 f(t) \sin (k \omega_0 t) dt
+\end{equation}
+
+\noindent for $k = 1, 2, \dots$ and
+
+\begin{equation}
+	\tag{16.20}
+	a_0 = \frac{1}{T} \int ^ T _ 0 f(t)dt
+\end{equation}
+
+\begin{example} Continuous Fourier Series Approximation
+
+    \noindent\textbf{Problem Statement.}\quad Use the continuous Fourier series to approximate the square or rectangular wave function (Fig. 16.1a) with a height of 2 and a period $T = 2\pi /\omega_0$:
+
+	$$
+		f(t) = \left\{ \begin{matrix}
+			-1 & -T/2 < t < -T/4 \\
+			1 & -T/4 < t < T/4 \\
+			-1 & T/4 < t < T/2
+		\end{matrix}  \right.
+	$$
+
+    \noindent\textbf{Solution.}\quad  Because the average height of the wave is zero, a value of $a_0 = 0$ can be
+	obtained directly. The remaining coefficients can be evaluated as [Eq. (16.18)]
+
+	$$
+		a_k = \frac{2}{T} \int_{-T/s} ^{T/2} f(t) \cos (k \omega_0 t) dt = \frac{2}{T} [- \int ^ {-T/4} _ {-T/2} \cos(k \omega_0 t) dt + \int ^ {T/4} _ {-T/4} \cos (k \omega_0 t) dt - \int _ {T/4} ^ {T/2} \cos(k \omega_0 t) dt]
+	$$
+
+	\noindent The integrals can be evaluated to give
+
+	$$
+		a_k = \left\{ \begin{matrix}
+			4 / (k \pi) & \text{for } k = 1,5,9, \dots \\
+			-4 / (k \pi) & \text{for } k = 3,7,11, \dots \\
+			0 & \text{for } k = \text{even integers} \dots \\
+		\end{matrix} \right.
+	$$
+
+	\begin{figure}[H] 
+		\centering
+		\includegraphics[width=1\linewidth]{fig_16_4}
+		\caption{\textsf{The Fourier series approximation of a square wave. The series of plots shows the summation up
+		to and including the (a) first, (b) second, and (c) third terms. The individual terms that were
+		added or subtracted at each stage are also shown.}}
+		\label{fig:fig_16_4}
+	\end{figure}
+
+	\noindent Similarly, it can be determined that all the $b$'s = 0. Therefore, the Fourier series approximation is
+
+	$$
+		f(t) = \frac{4}{\pi} \cos(\omega_0 t) - \frac{4}{3 \pi} \cos(3 \omega_0 t) + \frac{4}{5 \pi} \cos(5 \omega_0 t) - \frac{4}{7 \pi} \cos (7 \omega_0 t) + \dots
+	$$
+
+	\noindent The results up to the first three terms are shown in Fig. 16.4.
+\end{example}
+
+
+Before proceeding, the Fourier series can also be expressed in a more compact form
+using complex notation. This is based on \textit{Euler's formula} (Fig. 16.5):
+
+\begin{equation}
+	\tag{16.21}
+	e^{\pm ix} = \cos x \pm  i \sin x
+\end{equation}
+
+\noindent where $i = \sqrt{-1}$, and $x$ is in radians. Equation (16.21) can be used to express the Fourier
+series concisely as (Chapra and Canale, 2010)
+
+\begin{equation}
+	\tag{16.22}
+	f(t) = \sum _ {k=-\infty} ^ {\infty} \tilde{c}_k e^{i k \omega_0 t} 
+\end{equation}
+
+\noindent where the coefficients are
+
+\begin{equation}
+	\tag{16.23}
+	\tilde{c}_k = \frac{1}{T} \int ^ {T/2} _ {-T/2} f(t) e ^ {-ik \omega_0 t} dt
+\end{equation}
+
+Note that the tildes ~ are included to stress that the coefficients are complex numbers.
+Because it is more concise, we will primarily use the complex form in the rest of the
+chapter. Just remember, that it is identical to the sinusoidal representation.
+
+\begin{figure}[H] % FIXME too huge
+	\centering
+	\includegraphics[width=1\linewidth]{fig_16_5}
+	\caption{\textsf{Graphical depiction of Euler's formula. The rotating vector is called a phasor.}}
+	\label{fig:fig_16_5}
+\end{figure}
+
+\label{cha:cha_P_16_3} %390
+\section{FREQUENCY AND TIME DOMAINS}
+
+\noindent To this point, our discussion of Fourier analysis has been limited to the \textit{time domain}. We
+have done this because most of us are fairly comfortable conceptualizing a function's
+behavior in this dimension. Although it is not as familiar, the \textit{frequency domain} provides an
+alternative perspective for characterizing the behavior of oscillating functions.
+
+Just as amplitude can be plotted versus time, it can also be plotted versus frequency.
+Both types of expression are depicted in Fig. 16.6a, where we have drawn a threedimensional graph of a sinusoidal function:
+
+\begin{equation}
+	\notag
+	f(t) = C_1 \cos(t + \frac{\pi}{2})
+\end{equation} 
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=1\linewidth]{fig_16_6}
+	\caption{\textsf{(a) A depiction of how a sinusoid can be portrayed in the time and the frequency domains. The
+	time projection is reproduced in (b), whereas the amplitude-frequency projection is reproduced in
+	(c). The phase-frequency projection is shown in (d).}}
+	\label{fig:fig_16_6}
+\end{figure}
+
+\noindent In this plot, the magnitude or amplitude of the curve $f(t)$ is the dependent variable, and time $t$
+and frequency $f = \omega_0 / 2 \pi$ are the independent variables. Thus, the amplitude and the time
+axes form a \textit{time plane}, and the amplitude and the frequency axes form a \textit{frequency plane}.
+The sinusoid can, therefore, be conceived of as existing a distance $1/T$ out along the frequency axis and running parallel to the time axes. Consequently, when we speak about the
+behavior of the sinusoid in the time domain, we mean the projection of the curve onto the
+time plane (Fig. 16.6b). Similarly, the behavior in the frequency domain is merely its projection onto the frequency plane.
+
+As in Fig. 16.6c, this projection is a measure of the sinusoid's maximum positive
+amplitude $C_1$. The full peak-to-peak swing is unnecessary because of the symmetry.
+Together with the location $1/T$ along the frequency axis, Fig. 16.6c now defines the
+amplitude and frequency of the sinusoid. This is enough information to reproduce the
+shape and size of the curve in the time domain. However, one more parameter - namely,
+the phase angle - is required to position the curve relative to $t = 0$. Consequently, a
+phase diagram, as shown in Fig. 16.6d, must also be included. The phase angle is determined as the distance (in radians) from zero to the point at which the positive peak
+occurs. If the peak occurs after zero, it is said to be delayed (recall our discussion of lags
+and leads in Sec. 16.1), and by convention, the phase angle is given a negative sign.
+Conversely, a peak before zero is said to be advanced and the phase angle is positive.
+Thus, for Fig. 16.6, the peak leads zero and the phase angle is plotted as $+\pi / 2$. Figure 16.7 depicts some other possibilities.
+
+We can now see that Fig. 16.6c and $d$ provide an alternative way to present or summarize the pertinent features of the sinusoid in Fig. 16.6a. They are referred to as \textit{line spectra}.
+Admittedly, for a single sinusoid they are not very interesting. However, when applied to a
+more complicated situation-say, a Fourier series-their true power and value is revealed.
+For example, Fig. 16.8 shows the amplitude and phase line spectra for the square-wave
+function from Example 16.2.
+
+Such spectra provide information that would not be apparent from the time domain.
+This can be seen by contrasting Fig. 16.4 and Fig. 16.8. Figure 16.4 presents two alternative time domain perspectives. The first, the original square wave, tells us nothing
+about the sinusoids that comprise it. The alternative is to display these sinusoids-that
+is, $(4 / \pi) \cos(\omega_0 t), -(4/3 \pi) \cos(3 \omega_0 t), (4/5 \pi) \cos(5 \omega_0t ),$ etc. This alternative does
+not provide an adequate visualization of the structure of these harmonics. In contrast,
+Fig. 16.8a and b provide a graphic display of this structure. As such, the line spectra
+represent ``fingerprints'' that can help us to characterize and understand a complicated
+waveform. They are particularly valuable for nonidealized cases where they sometimes
+allow us to discern structure in otherwise obscure signals. In the next section, we will
+describe the Fourier transform that will allow us to extend such analyses to nonperiodic
+waveforms.
+
+\label{cha:cha_P_16_4} %391
+\section{FOURIER INTEGRAL AND TRANSFORM}
+
+\noindent Although the Fourier series is a useful tool for investigating periodic functions, there are
+many waveforms that do not repeat themselves regularly. For example, a lightning bolt
+occurs only once (or at least it will be a long time until it occurs again), but it will cause interference with receivers operating on a broad range of frequencies - for example, TVs,
+radios, and shortwave receivers. Such evidence suggests that a nonrecurring signal such as
+that produced by lightning exhibits a continuous frequency spectrum. Because such phenomena are of great interest to engineers, an alternative to the Fourier series would be valuable for analyzing these aperiodic waveforms.
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=1\linewidth]{fig_16_7}
+	\caption{\textsf{Various phases of a sinusoid showing the associated phase line spectra.}}
+	\label{fig:fig_16_7}
+\end{figure}
+
+The \textit{Fourier integral} is the primary tool available for this purpose. It can be derived
+from the exponential form of the Fourier series [Eqs. (16.22) and (16.23)]. The transition
+from a periodic to a nonperiodic function can be effected by allowing the period to approach infinity. In other words, as $T$ becomes infinite, the function never repeats itself and
+thus becomes aperiodic. If this is allowed to occur, it can be demonstrated (e.g., Van
+Valkenburg, 1974; Hayt and Kemmerly, 1986) that the Fourier series reduces to
+
+\begin{equation}
+	\tag{16.24}
+	f(t) = \frac{1}{2 \pi} \int ^ \infty _ {-\infty} F(\omega) e ^ {i \omega t} d \omega
+\end{equation}
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=1\linewidth]{fig_16_8}
+	\caption{\textsf{(a) Amplitude and (b) phase line spectra for the square wave from Fig. 16.4.}}
+	\label{fig:fig_16_8}
+\end{figure}
+
+\noindent and the coefficients become a continuous function of the frequency variable $\omega$, as in
+
+\begin{equation}
+	\tag{16.25}
+	F(\omega) = \int ^ \infty _ {-\infty} f(t)e ^ {-i \omega t} dt
+\end{equation}
+
+The function $F(\omega)$, as defined by Eq. (16.25), is called the \textit{Fourier integral} of $f(t)$. In
+addition, Eqs. (16.24) and (16.25) are collectively referred to as the \textit{Fourier transform}
+pair. Thus, along with being called the Fourier integral, $F(\omega)$ is also called the \textit{Fourier
+transform} of $f(t)$. In the same spirit, $f(t)$, as defined by Eq. (16.24), is referred to as the
+\textit{inverse Fourier transform} of $F(\omega)$. Thus, the pair allows us to transform back and forth
+between the time and the frequency domains for an aperiodic signal.
+
+The distinction between the Fourier series and transform should now be quite clear.
+The major difference is that each applies to a different class of functions-the series to periodic and the transform to nonperiodic waveforms. Beyond this major distinction, the two
+approaches differ in how they move between the time and the frequency domains. The
+Fourier series converts a continuous, periodic time-domain function to frequency-domain
+magnitudes at discrete frequencies. In contrast, the Fourier transform converts a continuous time-domain function to a continuous frequency-domain function. Thus, the discrete
+frequency spectrum generated by the Fourier series is analogous to a continuous frequency
+spectrum generated by the Fourier transform.
+
+Now that we have introduced a way to analyze an aperiodic signal, we will take the
+final step in our development. In the next section, we will acknowledge the fact that a
+signal is rarely characterized as a continuous function of the sort needed to implement
+Eq. (16.25). Rather, the data are invariably in a discrete form. Thus, we will now show how
+to compute a Fourier transform for such discrete measurements.
+
+\label{cha:cha_P_16_5} %394
+\section{DISCRETE FOURIER TRANSFORM (DFT)}
+
+\noindent In engineering, functions are often represented by a finite set of discrete values. Additionally, data are often collected in or converted to such a discrete format. As depicted in
+Fig. 16.9, an interval from 0 to $T$ can be divided into $n$ equispaced subintervals with widths
+of $\Delta t = T /n$. The subscript $j$ is employed to designate the discrete times at which samples
+are taken. Thus, $f_j$ designates a value of the continuous function $f(t)$ taken at $t_j$. Note that the
+data points are specified at $j = 0, 1, 2, \dots , n - 1$. A value is not included at $j = n$. (See
+Ramirez, 1985, for the rationale for excluding $f_n$.)
+
+For the system in Fig. 16.9, a discrete Fourier transform can be written as
+\begin{equation}
+	\tag{16.26}
+	F_k = \sum ^ {n-1} _ {j=0} f_j e ^ {-ik \omega_0 j} \quad \text{for } k=0 \text{ to } n - 1
+\end{equation}
+
+\noindent and the inverse Fourier transform as
+
+\begin{equation}
+	\tag{16.27}
+	F_k = \frac{1}{n} \sum ^ {n-1} _ {k=0} F_k e ^ {ik \omega_0 j} \quad \text{for } j=0 \text{ to } n - 1
+\end{equation}
+
+\noindent where $\omega_0 = 2 \pi / n$.
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=1\linewidth]{fig_16_9}
+	\caption{\textsf{The sampling points of the discrete Fourier series.}}
+	\label{fig:fig_16_9}
+\end{figure}
+
+Equations (16.26) and (16.27) represent the discrete analogs of Eqs. (16.25) and
+(16.24), respectively. As such, they can be employed to compute both a direct and an inverse Fourier transform for discrete data. Note that the factor $1/n$ in Eq. (16.27) is merely
+a scale factor that can be included in either Eq. (16.26) or (16.27), but not both. For example, if it is shifted to Eq. (16.26), the first coefficient $F_0$ (which is the analog of the constant
+$a_0$) is equal to the arithmetic mean of the samples.
+
+Before proceeding, several other aspects of the DFT bear mentioning. The highest frequency that can be measured in a signal, called the \textit{Nyquist frequency}, is half the sampling
+frequency. Periodic variations that occur more rapidly than the shortest sampled time interval cannot be detected. The lowest frequency you can detect is the inverse of the total
+sample length.
+
+As an example, suppose that you take 100 samples of data ($n = 100$ samples) at a
+sample frequency of $f_s = 1000$ Hz (i.e., 1000 samples per second). This means that the
+sample interval is
+
+\begin{equation}
+	\notag
+	\Delta t = \frac{1}{f_s}=\frac{1}{1000 \text{ samples/s}} = 0.01 \text{ s/sample}
+\end{equation}
+
+\noindent The total sample length is 
+
+\begin{equation}
+	\notag
+	t_n = \frac{n}{f_s} = \frac{100 \text{ samples}}{1000 \text{ samples/s}}=0.1 \text{ Hz}
+\end{equation}
+
+\noindent and the frequency increment is
+
+\begin{equation}
+	\notag
+	\Delta f = \frac{f_s}{n} = \frac{1000 \text{ samples/s}}{100 \text{ samples}}=10 \text{ Hz}
+\end{equation}
+
+\noindent The Nyquist frequency is
+
+\begin{equation}
+	\notag
+	f_{\text{max}} = 0.5 f_s = 0.5 (1000 \text{ Hz}) = 500 \text{ Hz}
+\end{equation}
+
+\noindent and the lowest detectable frequency is
+
+\begin{equation}
+	\notag
+	f_{\text{min}} = \frac{1}{0.1 \text{s}} = 10 \text{ Hz}
+\end{equation}
+
+\noindent Thus, for this example, the DFT could detect signals with periods from $1/500 = 0.002 \text{s}$ up
+to $1/10 = 0.1\text{s}$.
+
+\label{cha:cha_P_16_5_1} % 395
+\subsection{Fast Fourier Transform (FFT)}
+
+\noindent Although an algorithm can be developed to compute the DFT based on Eq. (16.26), it is
+computationally burdensome because $n^2$ operations are required. Consequently, for data
+samples of even moderate size, the direct determination of the DFT can be extremely time
+consuming.
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=1\linewidth]{fig_16_10}
+	\caption{\textsf{Plot of number of operations vs. sample size for the standard DFT and the FFT.}}
+	\label{fig:fig_16_10}
+\end{figure}
+
+The \textit{fast Fourier transform}, or \textit{FFT}, is an algorithm that has been developed to com-
+pute the DFT in an extremely economical fashion. Its speed stems from the fact that it
+utilizes the results of previous computations to reduce the number of operations. In particular, it exploits the periodicity and symmetry of trigonometric functions to compute
+the transform with approximately $n \log_2n$ operations (Fig. 16.10). Thus, for $n = 50$ samples, the FFT is about 10 times faster than the standard DFT. For $n = 1000$, it is about
+100 times faster.
+
+The first FFT algorithm was developed by Gauss in the early nineteenth century
+(Heideman et al., 1984). Other major contributions were made by Runge, Danielson,
+Lanczos, and others in the early twentieth century. However, because discrete transforms
+often took days to weeks to calculate by hand, they did not attract broad interest prior to the
+development of the modern digital computer.
+
+In 1965, J. W. Cooley and J. W. Tukey published a key paper in which they outlined an
+algorithm for calculating the FFT. This scheme, which is similar to those of Gauss and
+other earlier investigators, is called the Cooley-Tukey algorithm. Today, there are a host of
+other approaches that are offshoots of this method. As described next, MATLAB offers a
+function called \texttt{fft} that employs such efficient algorithms to compute the DFT.
+
+\label{cha:cha_P_16_5_2} % 396
+\subsection{MATLAB Function: \texttt{fft}}
+
+\noindent MATLAB's \texttt{fft} function provides an efficient way to compute the DFT. A simple representation of its syntax is
+
+\begin{lstlisting}[numbers=none]
+	F = fft(f, n)
+\end{lstlisting}
+
+where \texttt{F =} a vector containing the DFT, and \texttt{f =} a vector containing the signal. The
+parameter \texttt{n}, which is optional, indicates that the user wants to implement an $n$-point FFT.
+If \texttt{f} has less than \texttt{n} points, it is padded with zeros and truncated if it has more.
+
+Note that the elements in \texttt{F} are sequenced in what is called \textit{reverse-wrap-around
+order}. The first half of the values are the positive frequencies (starting with the constant)
+and the second half are the negative frequencies. Thus, if $n = 8$, the order is 0, 1, 2, 3, 4, -3, -2, -1. The following example illustrates the function's use to calculate the DFT of a
+simple sinusoid.
+
+\begin{example} Computing the DFT of a Simple Sinusoid with MATLAB
+
+    \noindent\textbf{Problem Statement.}\quad Apply the MATLAB fft function to determine the discrete Fourier
+	transform for a simple sinusoid:
+
+	$$
+		f(t) = 5 + \cos(2 \pi (12.5) t) + \sin(2 \pi (18.75) t)
+	$$
+
+	\noindent Generate 8 equispaced points with $\Delta t = 0.02 $s. Plot the result versus frequency.
+
+    \noindent\textbf{Solution.}\quad  Before generating the DFT, we can compute a number of quantities. The sampling frequency is
+
+	$$
+		f_x = \frac{1}{\Delta t} = \frac{1}{0.02 s} = 50 \text{Hz}
+	$$
+
+	\noindent The total sample length is
+
+	$$
+		t_n = \frac{n}{f_s} = \frac{8 \text{samples}}{50 \text{samples/s}} = 0.16 s
+	$$
+
+	\noindent The Nyquist frequency is
+
+	$$
+		f_\text{max} 0.5 f_s = 0.5 (50Hz) = 25 \text{Hz}
+	$$
+
+	\noindent and the lowest detectable frequency is
+
+	$$
+		f_\text{min}	= \frac{1}{0.16 s} = 6.25 \text {Hz}
+	$$
+
+	\noindent Thus, the analysis can detect signals with periods from 1/25 = 0.04 s up to 1/6.25 = 0.16 s.
+	So we should be able to detect both the 12.5 and 18.75 Hz signals.
+
+	The following MATLAB statements can be used to generate and plot the sample
+(Fig. 16.11a):
+
+	\begin{lstlisting}[numbers=none]
+		>> clc
+		>> n=8; dt=0.02; fs=1/dt; T = 0.16;
+		>> tspan=(0:n-1)/fs;
+		>> y=5+cos(2*pi*12.5*tspan)+sin(2*pi*31.25*tspan);
+		>> subplot(3,1,1);
+		>> plot(tspan,y,'-ok','linewidth',2,'MarkerFaceColor','black');
+		>> title('(a) f(t) versus time (s)');
+	\end{lstlisting}
+
+	\begin{figure}[H] 
+		\centering
+		\includegraphics[width=1\linewidth]{fig_16_11}
+		\caption{\textsf{Results of computing a DFT with MATLAB's \texttt{fft} function: (a) the sample; and plots of
+		the (b) real and (c) imaginary parts of the DFT versus frequency.}}
+		\label{fig:fig_16_11}
+	\end{figure}
+
+	\noindent As was mentioned at the beginning of Sec. 16.5, notice that tspan omits the last point.
+
+	The \texttt{fft} function can be used to compute the DFT and display the results
+
+	\begin{lstlisting}[numbers=none]
+		>>Y=fft(y)/n;
+		>>Y'
+	\end{lstlisting}
+
+	\noindent We have divided the transform by n in order that the first coefficient is equal to the arithmetic mean of the samples. When this code is executed, the results are displayed as
+
+	\begin{lstlisting}[numbers=none]
+		ans =
+			5.0000
+			0.0000 - 0.0000i
+			0.5000
+			-0.0000 + 0.5000i
+			0
+			-0.0000 - 0.5000i
+			0.5000
+			0.0000 + 0.0000i
+	\end{lstlisting}
+
+	\noindent Notice that the first coefficient corresponds to the signal's mean value. In addition, because of the \textit{reverse-wrap-around order}, the results can be interpreted as in the following
+	table:
+
+	\begin{tabular}{l l c c c c}
+		\textbf{Index} & \textbf{k} & \textbf{Frequency} & \textbf{Period} & \textbf{Real} & \textbf{Imaginary} \\
+		1 & 0 & constant & 5 & 0 \\
+		2 & 1 & 6.25 & 0.16 & 0 & 0 \\
+		3 & 2 & 12.5 & 0.08 & 0.5 & 0 \\
+		4 & 3 & 18.75 & 0.053333 & 0 & 0.5 \\
+		\textbf{5} & \textbf{4} & \textbf{25} & \textbf{0.04} & \textbf{0} & \textbf{0} \\
+		6 & -3 & 31.25 & 0.032 & 0 & -0.5 \\
+		7 & -2 & 37.5 & 0.026667 & 0.5 & 0 \\
+		8 & -1 & 43.75 & 0.022857 & 0 & 0
+	\end{tabular}
+
+	\noindent Notice that the \texttt{fft} has detected the 12.5- and 18.75-Hz signals. In addition, we have highlighted the Nyquist frequency to indicate that the values below it in the table are redundant.
+	That is, they are merely reflections of the results below the Nyquist frequency.
+
+	If we remove the constant value, we can plot both the real and imaginary parts of the
+DFT versus frequency
+
+	\begin{lstlisting}[numbers=none]
+		>> nyquist=fs/2;fmin=1/T;
+		>> f = linspace(fmin,nyquist,n/2);
+		>> Y(1)=[];YP=Y(1:n/2);
+		>> subplot(3,1,2)
+		>> stem(f,real(YP),'linewidth',2,'MarkerFaceColor','blue')
+		>> grid;title('(b) Real component versus frequency')
+		>> subplot(3,1,3)
+		>> stem(f,imag(YP),'linewidth',2,'MarkerFaceColor','blue')
+		>> grid;title('(b) Imaginary component versus frequency')
+		>> xlabel('frequency (Hz)')
+	\end{lstlisting}
+
+	\noindent As expected (recall Fig. 16.7), a positive peak occurs for the cosine at 12.5 Hz
+	(Fig. 16.11b), and a negative peak occurs for the sine at 18.75 Hz (Fig. 16.11c).
+\end{example}
+
+\label{cha:cha_P_16_6}
+\section{THE POWER SPECTRUM}
+
+\noindent Beyond amplitude and phase spectra, power spectra provide another useful way to discern
+the underlying harmonics of seemingly random signals. As the name implies, it derives
+from the analysis of the power output of electrical systems. In terms of the DFT, a \textit{power
+spectrum} consists of a plot of the power associated with each frequency component versus
+frequency. The power can be computed by summing the squares of the Fourier coefficients:
+
+\begin{equation}
+	\notag
+	P_k = {|\tilde{c}_k|}^2
+\end{equation}
+
+\noindent where $P_k$ is the power associated with each frequency $k \omega_0$.
+
+\begin{example}  Computing the Power Spectrum with MATLAB
+	\noindent \textbf{Problem Statement. } \quad Compute the power spectrum for the simple sinusoid for which the
+	DFT was computed in Example 16.3.
+
+	\noindent \textbf{Solution. } \quad  The following script can be developed to compute the power spectrum:
+
+	\begin{lstlisting}[numbers=none]
+		% compute the DFT
+		clc;clf
+		n=8; dt=0.02;
+		fs=1/dt;tspan=(0:n-1)/fs;
+		y=5+cos(2*pi*12.5*tspan)+sin(2*pi*18.75*tspan);
+		Y=fft(y)/n;
+		f = (0:n-1)*fs/n;
+		Y(1)=[];f(1)=[];
+		% compute and display the power spectrum
+		nyquist=fs/2;
+		f = (1:n/2)/(n/2)*nyquist;
+		Pyy = abs(Y(1:n/2)).^2;
+		stem(f,Pyy,'linewidth',2,'MarkerFaceColor','blue')
+		title('Power spectrum')
+		xlabel('Frequency (Hz)');ylim([0 0.3])
+	\end{lstlisting}
+
+	\noindent As indicated, the first section merely computes the DFT with the pertinent statements from
+	Example 16.3. The second section then computes and displays the power spectrum. As in
+	Fig. 16.12, the resulting graph indicates that peaks occur at both 12.5 and 18.75 Hz as
+	expected.
+
+	\begin{figure}[H] 
+		\centering
+		\includegraphics[width=1\linewidth]{fig_16_12}
+		\caption{\textsf{Power spectrum for a simple sinusoidal function with frequencies of 12.5 and 18.75 Hz.}}
+		\label{fig:fig_16_12}
+	\end{figure}
+\end{example}
+
+\section[CASE STUDY: SUNSPOTS]{CASE STUDY: SUNSPOTS}
+\noindent\textbf{Background.}\quad  In 1848, Johann Rudolph Wolf devised a method for quantifying solar
+activity by counting the number of individual spots and groups of spots on the sun's surface. He computed a quantity, now called a \textit{Wolf sunspot number}, by adding 10 times the
+number of groups plus the total count of individual spots. As in Fig. 16.13, the data set for
+the sunspot number extends back to 1700. On the basis of the early historical records, Wolf
+determined the cycle's length to be 11.1 years. Use a Fourier analysis to confirm this result
+by applying an FFT to the data.
+
+\noindent\textbf{Solution.}\quad  The data for year and sunspot number are contained in a MATLAB file,
+\texttt{sunspot.dat}. The following statements load the file and assign the year and number information to vectors of the same name:
+
+\begin{lstlisting}[numbers=none]
+	>> load sunspot.dat
+	>> year=sunspot(:,1);number=sunspot(:,2);
+\end{lstlisting}
+
+\noindent Before applying the Fourier analysis, it is noted that the data seem to exhibit an upward linear trend (Fig. 16.13). MATLAB can be used to remove this trend:
+
+\begin{lstlisting}[numbers=none]
+	>> n=length(number);
+	>> a=polyfit(year,number,1);
+	>> lineartrend=polyval(a,year);
+	>> ft=number-lineartrend;
+\end{lstlisting}
+
+\noindent Next, the \texttt{fft} function is employed to generate the DFT
+
+\begin{lstlisting}[numbers=none]
+	F=fft(ft);
+\end{lstlisting}
+
+\noindent The power spectrum can then be computed and plotted
+
+\begin{lstlisting}[numbers=none]
+	fs=1;
+	f=(0:n/2)*fs/n;
+	pow=abs(F(1:n/2+1)).^2;
+	plot(f,pow)
+	xlabel('Frequency (cycles/year)'); ylabel('Power')
+	title('Power versus frequency')
+\end{lstlisting}
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=1\linewidth]{fig_16_13}
+	\caption{\textsf{Plot of Wolf sunspot number versus year. The dashed line indicates a mild, upward linear trend.}}
+	\label{fig:fig_16_13}
+\end{figure}
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=1\linewidth]{fig_16_14}
+	\caption{\textsf{Power spectrum for Wolf sunspot number versus year.}}
+	\label{fig:fig_16_14}
+\end{figure}
+
+\noindent The result, as shown in Fig. 16.14, indicates a peak at a frequency of about 0.0915 Hz. This
+corresponds to a period of 1/0.0915 = 10.93 years. Thus, the Fourier analysis is consistent
+with Wolf's estimate of 11 years.
+
+\noindent\textbf{PROBLEMS}
+\begin{multicols}{2}
+    \noindent\textbf{16.1} The pH in a reactor varies sinusoidally over the course
+	of a day. Use least-squares regression to fit Eq. (16.11) to
+	the following data. Use your fit to determine the mean,
+	amplitude, and time of maximum pH. Note that the period
+	is 24 hr
+
+	\noindent
+	\begin{tabular}{l c c c c c c}
+		Time, hr & 0 & 2 & 4 & 5 & 7 & 9 \\
+		pH & 7.6 & 7.2 & 7 & 6.5 & 7.5 & 7.2 \\
+		Time, hr & 12 & 15 & 20 & 22 & 24 \\
+		pH & 8.9 & 9.1 & 8.9 & 7.9 & 7
+	\end{tabular}
+
+	\noindent\textbf{16.2}  The solar radiation for Tucson, Arizona, has been tabulated as
+
+	\noindent
+	\begin{tabular}{l c c c c c c}
+		Time, mo & J & F & M & A & M & J \\
+		Radiation, W/m$^2$ & 144 & 188 & 245 & 311 & 351 & 359 \\
+		Time, mo & J & A & S & O & N & D \\
+		Radiation, W/m$^2$ & 308 & 287 & 260 & 211 & 159 & 131
+	\end{tabular}
+
+	\noindent Assuming each month is 30 days long, fit a sinusoid to these
+	data. Use the resulting equation to predict the radiation in
+	mid-August.
+
+	\noindent\textbf{16.3} The average values of a function can be determined by
+
+	$$
+		\bar{f} = \frac{\int ^t _ 0 f(t) dt}{t}
+	$$
+
+	\noindent Use this relationship to verify the results of Eq. (16.13).
+
+	\noindent\textbf{16.4} In electric circuits, it is common to see current
+	behavior in the form of a square wave as shown in Fig. P16.4
+	(notice that square wave differs from the one described in
+	Example 16.2). Solving for the Fourier series from
+
+	$$
+		f(t) = \left\{ 
+			\begin{matrix}
+				A_0 & 0 \leq t \leq T/2 \\
+				-A_0 & T/2 \leq t \leq T
+			\end{matrix}
+		\right.
+	$$
+
+	\noindent the Fourier series can be represented as
+
+	$$
+		f(t) = \sum ^ \infty _ {n=1} (\frac{4 A_0}{(2n -1) \pi}) \sin (\frac{2 \pi (2n -1) t}{T})
+	$$
+
+	\noindent Develop a MATLAB function to generate a plot of the first $n$
+	terms of the Fourier series individually, as well as the sum of
+	these six terms. Design your function so that it plots the
+	curves from $t$ = 0 to $4T$. Use thin dotted red lines for the individual terms and a bold black solid line for the summation
+	(i.e., 'k-','linewidth',2). The function's first line
+	should be
+
+	\noindent
+	\begin{lstlisting}[numbers=none]
+		function [t,f] = FourierSquare(A0,T,n)
+	\end{lstlisting}
+
+	\noindent Let $A_0 = 1$ and $T = 0.25$ s.
+
+	\noindent\textbf{16.5} Use a continuous Fourier series to approximate the
+	sawtooth wave in Fig. P16.5. Plot the first four terms along
+	with the summation. In addition, construct amplitude and
+	phase line spectra for the first four terms.
+
+	\noindent\textbf{16.6}  Use a continuous Fourier series to approximate the tri-
+	angular wave form in Fig. P16.6. Plot the first four terms
+	along with the summation. In addition, construct amplitude
+	and phase line spectra for the first four terms.
+
+	\noindent
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=0.8\linewidth]{./images/problem_16_4}
+        \captionof*{figure}{Figure P16.4}
+    \end{minipage}
+
+	\noindent
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=0.8\linewidth]{./images/problem_16_5}
+        \captionof*{figure}{Figure P16.5 \textsf{A sawtooth wave.}}
+    \end{minipage}
+
+	\noindent
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=0.8\linewidth]{./images/problem_16_6}
+        \captionof*{figure}{Figure P16.6 \textsf{A triangular wave.}}
+    \end{minipage}
+
+	\noindent\textbf{16.7} Use the \textit{Maclaurin series expansions} for $e^x$, $\cos x$ and
+	$\sin x$ to prove Euler's formula (Eq. 16.21).
+
+	\noindent\textbf{16.8}A half-wave rectifier can be characterized by
+
+	$$
+		C_1 = [\frac{1}{\pi} + \frac{1}{2} \sin t 	- \frac{2}{3 \pi} \cos 2t - \frac{2}{15t} \cos 4t - \frac{2}{35 \pi} \cos 6t - \cdots]
+	$$
+
+	\noindent where $C_1$ is the amplitude of the wave.
+	\textbf{(a)} Plot the first four terms along with the summation.
+	\textbf{(b)} Construct amplitude and phase line spectra for the first
+	four terms.
+
+	\noindent\textbf{16.9} Duplicate Example 16.3, but for 64 points sampled at a
+	rate of $\Delta t = 0.01$ s from the function
+
+	$$
+		f (t) = \cos[2 \pi (12.5)t] + \cos[2 \pi (25)t]
+	$$
+
+	\noindent Use \texttt{fft} to generate a DFT of these values and plot the
+	results.
+
+	\noindent\textbf{16.10}  Use MATLAB to generate 64 points from the function
+
+	$$
+	f (t) = \cos(10t) + \sin(3t)
+	$$
+
+	\noindent from $t = 0$ to $2 \pi$ . Add a random component to the signal with
+	the function randn. Use \texttt{fft} to generate a DFT of these
+	values and plot the results.
+
+	\noindent\textbf{16.11}  Use MATLAB to generate 32 points for the sinusoid
+	depicted in Fig. 16.2 from $t = 0$ to 6 s. Compute the DFT
+	and create subplots of \textbf{(a)} the original signal, \textbf{(b)} the real
+	part, and \textbf{(c)} the imaginary part of the DFT versus frequency.
+
+	\noindent\textbf{16.12} Use the \texttt{fft} function to compute a DFT for the triangular wave from Prob. 16.6. Sample the wave from $t = 0$
+	to $4T$ using 128 sample points.
+
+	\noindent\textbf{16.13}  Develop an M-file function that uses the \texttt{fft} function to generate a power spectrum plot. Use it to solve
+	Prob. 16.9.
+\end{multicols}
+
+
+
+\end{document}

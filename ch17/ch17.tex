@@ -524,9 +524,9 @@ which can be used to evaluate $f_{3}(2)=0.6287686$, which represents a relative 
             xt = xt*(xx-x(j));
             yint = yint+b(1,j+1)*xt;
         end
+    \end{lstlisting}
 
-
-
+    \begin{lstlisting}[numbers=none]
         >> y = log(x);
         >> Newtint(x,y,2)
 
@@ -1043,13 +1043,15 @@ and so on. Which approach yields the best result?
 \noindent\textit{17.15} The specific volume of a superheated steam is listed
 
 in steam tables for various temperatures. For example, at a pressure of $3000 \mathrm{lb} / \mathrm{in}^{2}$, absolute:
+%\begin{table}
 \begin{tabular}{lccccc}
 \hline $\boldsymbol{T},{ }^{\circ} \mathbf{C}$ & 370 & 382 & 394 & 406 & 418 \\
 $\boldsymbol{v}_{\boldsymbol{,}} \mathbf{L t}^{\mathbf{3}} / \mathbf{k g}$ & $5.9313$ & $7.5838$ & $8.8428$ & $9.796$ & $10.5311$ \\
 \hline
 \end{tabular}
-Determine v at T = 750 °F.\\
-
+%\caption{}
+%\end{table}
+Determine v at T = 750 F.\\
 \noindent\textit{17.16} The vertical stress $\sigma_{z}$ under the corner of a rectangular area subjected to a uniform load of intensity $q$ is given by the solution of Boussinesq's equation:
 $$
 \begin{array}{r}
