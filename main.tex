@@ -2,68 +2,7 @@
 
 \usepackage{main}		%dołączenie pliku main.sty
 \usepackage{subfiles}	%pakiet do łączenia plików
-\usepackage{graphicx}	%pakiet do wstawiania obrazów
-\usepackage{float}		%pakiet m.in. możliwości lepszego formatowania obrazów
-\graphicspath{ {./images/} }
-\usepackage{wrapfig}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%chapter 7
-\theoremstyle{definition}
-\newtheorem{exmp}{Example \thechapter.}
-\usepackage{listings}
-\usepackage{courier}    %pakiet z czcionką courier
-\usepackage{amsmath,amsthm,amssymb}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%chapter 4
-\usepackage{main}
-\usepackage{amsmath}
-\usepackage{array}
-\usepackage{hyperref}
-\usepackage{amsmath,amsthm,amssymb}
-\usepackage{mathdots}
-\usepackage{multicol} %<
-\usepackage{wrapfig}  %<
-%\usepackage[svgnames,table,xcdraw]{xcolor}
-\usepackage{gettitlestring}
-\usepackage{subfiles}
-\usepackage{caption}
-\usepackage{yhmath}
-\usepackage{booktabs}
-\usepackage[ruled,vlined]{algorithm2e}
-\usepackage{tikz}
-\usepackage{graphics}
-\usepackage{ragged2e}
-\usepackage{blkarray}
-\usepackage{boldline,makecell}
-\usepackage{chngcntr}
-\newtheorem{theorem}{Theorem}[chapter]
-\newtheorem{proposition}{Proposition}[chapter]
-\newtheorem{lemma}{Lemma}[chapter]
-\theoremstyle{plain}
-\theoremstyle{definition}
-\newtheorem{definition}{Definition}[chapter]
-\newtheorem{exm}{\textbf{Example}}
-\numberwithin{exm}{chapter}
-\usepackage{latexsym}
-\usepackage{array}
-\theoremstyle{remark}
-\newtheorem{remark}{\texttt{Remark}}[chapter]
-\theoremstyle{summary}
-\newtheorem*{smr}{\textbf{Summary}}
-\theoremstyle{overview}
-\newtheorem*{overview}{\textbf{Overview}}
-\newtheorem{problem}{}[chapter]
-\newenvironment{example}    % this is the environment name for the input
-  {\renewcommand{\qedsymbol}{$\blacksquare$}%
-   \pushQED{\qed}\begin{exm}}
-  {\popQED\end{exm}}
-
-\newenvironment{summary}    % this is the environment name for the input
-  {\renewcommand{\qedsymbol}{$\blacksquare$}%
-   \pushQED{\qed}\begin{smr}}
-  {\popQED\end{smr}}
 
 \UseRawInputEncoding
 
@@ -88,10 +27,16 @@
     \subfile{pt3/pt3} %part 3
     \subfile{ch8/ch8}
     \subfile{ch9/ch9}
+    \subfile{ch10/ch10}
+    \subfile{ch13/ch13}
     \subfile{ch14/ch14} 
     \subfile{ch17/ch17} 
     \subfile{ch18/ch18} 
     \subfile{ch19/ch19} 
+    \subfile{ch20/ch20} 
+    \subfile{ch21/ch21} 
+    \subfile{pt6/pt6}     %part6 
+    \subfile{ch22/ch22} 
     \subfile{ch23/ch23}
     \subfile{ch24/ch24}
     \subfile{appendix_A/appendix_a}

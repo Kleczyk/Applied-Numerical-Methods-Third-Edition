@@ -1,0 +1,448 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\theoremstyle{definition}
+
+\chapter{Eigenvalues}
+\begin{center}
+\textbf{CHAPTER OBJECTIVES}
+\end{center}
+Knowledge and understanding are prerequisites for the effective implementation objectives and topics covered are
+\begin{itemize}
+\item Understanding the mathematical definition of eigenvalues and eigenvectors.
+\item Understanding the physical interpretation of eigenvalues and eigenvectors within
+the context of engineering systems that vibrate or oscillate.
+\item Knowing how to implement the polynomial method.
+\item Knowing how to implement the power method to evaluate the largest and smallest eigenvalues and their respective eigenvectors.
+\item Knowing how to use and interpret MATLAB's eig function.
+\end{itemize}
+\textbf{YOU’VE GOT A PROBLEM }
+At the beginning of Chap. 8, we used Newton’s second law and force balances to predict the equilibrium positions of three bungee jumpers connected by cords. Because
+we assumed that the cords behaved like ideal springs (i.e., followed Hooke’s law),
+the steady-state solution reduced to solving a system of linear algebraic equations (recall
+Eq. 8.1 and Example 8.2). In mechanics, this is referred to as a statics problem.
+Now let’s look at a dynamics problem involving the same system. That is, we’ll study the
+jumpers’ motion as a function of time. To do this, their initial conditions (i.e., their initial positions and velocities) must be prescribed. For example, we can set the jumpers’ initial positions at the equilibrium values computed in Example 8.2. If we then set their initial velocities
+to zero, nothing would happen because the system would be at equilibrium.
+Because we are now interested in examining the system’s dynamics, we must set the
+initial conditions to values that induce motion. Although we set the jumpers’ initial positions to the equilibrium values and the middle jumper’s initial velocity to zero, we set the
+upper and bottom jumper’s initial velocities to some admittedly extreme values. That is, we
+
+\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.75\textwidth]{fig_13_26}
+	   \caption{\textsf{The (a) positions and (b) velocities versus time for the system of three interconnected bungee
+jumpers from Example 8.2.}}
+	   \label{fig:fig_13_26}
+\end{figure}
+
+impose a downward velocity of 200 m/s on jumper 1 and an upward velocity of 100 m/s on
+jumper 3. (Safety tip: Don’t try this at home!) We then used MATLAB to solve the differential
+equations (Eq. 8.1) to generate the resulting positions and velocities as a function of time.
+\footnote{1 We will show how this is done when we cover ordinary differential equations in Part Six.}
+
+
+As displayed in Fig. 13.1, the outcome is that the jumpers oscillate wildly. Because
+there are no friction forces (e.g., no air drag or spring dampening), they lurch up and down
+around their equilibrium positions in a persistent manner that at least visually borders on
+the chaotic. Closer inspection of the individual trajectories suggests that there may be some
+pattern to the oscillations. For example, the distances between peaks and troughs might be
+constant. But when viewed as a time series, it is difficult to perceive whether there is anything systematic and predictable going on.
+
+
+In this chapter, we deal with one approach for extracting something fundamental out
+of such seemingly chaotic behavior. This entails determining the eigenvalues, or characteristic values, for such systems. As we will see, this involves formulating and solving systems of linear algebraic equations in a fashion that differs from what we’ve done to this
+point. To do this, let’s first describe exactly what is meant by eigenvalues from a mathematical standpoint.
+
+\section{MATHEMATICAL BACKGROUND}
+Chapters 8 through 12 have dealt with methods for solving sets of linear algebraic equations of the general form
+\begin{equation}
+[A]\{x\}=\{b\} \tag{13.1}
+\end{equation}
+
+Such systems are called nonhomogeneous because of the presence of the vector $\{b\}$ on the
+right-hand side of the equality. If the equations comprising such a system are linearly
+independent (i.e., have a nonzero determinant), they will have a unique solution. In other
+words, there is one set of x values that will make the equations balance. As we’ve already
+seen in Sec. 9.1.1, for two equations with two unknowns, the solution can be visualized as
+the intersection of two straight lines represented by the equations (recall Fig. 9.1).
+In contrast, a homogeneous linear algebraic system has a right-hand side equal to zero:
+\begin{equation}
+[A]\{x\}=0 \tag{13.2}
+\end{equation}
+
+At face value, this equation suggests that the only possible solution would be the trivial
+case for which all $x’s = 0$. Graphically this would correspond to two straight lines that intersected at zero.
+Although this is certainly true, eigenvalue problems associated with engineering are
+typically of the general form
+\begin{equation}
+[[A]-\lambda[I]]\{x\}=0 \tag{13.3}
+\end{equation}
+
+where the parameter $\lambda$ is the eigenvalue. Thus, rather than setting the x's to zero, we can
+determine the value of $\lambda$ that drives the left-hand side to zero! One way to accomplish this
+is based on the fact that, for nontrivial solutions to be possible, the determinant of the matrix must equal zero
+\begin{equation}
+[[A]-\lambda[I]]=0 \tag{13.4}
+\end{equation}
+
+Expanding the determinant yields a polynomial in $\lambda$, which is called the characteristic
+polynomial. The roots of this polynomial are the solutions for the eigenvalues.
+In order to better understand these concepts, it is useful to examine the two-equation
+case,
+\begin{equation}
+(a_{11}-\lambda)x_{1}+a_{12}x_{2}=0
+\end{equation}
+
+\begin{equation}
+a_{21}x_{1}+(a_{22}-\lambda)x_{2}=0 \tag{13.5}
+\end{equation}
+
+Expanding the determinant of the coefficient matrix gives
+\begin{equation}
+\begin{vmatrix}
+a_{11}-\lambda  &a_{12} \\
+a_{12} & a_{11}-\lambda
+\end{vmatrix}
+=\lambda ^{2}-(a{12}+a_{22})\lambda -a_{12}a_{21} \tag{13.6}
+\end{equation}
+
+
+which is the characteristic polynomial. The quadratic formula can then be used to solve for
+the two eigenvalues:
+\begin{equation}
+\begin{matrix}
+\lambda _{1}\\
+\lambda _{2}
+\end{matrix}
+=\frac{(a_{12}-a_{22})^{2}\pm \sqrt{(a_{11}-a_{22})^{2}-4a_{12}a_{21}}}{2} \tag{13.7}
+\end{equation}
+
+
+These are the values that solve Eq. (13.5). Before proceeding, let’s convince ourselves that
+this approach (which, by the way, is called the polynomial method) is correct.
+
+
+\section*{EXAMPLE 13.1 The Polynomial Method}
+
+Problem Statement. Use the polynomial method to solve for the eigenvalues of the following homogeneous system:
+\begin{equation}
+(10-\lambda )x_{1}-5x_{2}=0
+\end{equation}
+
+\begin{equation}
+-5x_{1}+(10-\lambda )x_{2}=0
+\end{equation}
+
+Solution. Before determining the correct solution, let’s first investigate the case where
+we have an incorrect eigenvalue. For example, if $\lambda = 3$, the equations become
+\begin{equation}
+7x_{1}-5x_{2}=0
+\end{equation}
+
+\begin{equation}
+-5x_{1}+7x_{2}=0
+\end{equation}
+
+Plotting these equations yields two straight lines that intersect at the origin (Fig. 13.2a).
+Thus, the only solution is the trivial case where $x_{1} = x_{2} = 0$.
+To determine the correct eigenvalues, we can expand the determinant to give the characteristic polynomial:
+\begin{equation}
+\begin{vmatrix}
+10-\lambda  &-5 \\
+-5 & 10-\lambda
+\end{vmatrix}
+=\lambda ^{2}-20\lambda +75
+\end{equation}
+
+which can be solved for
+\begin{equation}
+\begin{matrix}
+\lambda _{1}\\
+\lambda _{2}
+\end{matrix}
+\frac{20\pm \sqrt{20^{2}-4(1)75)}}{2}=15,5
+\end{equation}
+
+Therefore, the eigenvalues for this system are 15 and 5.
+We can now substitute either of these values back into the system and examine the result. For $\lambda = 15$, we obtain
+\begin{equation}
+-5x_{1}-5x_{2}=0
+\end{equation}
+
+\begin{equation}
+-5x_{1}-5x_{2}
+\end{equation}
+
+Thus, a correct eigenvalue makes the two equations identical (Fig. 13.2b). In essence as we
+move towards a correct eigenvalue the two lines rotate until they lie on top of each other.
+Mathematically, this means that there are an infinite number of solutions. But solving
+either of the equations yields the interesting result that all the solutions have the property
+that $x_{1} = -x_{2}$. Although at first glance this might appear trivial, it’s actually quite interesting
+as it tells us that the ratio of the unknowns is a constant. This result can be expressed in vector form as
+\begin{equation}
+\{x\}=\begin{Bmatrix}
+-1\\
+1
+\end{Bmatrix}
+\end{equation}
+
+which is referred to as the eigenvector corresponding to the eigenvalue $\lambda = 15$.
+In a similar fashion, substituting the second eigenvalue, $\lambda_{2} = 5$, gives
+
+\begin{equation}
+5x_{1}-5x_{2}=0
+\end{equation}
+
+\begin{equation}
+-5x_{1}+5x_{2}=0
+\end{equation}
+
+\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.75\textwidth]{fig_13_27}
+	   \caption{\textsf{Plots of a system of two homogeneous linear equations from Example 13.1. (a) An incorrect
+eigenvalue ($\lambda = 3$) means that the two equations, which are labeled as Eq. 1 and 2 in the
+figure, plot as separate lines and the only solution is the trivial case ($x_{1} = x_{2} = 0)$. (b) In contrast,
+the cases with correct eigenvalues ($\lambda = 5$ and 15), the equations fall on top of each other.}}
+	   \label{fig:fig_13_27}
+\end{figure}
+
+Again, the eigenvalue makes the two equations identical (Fig. 13.2b) and we can see that
+the solution for this case corresponds to $x_{1} = x_{2}$, and the eigenvector is
+\begin{equation}
+{x}=\begin{Bmatrix}
+1\\
+1
+\end{Bmatrix}
+\end{equation}
+
+
+We should recognize that MATLAB has built-in functions to facilitate the polynomial
+method. For Example 13.1, the poly function can be used to generate the characteristic
+polynomial as in
+
+\begin{lstlisting}[numbers=none]
+>> A = [10 -5;-5 10];
+>> p = poly(A)
+p =
+  1 -20 75
+\end{lstlisting}
+
+Then, the roots function can be employed to compute the eigenvalues:
+\begin{lstlisting}[numbers=none]
+>> d = roots(p)
+d =
+   15
+    5
+\end{lstlisting}
+
+
+The previous example yields the useful mathematical insight that the solution of n
+homogeneous equations of the form of Eq. 13.3 consists of a set of n eigenvalues and their
+associated eigenvectors. Further, it showed that the eigenvectors provide the ratios of the
+unknowns representing the solution. In the next section, we will show how such information has utility in engineering and
+science by turning back to our physical problem setting of oscillating objects. However,
+before doing so, we’d like to make two more mathematical points.
+First, inspection of Fig. 13.2b indicates that the straight lines representing each eigenvalue solution are at right angles to each other. That is, they are orthogonal. This property
+is true for symmetric matrices with distinct eigenvalues.
+Second, multiplying out Eq. 13.3 and separating terms gives
+\begin{equation}
+[A]\{x\}=\lambda\{x\}
+\end{equation}
+
+When viewed in this way, we can see that solving for the eigenvalues and eigenvectors
+amounts to translating the information content of a matrix [A] into a scalar $\lambda$. This might
+not seem significant for the 2 × 2 system we have been examining, but it is pretty remarkable when we consider that the size of [A] can potentially be much larger.
+
+
+\section*{13.2 PHYSICAL BACKGROUND}
+The mass-spring system in Fig. 13.3a is a simple context to illustrate how eigenvalues occur
+in physical problem settings. It will also help to demonstrate some of the mathematical
+concepts introduced in the previous section.
+To simplify the analysis, assume that each mass has no external or damping forces
+acting on it. In addition, assume that each spring has the same natural length l and the same
+spring constant k. Finally, assume that the displacement of each spring is measured relative
+to its own local coordinate system with an origin at the spring’s equilibrium position
+(Fig. 13.3a). Under these assumptions, Newton’s second law can be employed to develop
+a force balance for each mass:
+\begin{equation}
+m_{1}\frac{d^{2}x_{1}}{dt^{2}}=-kx_{1}+k(x_{2}-x_{1})\tag{13.8a}
+\end{equation}
+
+
+\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.75\textwidth]{fig_13_28}
+	   \caption{\textsf{Plots of a system of two homogeneous linear equations from Example 13.1. (a) An incorrect
+eigenvalue ( two mass–three spring system with frictionless rollers vibrating between two fixed walls.
+The position of the masses can be referenced to local coordinates with origins at their respective
+equilibrium positions (a). As in (b), positioning the masses away from equilibrium creates forces
+in the springs that on release lead to oscillations of the masses.), the equations fall on top of each other.}}
+	   \label{fig:fig_13_28}
+\end{figure}
+
+
+\begin{equation}
+m_{1}\frac{d^{2}x_{1}}{dt^{2}}=k(x_{2}-x_{1})-kx_{1}\tag{13.8b}
+\end{equation}
+
+
+	where $x_{i}$ is the displacement of mass i away from its equilibrium position (Fig. 13.3b).
+From vibration theory, it is known that solutions to Eq. (13.8) can take the form
+\begin{equation}
+x_{1}=X_{i}sin(\omega t)\tag{13.9}
+\end{equation}
+
+where $X_{1} =$ the amplitude of the oscillation of mass i (m) and $\omega =$ the angular frequency
+of the oscillation (radians/time), which is equal to
+
+\begin{equation}
+\omega =\frac{2\pi }{T_{p}}\tag{13.10}
+\end{equation}
+
+
+where $T_{p}$ = the period (time/cycle). Note that the inverse of the period is called the ordinary frequency f (cycles/time). If time is measured in seconds, the unit for f is the cycles/s,
+which is referred to as a Hertz (Hz).
+Equation (13.9) can be differentiated twice and substituted into Eq. (13.8). After collection of terms, the result i
+\begin{equation}
+\left ( \frac{2k}{m_{1}}-\omega ^{2}\right )x_{1}-\frac{k}{m_{1}}x_{2}=0\tag{13.11a}
+\end{equation}
+
+
+\begin{equation}
+-\frac{k}{m_{1}}x_{1}+\left ( \frac{2k}{m_{2}}-\omega ^{2} \right )x_{2}=0 \tag{13.11b}
+\end{equation}
+
+
+Comparison of Eq. (13.11) with Eq. (13.3) indicates that at this point, the solution has
+been reduced to an eigenvalue problem—where, for this case, the eigenvalue is the square
+of the frequency. For a two-degree-of-freedom system such as Fig. 13.3, there will be two
+such values along with their eigenvectors. As shown in the following example, the latter
+establish the unique relationship between the unknowns.
+
+\section*{EXAMPLE 13.2 Physical Interpretation of Eigenvalues and Eigenvectors}
+Problem Statement. If $m_{1} = m_{2} = 40$ kg and k = 200 N/m, Eq. (13.11) is
+\begin{equation}
+(10-\lambda )x_{1}-5x_{2}=0
+\end{equation}
+
+\begin{equation}
+-5x_{2}+(10-\lambda )x_{1}=0
+\end{equation}
+
+Mathematically, this is the same system we already solved with the polynomial methods in
+Example 13.2. Thus, the two eigenvalues are $\omega_{2} = 15$ and 5 s-2 and the corresponding
+eigenvectors are $X_{1} = X_{2}$ and $X_{1} = -X_{2}$. Interpret these results as they relate to the massspring system of Fig. 13.3.
+
+
+Solution. This example provides valuable information regarding the behavior of the system in Fig. 13.3. First, it tells us that the system has two primary modes of oscillation with
+angular frequencies of $\omega = 3.873$ and 2.36 radians $s^{-1}$, respectively. These values can be
+also expressed as periods (1.62 and 2.81 s, respectively) or ordinary frequencies (0.6164 and 0.3559 Hz, respectively).
+As stated in Section 13.1, a unique set of values cannot be obtained for the unknown
+amplitudes X. However, their ratios are specified by the eigenvectors. Thus, if the system
+\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.75\textwidth]{fig_13_29}
+	   \caption{\textsf{The principal modes of vibration of two equal masses connected by three identical springs
+between fixed walls.}}
+	   \label{fig:fig_13_29}
+\end{figure}
+is vibrating in the first mode, the first eigenvector tells us that the amplitude of the second
+mass will be equal but of opposite sign to the amplitude of the first. As in Fig. 13.4a, the
+masses vibrate apart and then together indefinitely (like two hands clapping every 1.62 s).
+In the second mode, the eigenvector specifies that the two masses have equal
+amplitudes at all times. Thus, as in Fig. 13.4b, they vibrate back and forth in unison every
+2.81 s. We should note that the configuration of the amplitudes provides guidance on how
+to set their initial values to attain pure motion in either of the two modes. Any other configuration will lead to superposition of the modes. It is this superposition that leads to the
+apparently chaotic behavior of systems like the bungee jumpers in Fig. 13.1. But as this example should make clear, there is an underlying systematic behavior that is embodied by
+the eigenvalues.
+
+
+\section*{13.3 THE POWER METHOD}
+The power method is an iterative approach that can be employed to determine the largest
+or dominant eigenvalue. With slight modification, it can also be employed to determine the
+smallest value. It has the additional benefit that the corresponding eigenvector is obtained
+as a by-product of the method. To implement the power method, the system being analyzed
+is expressed in the form
+\begin{equation}
+[A]\{x\}=\lambda\{x\}\tag{13.12}
+\end{equation}
+
+As illustrated by the following example, Eq. (13.12) forms the basis for an iterative
+solution technique that eventually yields the highest eigenvalue and its associated
+eigenvector.
+
+
+\section*{EXAMPLE 13.3 Power Method for Highest Eigenvalue}
+Problem Statement. Using the same approach as in Section 13.2, we can derive the following homogeneous set of equations for a three mass–four spring system between two
+fixed walls:
+\begin{equation}
+\left ( \frac{2k}{m_{1}}-\omega^{2}  \right )X_{1}    -\frac{k}{m_{1}}X_{2}=0
+\end{equation}
+
+
+\begin{equation}
+-\frac{k}{m_{2}}X_{1}+\left ( \frac{2k}{m_{2}}-\omega ^{2} \right )X_{2}-\frac{k}{m_{2}}X_{3}=0
+\end{equation}
+\begin{equation}
+-\frac{k}{m_{3}}X_{2}+\left ( \frac{k}{m_{2}}-\omega^{2} \right )X_{3}=0
+\end{equation}
+If all the masses m = 1 kg and all the spring constants k = 20 N/m, the system can be
+expressed in the matrix format of Eq. (13.4) as
+\begin{equation}
+\begin{bmatrix}
+40 & -20 & 0\\
+-20 & 40 & -20\\
+0 & -20 & 40
+\end{bmatrix}
+-\lambda [I]=0
+\end{equation}
+
+
+where the eigenvalue $\lambda$ is the square of the angular frequency $\omega^{2}$. Employ the power
+method to determine the highest eigenvalue and its associated eigenvector.
+
+Solution. The system is first written in the form of Eq. (13.12):
+\begin{equation}
+40X_{1}-20X_{2}=\lambda X_{1}
+\end{equation}
+
+\begin{equation}
+-20X_{1}+40X_{2}-20X_{3}=\lambda X_{2}
+\end{equation}
+
+\begin{equation}
+-20X_{2}+40X_{3}=\lambda X_{3}
+\end{equation}
+
+At this point, we can specify initial values of the X’s and use the left-hand side to compute
+an eigenvalue and eigenvector. A good first choice is to assume that all the X’s on the lefthand side of the equation are equal to one
+\begin{equation}
+40(1) - 20(1) = 20
+\end{equation}
+
+\begin{equation}
+-20(1) + 40(1) - 20(1) = 0
+\end{equation}
+
+\begin{equation}
+- 20(1) + 40(1) = 20
+\end{equation}
+
+Next, the right-hand side is normalized by 20 to make the largest element equal to one:
+\begin{equation}
+\begin{Bmatrix}
+20\\
+0\\
+20
+\end{Bmatrix}
+= 20\begin{Bmatrix}
+1\\
+0\\
+1
+\end{Bmatrix}
+\end{equation}
+
+\end{document}
+% 311 TODO

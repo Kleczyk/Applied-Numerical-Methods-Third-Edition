@@ -1,11 +1,11 @@
-
+\documentclass[../main.tex]{subfiles}
 
 \begin{document}
-\part*{Numerical Differentiation}
+\chapter{Numerical Differentiation}
 
 \vspace{1,5in}
 
-\begin{center}\begin{Large}\textbf{CHAPTER OBJECTIVES}\end{Large}\end{center}\\
+\begin{center}\begin{Large}\textbf{CHAPTER OBJECTIVES}\end{Large}\end{center}
 The primary objective of this chapter is to introduce you to numerical differentiation.
 Specific objectives and topics covered are
 
@@ -19,9 +19,9 @@ differentiation.
 	\item Knowing how to evaluate derivatives in MATLAB with the diff and gradient
 functions.
 	\item Knowing how to generate contour plots and vector fields with MATLAB.
-\end{itemize}\\
+\end{itemize}
 \vspace{0.3in}
-\begin{Large}\textbf{YOU’VE GOT A PROBLEM}\end{Large}\\
+\begin{Large}\textbf{YOU'VE GOT A PROBLEM}\end{Large}\\
 Recall that the velocity of a free-falling bungee jumper as a function of time can be
 computed as
 \begin{equation}
@@ -35,14 +35,14 @@ vertical distance $z$ the jumper has fallen after a time $t$.
 	z(t) = \dfrac{m}{c_{d}} ln \left[ cosh \left( \sqrt{\dfrac{gc_{d}}{m}} t \right) \right]
 \end{equation}
 
-Now suppose that you were given the reverse problem. That is, you were asked to determine velocity based on the jumper’s position as a function of time. Because it is the inverse of integration, differentiation could be used to make the determination:
+Now suppose that you were given the reverse problem. That is, you were asked to determine velocity based on the jumper's position as a function of time. Because it is the inverse of integration, differentiation could be used to make the determination:
 \begin{equation}
 	\tag{21.3}
 	v(t) = \dfrac{dz(t)}{dt}
 \end{equation}\\
 Substituting Eq. (21.2) into Eq. (21.3) and differentiating would bring us back to Eq. (21.1).
 
-Beyond velocity, you might also be asked to compute the jumper’s acceleration. To
+Beyond velocity, you might also be asked to compute the jumper's acceleration. To
 do this, we could either take the first derivative of velocity, or the second derivative of
 displacement:
 \begin{equation}
@@ -55,24 +55,24 @@ In either case, the result would be
 	a(t) = g sech^{2} \left( \sqrt{\dfrac{gc_{d}}{m}}t \right)
 \end{equation}
 
-Although a closed-form solution can be developed for this case, there are other functions that may be difficult or impossible to differentiate analytically. Further, suppose that
-there was some way to measure the jumper’s position at various times during the fall.
+Although a closed-form solution can be developed for this case, there are other functions that may be difficult or impossible to differentiate analytically. Further, suppose that
+there was some way to measure the jumper's position at various times during the fall.
 These distances along with their associated times could be assembled as a table of discrete
 values. In this situation, it would be useful to differentiate the discrete data to determine the
 velocity and the acceleration. In both these instances, numerical differentiation methods
 are available to obtain solutions. This chapter will introduce you to some of these methods.
 
 \vspace{0,6in}
-\chapter{INTRODUCTION AND BACKGROUND}
+\section{INTRODUCTION AND BACKGROUND}
 \vspace{0,1in}
-\hline\\
+\hrule
 \vspace{0,1in}
-\section{What Is Differentiation?}
+\subsection{What Is Differentiation?}
 $Calculus$ is the mathematics of change. Because engineers and scientists must continuously
 deal with systems and processes that change, calculus is an essential tool of our profession.
 Standing at the heart of calculus is the mathematical concept of differentiation.
 
-According to the dictionary definition, to $differentiate$ means “to mark off by differences; distinguish; . . . to perceive the difference in or between.” Mathematically, the $derivative$, which serves as the fundamental vehicle for differentiation, represents the rate of change
+According to the dictionary definition, to $differentiate$ means “to mark off by differences; distinguish; . . . to perceive the difference in or between.” Mathematically, the $derivative$, which serves as the fundamental vehicle for differentiation, represents the rate of change
 of a dependent variable with respect to an independent variable. As depicted in Fig. 21.1, the
 mathematical definition of the derivative begins with a difference approximation:
 \begin{equation}
@@ -80,7 +80,7 @@ mathematical definition of the derivative begins with a difference approximation
 	\dfrac{\Delta y}{\Delta x} = \dfrac{f(x_{i} + \Delta x)-f(x_{i})}{\Delta x}
 \end{equation}\\
 where $y$ and $f=(x)$ are alternative representatives for the dependent variable and $x$ is the
-independent variable. If x is allowed to approach zero, as occurs in moving from Fig. 21.1a
+independent variable. If x is allowed to approach zero, as occurs in moving from Fig. 21.1a
 to c, the difference becomes a derivative:
 \begin{equation}
 	\tag{21.7}
@@ -92,12 +92,12 @@ to c, the difference becomes a derivative:
 \begin{figure}[hbt!]
 	\centering
 	\includegraphics[width=0.65\textwidth]{pic.21.1}
-	\caption{\textsf{The graphical definition of a derivative: as $\Delta x$ approaches zero in going from (a) to (c), the difference approximation
-becomes a derivative. }} \hline
+	\caption{\textsf{The graphical definition of a derivative: as $\Delta x$ approaches zero in going from (a) to (c), the difference approximation
+becomes a derivative. }} \hrule
 	\label{pic.21.1}
-\end{figure}\\
+\end{figure}
 \pagebreak
-where $dy/dx$ [which can also be designated as $y'$ or $f'(x_{i})]$\footnote{ The form $dy/dx$ was devised by Leibnitz, whereas $y$ is attributed to Lagrange. Note that Newton used the 
+where $dy/dx$ [which can also be designated as $y'$ or $f'(x_{i})]$\footnote{ The form $dy/dx$ was devised by Leibnitz, whereas $y$ is attributed to Lagrange. Note that Newton used the 
 so-called dot notation: $y'$. Today, the dot notation is usually used for time derivatives.} is the first derivative of $y$ with
 respect to $x$ evaluated at $x_{i}$. As seen in the visual depiction of Fig. 21.1c, the derivative is
 the slope of the tangent to the curve at $x_{i}$.
@@ -121,7 +121,7 @@ and $y$, the partial derivative of f with respect to $x$ at an arbitrary point $
 Similarly, the partial derivative of $f$ with respect to $y$ is defined as
 \begin{equation}
 	\tag{21.10}
-	\dfrac{\patrial f}{\partial y} = \lim \limits_{\Delta \longrightarrow 0} \dfrac{f(x,y + \Delta y) - f(x,y)}{\Delta y}
+	\dfrac{\partial f}{\partial y} = \lim \limits_{\Delta \longrightarrow 0} \dfrac{f(x,y + \Delta y) - f(x,y)}{\Delta y}
 \end{equation}
 
 To get an intuitive grasp of partial derivatives, recognize that a function that depends on
@@ -129,19 +129,19 @@ two variables is a surface rather than a curve. Suppose you are mountain climbin
 access to a function f that yields elevation as a function of longitude (the east-west oriented $x$ axis) and latitude (the north-south oriented $y$ axis). If you stop at a particular point $(x_{0}, y_{0})$,
 the slope to the east would be $\partial f(x_{0},y_{0})/ \partial x$, and the slope to the north would be $\partial f(x_{0}, y_{0})/ \partial y$.
 
-\section{Differentiation in Engineering and Science}
+\subsection{Differentiation in Engineering and Science}
 The differentiation of a function has so many engineering and scientific applications that
-you were required to take differential calculus in your first year at college. Many specific examples of such applications could be given in all fields of engineering and science. Differentiation is commonplace in engineering and science because so much of our work involves
+you were required to take differential calculus in your first year at college. Many specific examples of such applications could be given in all fields of engineering and science. Differentiation is commonplace in engineering and science because so much of our work involves
 characterizing the changes of variables in both time and space. In fact, many of the laws and
 other generalizations that figure so prominently in our work are based on the predictable
-ways in which change manifests itself in the physical world. A prime example is Newton’s
+ways in which change manifests itself in the physical world. A prime example is Newton's
 second law, which is not couched in terms of the position of an object but rather in its change
 with respect to time.
 
 Aside from such temporal examples, numerous laws involving the spatial behavior of
 variables are expressed in terms of derivatives. Among the most common of these are the
 $constitutive \, laws$ that define how potentials or gradients influence physical processes. For
-example, $Fourier’s \, law \, of \, heat \, conduction$ quantifies the observation that heat flows from
+example, $Fourier's \, law \, of \, heat \, conduction$ quantifies the observation that heat flows from
 regions of high to low temperature. For the one-dimensional case, this can be expressed
 mathematically as
 \begin{equation}
@@ -160,67 +160,67 @@ of the intensity of the spatial temperature change, which drives the transfer of
 Graphical depiction of a temperature gradient. Because heat moves “downhill” from high to low
 temperature, the flow in (a) is from left to right. However, due to the orientation of Cartesian
 coordinates, the slope is negative for this case. Thus, a negative gradient leads to a positive
-flow. This is the origin of the minus sign in Fourier’s law of heat conduction. The reverse case is
-depicted in (b), where the positive gradient leads to a negative heat flow from right to left.}} \hline
+flow. This is the origin of the minus sign in Fourier's law of heat conduction. The reverse case is
+depicted in (b), where the positive gradient leads to a negative heat flow from right to left.}} \hrule
 	\label{pic.21.2}
 \end{figure}\\
 \begin{table}[hbt!]
 \caption{\textsf{The one-dimensional forms of some constitutive laws commonly used in
-engineering and science.}} \hline
+engineering and science.}} \hrule
 \begin{tabular}{p{0.8in} c p{1.2in} cc p{0.9in}}
 	
-	\textbf{Law} & \textbf{Equation} & \textbf{Physical Area} & \textbf{Gradient} & \textbf{Flux} & \textbf{Proportionality}\\ \hline
+	\textbf{Law} & \textbf{Equation} & \textbf{Physical Area} & \textbf{Gradient} & \textbf{Flux} & \textbf{Proportionality}\\ \hrule
 	
-	Fourier’s law & $q= -k \dfrac{dT}{dx}$ & Heat conduction &  Temperature & Heat flux & Thermal
+	Fourier's law & $q= -k \dfrac{dT}{dx}$ & Heat conduction &  Temperature & Heat flux & Thermal
+Conductivity
+
+\vspace{0,1in}\\
+
+	Fick's law & $J=-D\dfrac{dc}{dx}$ & Mass diffusion & Concentration & Mass flux & Diffusivity\\
+	
+\vspace{0,1in}\\
+	
+	Darcy's law & $q=-k \dfrac{dh}{dx}$ & Flow through porous media & Head & Flow flux &  Hydraulic Conductivity\\
+	
+\vspace{0,1in}\\
+
+	Ohm's law & $J=\sigma \dfrac{dV}{dx}$ & Current flow & Voltage & Current flux & Electrical
 Conductivity\\
 
-\vspace{}\\
+\vspace{0,1in}\\
 
-	Fick’s law & $J=-D\dfrac{dc}{dx}$ & Mass diffusion & Concentration & Mass flux & Diffusivity\\
+	Newton's viscosity law & $\tau = \mu \dfrac{du}{dx}$ & Fluids & Velocity & Shear Stress & Dynamic Viscosity\\
 	
-\vspace{}\\
+\vspace{0,1in}\\	
 	
-	Darcy’s law & $q=-k \dfrac{dh}{dx}$ & Flow through porous media & Head & Flow flux &  Hydraulic Conductivity\\
-	
-\vspace{}\\
-
-	Ohm’s law & $J=\sigma \dfrac{dV}{dx}$ & Current flow & Voltage & Current flux & Electrical
-Conductivity\\
-
-\vspace{}\\
-
-	Newton’s viscosity law & $\tau = \mu \dfrac{du}{dx}$ & Fluids & Velocity & Shear Stress & Dynamic Viscosity\\
-	
-\vspace{}\\	
-	
-	Hooke’s law & $\sigma = E \dfrac{\Delta L}{L}$ & Elasticity & Deformation & Stress & Young’s Modulus\\ \hline
+	Hooke's law & $\sigma = E \dfrac{\Delta L}{L}$ & Elasticity & Deformation & Stress & Young's Modulus\\ \hrule
 \end{tabular}
 \end{table}
 
 Similar laws provide workable models in many other areas of engineering and science,
-including the modeling of fluid dynamics, mass transfer, chemical reaction kinetics, electricity, and solid mechanics (Table 21.1). The ability to accurately estimate derivatives is an
+including the modeling of fluid dynamics, mass transfer, chemical reaction kinetics, electricity, and solid mechanics (Table 21.1). The ability to accurately estimate derivatives is an
 important facet of our capability to work effectively in these areas.
 
 Beyond direct engineering and scientific applications, numerical differentiation is also
 important in a variety of general mathematical contexts including other areas of numerical
-methods. For example, recall that in Chap. 6 the secant method was based on a finitedifference approximation of the derivative. In addition, probably the most important application of numerical differentiation involves the solution of differential equations. We have
-already seen an example in the form of Euler’s method in Chap. 1. In Chap. 24, we will investigate how numerical differentiation provides the basis for solving boundary-value
+methods. For example, recall that in Chap. 6 the secant method was based on a finitedifference approximation of the derivative. In addition, probably the most important application of numerical differentiation involves the solution of differential equations. We have
+already seen an example in the form of Euler's method in Chap. 1. In Chap. 24, we will investigate how numerical differentiation provides the basis for solving boundary-value
 problems of ordinary differential equations.
 
 These are just a few of the applications of differentiation that you might face regularly
-in the pursuit of your profession. When the functions to be analyzed are simple, you will normally choose to evaluate them analytically. However, it is often difficult or impossible when
-the function is complicated. In addition, the underlying function is often unknown and defined only by measurement at discrete points. For both these cases, you must have the ability
+in the pursuit of your profession. When the functions to be analyzed are simple, you will normally choose to evaluate them analytically. However, it is often difficult or impossible when
+the function is complicated. In addition, the underlying function is often unknown and defined only by measurement at discrete points. For both these cases, you must have the ability
 to obtain approximate values for derivatives, using numerical techniques as described next.
 
 \vspace{0,6in}
-\chapter{HIGH-ACCURACY DIFFERENTIATION FORMULAS}
+\section{HIGH-ACCURACY DIFFERENTIATION FORMULAS}
 \vspace{0,1in}
-\hline\\
+\hrule
 \vspace{0,1in}
 We have already introduced the notion of numerical differentiation in Chap. 4. Recall that
-we employed Taylor series expansions to derive finite-difference approximations of derivatives. In Chap. 4, we developed forward, backward, and centered difference approximations
+we employed Taylor series expansions to derive finite-difference approximations of derivatives. In Chap. 4, we developed forward, backward, and centered difference approximations
 of first and higher derivatives. Remember that, at best, these estimates had errors that were $O(h^{2})$ -that is, their errors were proportional to the square of the step size. This level of
-accuracy is due to the number of terms of the Taylor series that were retained during the derivation of these formulas. We will now illustrate how high-accuracy finite-difference formulas can be generated by including additional terms from the Taylor series expansion.
+accuracy is due to the number of terms of the Taylor series that were retained during the derivation of these formulas. We will now illustrate how high-accuracy finite-difference formulas can be generated by including additional terms from the Taylor series expansion.
 
 For example, the forward Taylor series expansion can be written as [recall Eq. (4.13)]
 \begin{equation}
@@ -259,31 +259,31 @@ or, by collecting terms:
 Notice that inclusion of the second-derivative term has improved the accuracy to $O(h^{2})$.
 Similar improved versions can be developed for the backward and centered formulas as
 well as for the approximations of higher-order derivatives. The formulas are summarized in
-Fig. 21.3 through Fig. 21.5 along with the lower-order versions from Chap. 4. The following example illustrates the utility of these formulas for estimating derivatives. 
+Fig. 21.3 through Fig. 21.5 along with the lower-order versions from Chap. 4. The following example illustrates the utility of these formulas for estimating derivatives. 
 
 \vspace{0,6in}
-\chapter{High-Accuracy Differentiation Formulas}
+\section{High-Accuracy Differentiation Formulas}
 \vspace{0,1in}
-\hline\\
+\hrule
 \vspace{0,1in}
 \textbf{Problem Statement.} Recall that in Example 4.4 we estimated the derivative of
 
 	$$f(x) = -0.1x^{4} - 0.15x^{3} - 0.5x^{2} 0.25x +1.2$$\\
 at $x$ = 0.5 using finite-differences and a step size of $h$ = 0.25. The results are summarized
 in the following table. Note that the errors are based on the true value of
-$f' (0.5) = −0.9125$.
+$f' (0.5) = −0.9125$.
 
 \begin{table}[hbt!]
 \centering
 \begin{tabular}{lccc}
 \hline
-	\vspace{} & \textbf{Backward $O(h)$} & \textbf{Centered $O(h^{2})$} & \textbf{Forward $O(h)$}\\ \hline
+	\vspace{0,1in} & \textbf{Backward $O(h)$} & \textbf{Centered $O(h^{2})$} & \textbf{Forward $O(h)$}\\ \hline
 	
 	\textbf{Estimate} & −0.714 & −0.934 & −1.155\\
 	
 	$\varepsilon_{t}$ & 21.7\% & −2.4\% & −26.5\%\\ \hline
 \end{tabular}
-\end{table}\\
+\end{table}
 Repeat this computation, but employ the high-accuracy formulas from Fig. 21.3 through
 Fig. 21.5.
 
@@ -291,10 +291,10 @@ Fig. 21.5.
 	\centering
 	\includegraphics[width=0.75\textwidth]{pic.21.3}
 	\caption{\textsf{Forward finite-difference formulas: two versions are presented for each derivative. The latter version
-incorporates more terms of the Taylor series expansion and is, consequently, more accurate.}} \hline
+incorporates more terms of the Taylor series expansion and is, consequently, more accurate.}} \hrule
 	\label{pic.21.3}
-\end{figure}\\
-\vspace{0.2in}\\
+\end{figure}
+\vspace{0.2in}
 \textbf{Solution.} The data needed for this example are
 
 \begin{tabular}{ll}
@@ -324,17 +324,17 @@ The centered difference of accuracy O(h4) is computed as (Fig. 21.5)
 	\centering
 	\includegraphics[width=0.75\textwidth]{pic.21.4}
 	\caption{\textsf{Backward finite-difference formulas: two versions are presented for each derivative. The latter
-version incorporates more terms of the Taylor series expansion and is, consequently, more accurate.}} \hline
+version incorporates more terms of the Taylor series expansion and is, consequently, more accurate.}} \hrule
 	\label{pic.21.4}
 \end{figure}
 
 \vspace{0.2in}
 
 As expected, the errors for the forward and backward differences are considerably
-more accurate than the results from Example 4.4. However, surprisingly, the centered difference yields the exact derivative at $x$ = 0.5. This is because the formula based on the
+more accurate than the results from Example 4.4. However, surprisingly, the centered difference yields the exact derivative at $x$ = 0.5. This is because the formula based on the
 Taylor series is equivalent to passing a fourth-order polynomial through the data points.
 
-\chapter{RICHARDSON EXTRAPOLATION}
+\section{RICHARDSON EXTRAPOLATION}
 To this point, we have seen that there are two ways to improve derivative estimates when
 employing finite differences: (1) decrease the step size or (2) use a higher-order formula
 that employs more points. A third approach, based on Richardson extrapolation, uses two
@@ -360,9 +360,9 @@ for the case where $h_{2} = h_{1}/2$, as in
 	\caption{\textsf{Centered finite-difference formulas: two versions are presented for each derivative. The latter
 version incorporates more terms of the Taylor series expansion and is, consequently, more
 accurate.
-}} \hline
+}} \hrule
 	\label{pic.21.5}
-\end{figure}\\
+\end{figure}
 In a similar fashion, Eq. (21.19) can be written for derivatives as
 \begin{equation}
 	\tag{21.20}
@@ -372,11 +372,11 @@ For centered difference approximations with O(h2), the application of this formu
 yield a new derivative estimate of $O(h_{4})$.
 
 \vspace{0,6in}
-\chapter{Richardson Extrapolation}
+\section{Richardson Extrapolation}
 \vspace{0,1in}
-\hline\\
+\hrule
 \vspace{0,1in}
-\textbf{Problem Statement.} Using the same function as in Example 21.1, estimate the first derivative at $x$ = 0.5 employing step sizes of $h_{1}$ = 0.5 and $h_{2}$ = 0.25. Then use Eq. (21.20)
+\textbf{Problem Statement.} Using the same function as in Example 21.1, estimate the first derivative at $x$ = 0.5 employing step sizes of $h_{1}$ = 0.5 and $h_{2}$ = 0.25. Then use Eq. (21.20)
 to compute an improved estimate with Richardson extrapolation. Recall that the true value
 is −0.9125.\\
 \vspace{0.2in}\\
@@ -393,22 +393,22 @@ which for the present case is exact.
 \vspace{0.2in}
 
 The previous example yielded an exact result because the function being analyzed was
-a fourth-order polynomial. The exact outcome was due to the fact that Richardson extrapolation is actually equivalent to fitting a higher-order polynomial through the data and then
+a fourth-order polynomial. The exact outcome was due to the fact that Richardson extrapolation is actually equivalent to fitting a higher-order polynomial through the data and then
 evaluating the derivatives by centered divided differences. Thus, the present case matched
 the derivative of the fourth-order polynomial precisely. For most other functions, of course,
-this would not occur, and our derivative estimate would be improved but not exact. Consequently, as was the case for the application of Richardson extrapolation, the approach can
+this would not occur, and our derivative estimate would be improved but not exact. Consequently, as was the case for the application of Richardson extrapolation, the approach can
 be applied iteratively using a Romberg algorithm until the result falls below an acceptable
 error criterion. 
 
 \vspace{0,6in}
-\chapter{DERIVATIVES OF UNEQUALLY SPACED DATA}
+\section{DERIVATIVES OF UNEQUALLY SPACED DATA}
 \vspace{0,1in}
-\hline\\
+\hrule
 \vspace{0,1in}
 The approaches discussed to this point are primarily designed to determine the derivative of
 a given function. For the finite-difference approximations of Sec. 21.2, the data had to be
 evenly spaced. For the Richardson extrapolation technique of Sec. 21.3, the data also had to
-be evenly spaced and generated for successively halved intervals. Such control of data spacing is usually available only in cases where we can use a function to generate a table of values.
+be evenly spaced and generated for successively halved intervals. Such control of data spacing is usually available only in cases where we can use a function to generate a table of values.
 
 In contrast, empirically derived information—that is, data from experiments or field
 studies—are often collected at unequal intervals. Such information cannot be analyzed
@@ -417,7 +417,7 @@ with the techniques discussed to this point.
 One way to handle nonequispaced data is to fit a Lagrange interpolating polynomial
 [recall Eq. (17.21)] to a set of adjacent points that bracket the location value at which you
 want to evaluate the derivative. Remember that this polynomial does not require that the
-points be equispaced. The polynomial can then be differentiated analytically to yield a formula that can be used to estimate the derivative.
+points be equispaced. The polynomial can then be differentiated analytically to yield a formula that can be used to estimate the derivative.
 
 For example, you can fit a second-order Lagrange polynomial to three adjacent points
 ($x_{0}$, $y_{0}$),($x_{1}$, $y_{1}$), and ($x_{2}$, $y_{2}$). Differentiating the polynomial yields:
@@ -430,21 +430,21 @@ certainly more complicated than the first-derivative approximation from Fig. 21.
 Fig. 21.5, it has some important advantages. First, it can provide estimates anywhere
 within the range prescribed by the three points. Second, the points themselves do not have
 to be equally spaced. Third, the derivative estimate is of the same accuracy as the centered
-difference [Eq. (4.25)]. In fact, for equispaced points, Eq. (21.21) evaluated at $x = x_{1}$ reduces to Eq. (4.25).
+difference [Eq. (4.25)]. In fact, for equispaced points, Eq. (21.21) evaluated at $x = x_{1}$ reduces to Eq. (4.25).
 
 \vspace{0,6in}
-\chapter{Differentiating Unequally Spaced Data}
+\section{Differentiating Unequally Spaced Data}
 \vspace{0,1in}
-\hline\\
+\hrule
 \vspace{0,1in}
 \textbf{Problem Statement.} As in Fig. 21.6, a temperature gradient can be measured down into the
-soil. The heat flux at the soil-air interface can be computed with Fourier’s law (Table 21.1):
+soil. The heat flux at the soil-air interface can be computed with Fourier's law (Table 21.1):
 
 	$$q(z=0) = -k \dfrac{dT}{dz} \bigg| _{z=0}$$\\
 where $q(z)$ = heat flux ($W/m^{2}$), $k$ = coefficient of thermal conductivity for soil [= 0.5 W/
 (m · K)], $T$ = temperature (K), and $z$ = distance measured down from the surface into the
 soil (m). Note that a positive value for flux means that heat is transferred from the air to the
-soil. Use numerical differentiation to evaluate the gradient at the soil-air interface and employ this estimate to determine the heat flux into the ground.
+soil. Use numerical differentiation to evaluate the gradient at the soil-air interface and employ this estimate to determine the heat flux into the ground.
 
 
 \vspace{0.4in}
@@ -452,27 +452,27 @@ soil. Use numerical differentiation to evaluate the gradient at the soil-air int
 
 \begin{table}[hbt!]
 \begin{tabular}{l p{5.1in}}
-\vspace{} & $f'(0) = 13.5\dfrac{2(0)-0.0125 - 0.0375}{(0 − 0.0125)(0 − 0.0375)} + 12\dfrac{2(0) − 0 − 0.0375}{(0.0125 − 0)(0.0125 − 0.0375)} +10\dfrac{2(0) − 0 − 0.0125}{(0.0375 − 0)(0.0375 − 0.0125)} =  −1440 + 1440 − 133.333 = −133.333 K/m$\\
+\vspace{0,1in} & $f'(0) = 13.5\dfrac{2(0)-0.0125 - 0.0375}{(0 − 0.0125)(0 − 0.0375)} + 12\dfrac{2(0) − 0 − 0.0375}{(0.0125 − 0)(0.0125 − 0.0375)} +10\dfrac{2(0) − 0 − 0.0125}{(0.0375 − 0)(0.0375 − 0.0125)} =  −1440 + 1440 − 133.333 = −133.333 K/m$\\
 \end{tabular}
-\end{table}\\
+\end{table}
 which can be used to compute
 
 	$$q(z=0) = -0.5 \dfrac{W}{mK} \left( -133.333 \dfrac{K}{m} \right) = 66.667 \dfrac{W}{m^{2}}$$
 
 \begin{figure}[hbt!]
-	\hline
+	\hrule
 	\caption{\textsf{Temperature versus depth into the soil.}} 
 	\includegraphics[width=0.45\textwidth]{pic.21.6}
 	\label{pic.21.6}
 \end{figure}
 
 \vspace{0,6in}
-\chapter{DERIVATIVES AND INTEGRALS FOR DATA WITH ERRORS}
+\section{DERIVATIVES AND INTEGRALS FOR DATA WITH ERRORS}
 \vspace{0,1in}
-\hline\\
+\hrule
 \vspace{0,1in}
 Aside from unequal spacing, another problem related to differentiating empirical data is
-that these data usually include measurement error. A shortcoming of numerical differentiation is that it tends to amplify errors in the data.
+that these data usually include measurement error. A shortcoming of numerical differentiation is that it tends to amplify errors in the data.
 
 \begin{figure}[hbt!]
 	\centering
@@ -481,12 +481,12 @@ that these data usually include measurement error. A shortcoming of numerical di
 error, (b) the resulting numerical differentiation of curve (a), (c) data modified slightly, and (d) the
 resulting differentiation of curve (c) manifesting increased variability. In contrast, the reverse
 operation of integration [moving from (d) to (c) by taking the area under (d)] tends to attenuate 
-or smooth data errors.}} \hline
+or smooth data errors.}} \hrule
 	\label{pic.21.7}
 \end{figure}
 
 Fig. 21.7a shows smooth, error-free data that when numerically differentiated yield
-a smooth result (Fig. 21.7b). In contrast, Fig. 21.7c uses the same data, but with alternating points raised and lowered slightly. This minor modification is barely apparent from
+a smooth result (Fig. 21.7b). In contrast, Fig. 21.7c uses the same data, but with alternating points raised and lowered slightly. This minor modification is barely apparent from
 Fig. 21.7c. However, the resulting effect in Fig. 21.7d is significant.
 
 The error amplification occurs because differentiation is subtractive. Hence, random
@@ -497,12 +497,12 @@ summed to form an integral, random positive and negative errors cancel out.
 As might be expected, the primary approach for determining derivatives for imprecise
 data is to use least-squares regression to fit a smooth, differentiable function to the data. In
 the absence of any other information, a lower-order polynomial regression might be a good
-first choice. Obviously, if the true functional relationship between the dependent and independent variable is known, this relationship should form the basis for the least-squares fit.
+first choice. Obviously, if the true functional relationship between the dependent and independent variable is known, this relationship should form the basis for the least-squares fit.
 
 \vspace{0,6in}
-\chapter{PARTIAL DERIVATIVES}
+\section{PARTIAL DERIVATIVES}
 \vspace{0,1in}
-\hline\\
+\hrule
 \vspace{0,1in}
 
 Partial derivatives along a single dimension are computed in the same fashion as ordinary
@@ -520,13 +520,13 @@ All the other formulas and approaches discussed to this point can be applied to 
 partial derivatives in a similar fashion.
 
 For higher-order derivatives, we might want to differentiate a function with respect to
-two or more different variables. The result is called a $mixed\, partial\, derivative$. For example, we might want to take the partial derivative of f (x, y) with respect to both independent
+two or more different variables. The result is called a $mixed\, partial\, derivative$. For example, we might want to take the partial derivative of f (x, y) with respect to both independent
 variables
 \begin{equation}
 	\tag{21.24}
 	\dfrac{\partial^{2} f}{\partial x \partial y} = \dfrac{\partial}{\partial x} \left( \dfrac{\partial f}{\partial y} \right)
 \end{equation}\\
-To develop a finite-difference approximation, we can first form a difference in $x$ of the partial derivatives in $y$:
+To develop a finite-difference approximation, we can first form a difference in $x$ of the partial derivatives in $y$:
 \begin{equation}
 	\tag{21.25}
 	\dfrac{\partial^{2} f}{\partial x \partial y} = \dfrac{\dfrac{\partial f}{\partial y} (x + \Delta x,y) - \dfrac{\partial f}{\partial y} (x - \Delta x, y)}{2\Delta x}
@@ -539,29 +539,29 @@ Then, we can use finite differences to evaluate each of the partials in $y$:
 Collecting terms yields the final result
 \begin{equation}
 	\tag{21.27}
-	\dfrac{\partial^{2} f}{\partial x \partial y} = \dfrac{ f(x + \Delta x, y+ \Delta y) - f(x+ \Delta x, y-\Delta ) - f(x-\Delta x,y+ \Delta y) + f(x - \Delta x, y- \Deltay)}{4 \Delta x \Delta y}
+	\dfrac{\partial^{2} f}{\partial x \partial y} = \dfrac{ f(x + \Delta x, y+ \Delta y) - f(x+ \Delta x, y-\Delta ) - f(x-\Delta x,y+ \Delta y) + f(x - \Delta x, y- \Delta y)}{4 \Delta x \Delta y}
 \end{equation}
 
 \vspace{0,6in}
-\chapter{NUMERICAL DIFFERENTIATION WITH MATLAB}
+\section{NUMERICAL DIFFERENTIATION WITH MATLAB}
 \vspace{0,1in}
-\hline\\
+\hrule
 \vspace{0,1in}
 
-MATLAB software has the ability to determine the derivatives of data based on two builtin functions: diff and gradient. 
+MATLAB software has the ability to determine the derivatives of data based on two builtin functions: diff and gradient. 
 
-\section{MATLAB Function: \begin{small}diff\end{small}}
+\subsection{MATLAB Function: diff}
 When it is passed a one-dimensional vector of length $n$, the diff function returns a vector
 of length $n − 1$ containing the differences between adjacent elements. As described in the
-following example, these can then be employed to determine finite-difference approximations of first derivatives.
+following example, these can then be employed to determine finite-difference approximations of first derivatives.
 
 \vspace{0,6in}
-\chapter{Using \begin{small}diff\end{small} for Differentiation}
+\section{Using diff for Differentiation}
 \vspace{0,1in}
-\hline\\
+\hrule
 \vspace{0,1in}
 
-\textbf{Problem Statement.} Explore how the MATLAB diff function can be employed to differentiate the function
+\textbf{Problem Statement.} Explore how the MATLAB diff function can be employed to differentiate the function
 
 	$$f(x) = 0.2 + 25x - 200x^{2} + 675x^{3} - 900x^{4} + 400x^{5}$$\\
 from $x$ = 0 to 0.8. Compare your results with the exact solution:
@@ -572,13 +572,13 @@ from $x$ = 0 to 0.8. Compare your results with the exact solution:
 
 \begin{verbatim}
    >> f=@(x) 0.2+25*x-200*x.^2+675*x.^3-900*x.^4+400*x.^5;
-\end{verbatim}\\
+\end{verbatim}
 We can then generate a series of equally spaced values of the independent and dependent
 variables:
 \begin{verbatim}
    >> x=0:0.1:0.8;
    >> y=f(x);
-\end{verbatim}\\
+\end{verbatim}
 The diff function can be used to determine the differences between adjacent elements of
 each vector. For example,
 \begin{verbatim}
@@ -589,7 +589,7 @@ each vector. For example,
        0.1000 0.1000 0.1000 0.1000 0.1000
      Columns 6 through 8
        0.1000 0.1000 0.1000
-\end{verbatim}\\
+\end{verbatim}
 As expected, the result represents the differences between each pair of elements of x. To
 compute divided-difference approximations of the derivative, we merely perform a vector
 division of the y differences by the x differences by entering
@@ -600,14 +600,14 @@ division of the y differences by the x differences by entering
        10.8900 -0.0100 3.1900 8.4900 8.6900
      Columns 6 through 8
        1.3900 -11.0100 -21.3100
-\end{verbatim}\\
+\end{verbatim}
 Note that because we are using equally spaced values, after generating the x values, we
 could have simply performed the above computation concisely as
 \begin{verbatim}
    >> d=diff(f(x))/0.1;
 \end{verbatim}
 
-The vector $d$ now contains derivative estimates corresponding to the midpoint between adjacent elements. Therefore, in order to develop a plot of our results, we must first
+The vector $d$ now contains derivative estimates corresponding to the midpoint between adjacent elements. Therefore, in order to develop a plot of our results, we must first
 generate a vector holding the $x$ values for the midpoint of each interval:
 
 \begin{verbatim}
@@ -619,19 +619,19 @@ generate a vector holding the $x$ values for the midpoint of each interval:
 	\centering
 	\includegraphics[width=0.55\textwidth]{pic.21.8}
 	\caption{\textsf{Comparison of the exact derivative (line) with numerical estimates (circles) computed with
-MATLAB’s diff function.}} \vspace{0.1in} \hline
+MATLAB's diff function.}} \vspace{0.1in} \hrule
 	\label{pic.21.8}
-\end{figure}\\
-As a final step, we can compute values for the analytical derivative at a finer level of resolution to include on the plot for comparison
+\end{figure}
+As a final step, we can compute values for the analytical derivative at a finer level of resolution to include on the plot for comparison
 
 \begin{verbatim}
    >> xa=0:.01:.8;
    >> ya=25-400*xa+3*675*xa.^2-4*900*xa.^3+5*400*xa.^4;
-\end{verbatim}\\
+\end{verbatim}
 A plot of the numerical and analytical estimates can be generated with
 \begin{verbatim}
    >> plot(xm,d,'o',xa,ya)
-\end{verbatim}\\
+\end{verbatim}
 As displayed in Fig. 21.8, the results compare favorably for this case.
 \vspace{0.4in}
 
@@ -644,20 +644,20 @@ $x$ has unequal spacing:
 \end{verbatim}
 
 Another common use is to detect whether a vector is in ascending or descending order.
-For example, the following code rejects a vector that is not in ascending order (that is, monotonically increasing):
+For example, the following code rejects a vector that is not in ascending order (that is, monotonically increasing):
 \begin{verbatim}
    if any(diff(x)<=0), error('not in ascending order'), end
 \end{verbatim}
 
-\section{MATLAB Function: \begin{small}gradient\end{small}}\\
+\subsection{MATLAB Function: gradient }
 The gradient function also returns differences. However, it does so in a manner that is
 more compatible with evaluating derivatives at the values themselves rather than in the
 intervals between values. A simple representation of its syntax is 
 \begin{verbatim}
    fx = gradient(f)
-\end{verbatim}\\
+\end{verbatim}
 where $f = a$ one-dimensional vector of length $n$, and $fx$ is a vector of length $n$ containing
-differences based on $f$. Just as with the diff function, the first value returned is the difference between the first and second value. However, for the intermediate values, a centered difference based on the adjacent values is return
+differences based on $f$. Just as with the diff function, the first value returned is the difference between the first and second value. However, for the intermediate values, a centered difference based on the adjacent values is return
 
 \begin{equation}
 	\tag{21.28}
@@ -672,13 +672,15 @@ equally spaced data, the following version divides all the results by the interv
 returns the actual values of the derivatives,
 \begin{verbatim}
    fx = gradient(f, h)
-\end{verbatim}\\
+\end{verbatim}
 where $h$ = the spacing between points.
 
 \vspace{0,6in}
-\chapter{Using gradient for Differentiation}
+
+\section{Using gradient for Differentiation}
+
 \vspace{0,1in}
-\hline\\
+\hrule
 \vspace{0,1in}
 
 \textbf{Problem Statement.} Use the gradient function to differentiate the same function that
@@ -691,7 +693,7 @@ spaced values of the independent and dependent variables:
    >> f=@(x) 0.2+25*x-200*x.^2+675*x.^3-900*x.^4+400*x.^5;
    >> x=0:0.1:0.8;
    >> y=f(x);
-\end{verbatim}\\
+\end{verbatim}
 We can then use the gradient function to determine the derivatives as
 \begin{verbatim}
    >> dy=gradient(y,0.1)
@@ -700,7 +702,7 @@ We can then use the gradient function to determine the derivatives as
       10.8900 5.4400 1.5900 5.8400 8.5900
      Columns 6 through 9
        5.0400   -4.8100   -16.1600   -21.3100
-\end{verbatim}\\
+\end{verbatim}
 As in Example 21.4, we can generate values for the analytical derivative and display both
 the numerical and analytical estimates on a plot:
 \begin{verbatim}
@@ -713,7 +715,7 @@ the numerical and analytical estimates on a plot:
 	\centering
 	\includegraphics[width=0.60\textwidth]{pic.21.9}
 	\caption{\textsf{Comparison of the exact derivative (line) with numerical estimates (circles) computed with
-MATLAB’s gradient function.}} \vspace{0.1in} \hline 
+MATLAB's gradient function.}} \vspace{0.1in} \hrule 
 	\label{pic.21.9}
 \end{figure}
 \vspace{0.2in}
@@ -724,23 +726,23 @@ that are two times (0.2) as wide as for those used for diff (0.1).
 
 \vspace{0.4in}
 Beyond one-dimensional vectors, the gradient function is particularly well suited
-for determining the partial derivatives of matrices. For example, for a two-dimensional matrix, $f$, the function can be invoked as
+for determining the partial derivatives of matrices. For example, for a two-dimensional matrix, $f$, the function can be invoked as
 \begin{verbatim}
    [fx,fy] = gradient(f, h)
-\end{verbatim}\\
+\end{verbatim}
 where $fx$ corresponds to the differences in the $x$ (column) direction, and $fy$ corresponds
 to the differences in the $y$ (row) direction, and $h$ = the spacing between points. If $h$ is
 omitted, the spacing between points in both dimensions is assumed to be one. In the next
 section, we will illustrate how gradient can be used to visualize vector fields.
 
 \vspace{0,6in}
-\chapter{\begin{Large}CASE STUDY\end{Large} VISUALIZING FIELDS}
+\section{\begin{Large}CASE STUDY\end{Large} VISUALIZING FIELDS}
 \vspace{0,1in}
-\hline\\
+\hrule
 \vspace{0,1in}
 \textbf{Background.} Beyond the determination of derivatives in one dimension, the gradient
 function is also quite useful for determining partial derivatives in two or more dimensions.
-In particular, it can be used in conjunction with other MATLAB functions to produce visualizations of vector fields.
+In particular, it can be used in conjunction with other MATLAB functions to produce visualizations of vector fields.
 
 To understand how this is done, we can return to our discussion of partial derivatives
 at the end of Section 21.1.1. Recall that we used mountain elevation as an example of a
@@ -751,7 +753,7 @@ where $z$ = elevation, $x$ = distance measured along the east-west axis, and $y$
 measured along the north-south axis.
 
 For this example, the partial derivatives provide the slopes in the directions of the
-axes. However, if you were mountain climbing, you would probably be much more interested in determining the direction of the maximum slope. If we think of the two partial derivatives as component vectors, the answer is provided very neatly by 
+axes. However, if you were mountain climbing, you would probably be much more interested in determining the direction of the maximum slope. If we think of the two partial derivatives as component vectors, the answer is provided very neatly by 
 
 	$$\triangledown f = \dfrac{\partial f}{\partial x} \textbf{i} + \dfrac{\partial f}{\partial y} \textbf{j}$$\\
 where $\triangledown f$ is referred to as the $gradient$ of $f$. This vector, which represents the steepest
@@ -765,14 +767,14 @@ where $\theta$ = the angle measured counterclockwise from the $x$ axis.
 
 Now suppose that we generate a grid of points in the $x-y$ plane and used the foregoing
 equations to draw the gradient vector at each point. The result would be a field of arrows
-indicating the steepest route to the peak from any point. Conversely, if we plotted the negative of the gradient, it would indicate how a ball would travel as it rolled downhill from
+indicating the steepest route to the peak from any point. Conversely, if we plotted the negative of the gradient, it would indicate how a ball would travel as it rolled downhill from
 any point.
 
 Such graphical representations are so useful that MATLAB has a special function,
 called quiver, to create such plots. A simple representation of its syntax is
 \begin{verbatim}
    quiver(x,y,u,v)
-\end{verbatim}\\
+\end{verbatim}
 where $x$ and $y$ are matrices containing the position coordinates and $u$ and $v$ are matrices
 containing the partial derivatives. The following example demonstrates the use of quiver
 to visualize a field.
@@ -781,24 +783,24 @@ Employ the gradient function to determine to partial derivatives for the followi
 two-dimensional function:
 
 	$$f(x,y) = y-x-2x^{2} - 2xy - y^{2}$$\\
-from $x$ = −2 to 2 and $y$ = 1 to 3. Then use quiver to superimpose a vector field on a contour plot of the function.\\
+from $x$ = −2 to 2 and $y$ = 1 to 3. Then use quiver to superimpose a vector field on a contour plot of the function.\\
 \textbf{Solution.} We can first express $f(x, y)$ as an anonymous function
 \begin{verbatim}
    >> f=@(x,y) y-x-2*x.^2-2.*x.*y-y.^2;
-\end{verbatim}\\
-A series of equally spaced values of the independent and dependent variables can be generated as
+\end{verbatim}
+A series of equally spaced values of the independent and dependent variables can be generated as
 \begin{verbatim}
    >> [x,y]=meshgrid(-2:.25:0, 1:.25:3);
    >> z=f(x,y);
-\end{verbatim}\\
+\end{verbatim}
 The gradient function can be employed to determine the partial derivatives:
 \begin{verbatim}
    >> [fx,fy]=gradient(z,0.25);
-\end{verbatim}\\
+\end{verbatim}
 We can then develop a contour plot of the results:
 \begin{verbatim}
    >> cs=contour(x,y,z);clabel(cs);hold on
-\end{verbatim}\\
+\end{verbatim}
 As a final step, the resultant of the partial derivatives can be superimposed as vectors on the
 contour plot:
 \begin{verbatim}
@@ -807,22 +809,22 @@ contour plot:
 
 \begin{figure}[hbt!]
 	\caption{\textsf{MATLAB generated contour plot of a two-dimensional function with the resultant of the partial
-derivatives displayed as arrows.}} \hline \vspace{0.2in}
+derivatives displayed as arrows.}} \hrule \vspace{0.2in}
 \centering
 	\includegraphics[width=0.65\textwidth]{pic.21.10}
 	\label{pic.21.10}
-\end{figure}\\
+\end{figure}
 Note that we have displayed the negative of the resultants, in order that they point 
 “downhill.”
 
-The result is shown in Fig. 21.10. The function’s peak occurs at $x$ = −1 and $y$ = 1.5
+The result is shown in Fig. 21.10. The function's peak occurs at $x$ = −1 and $y$ = 1.5
 and then drops away in all directions. As indicated by the lengthening arrows, the gradient
 drops off more steeply to the northeast and the southwest.
 
-\section*{PROBLEMS} \hline
+\subsection*{PROBLEMS} \hrule
 
 \begin{multicols}{2}
-\textbf{21.1} Compute forward and backward difference approximations of $O(h)$ and $O(h^{2})$, and central difference approximations of $O(h^{2})$ and $O(h^{4})$ for the first derivative of
+\textbf{21.1} Compute forward and backward difference approximations of $O(h)$ and $O(h^{2})$, and central difference approximations of $O(h^{2})$ and $O(h^{4})$ for the first derivative of
 $y = \cos x$ at $x = \pi/4$ using a value of $h = \pi/12$. Estimate
 the true percent relative error εt for each approximation. 
 
@@ -837,9 +839,9 @@ different expansions for the points $x_{i-2}$,$x_{i-1}$, $x_{i+1}$, and $x_{i+2}
 interval $\Delta x$ will be used in each case of $i$ − 1 and $i$ + 1, and $2\Delta x$ will be used in each case of $i$ − 2 and $i$ + 2. The four
 equations must then be combined in a way to eliminate the
 first and second derivatives. Carry enough terms along in
-each expansion to evaluate the first term that will be truncated to determine the order of the approximation. 
+each expansion to evaluate the first term that will be truncated to determine the order of the approximation. 
 
-\textbf{21.4} Use Richardson extrapolation to estimate the first derivative of $y = \cos x$ at $x = \pi/4$ using step sizes of $h_{1} = \pi/3$ and $h_{2} = \pi/6$. Employ centered differences of $O(h^{2})$ for the
+\textbf{21.4} Use Richardson extrapolation to estimate the first derivative of $y = \cos x$ at $x = \pi/4$ using step sizes of $h_{1} = \pi/3$ and $h_{2} = \pi/6$. Employ centered differences of $O(h^{2})$ for the
 initial estimates.
 
 \textbf{21.5} Repeat Prob. 21.4, but for the first derivative of ln $x$ at
@@ -859,26 +861,26 @@ estimate the derivative of a given function.
 \textbf{21.9} Develop an M-file to obtain first-derivative estimates
 for unequally spaced data. Test it with the following data: \\
 \begin{tabular}{lccccc}
-\hline
-\small{\textbf{$x$}} & \small{0.6} & \small{1.5} & \small{1.6} & \small{2.5} & \small{3.5}\\
-\small{\textbf{$f(x)$}} & \small{0.9036} & \small{0.3734} & \small{0.3261} & \small{0.08422} & \small{0.01596}\\ \hline
+	\hline
+{\textbf{$x$}} & {0.6} & {1.5} & {1.6} & {2.5} & {3.5}\\
+{\textbf{$f(x)$}} & {0.9036} & {0.3734} & {0.3261} & {0.08422} & {0.01596}\\ \hline
 \end{tabular} \vspace{0.1in} \\
 where $f (x) = 5e^{−2x} x$ . Compare your results with the true
 derivatives.
 
 \textbf{21.10} Develop an M-file function that computes first and
-second derivative estimates of order $O(h^{2})$ based on the formulas in Figs. 21.3 through 21.5. The function’s first line
+second derivative estimates of order $O(h^{2})$ based on the formulas in Figs. 21.3 through 21.5. The function's first line
 should be set up as
 \begin{verbatim}
    function [dydx, d2ydx2] = diffeq(x,y)
-\end{verbatim}\\
+\end{verbatim}
 where $x$ and $y$ are input vectors of length $n$ containing the
-values of the independent and dependent variables, respectively, and $dydx$ and $dy2dx2$ are output vectors of length $n$
+values of the independent and dependent variables, respectively, and $dydx$ and $dy2dx2$ are output vectors of length $n$
 containing the first- and second-derivative estimates at
 each value of the independent variable. The function should
 generate a plot of $dydx$ and $dy2dx2$ versus $x$. Have your 
 M-file return an error message if \textbf{(a)} the input vectors are not
-the same length, or \textbf{(b)} the values for the independent variable are not equally spaced. Test your program with the data
+the same length, or \textbf{(b)} the values for the independent variable are not equally spaced. Test your program with the data
 from Prob. 21.11.
 
 \textbf{21.11} The following data were collected for the distance
@@ -889,9 +891,9 @@ traveled versus time for a rocket: \\
  & \; 100 & 125\\ 
 \textbf{$y, km$} & 0 & 32 & 58 & 78 & 92 & 100\\ \hline
 \end{tabular} \vspace{0.1in} \\
-Use numerical differentiation to estimate the rocket’s velocity and acceleration at each time. 
+Use numerical differentiation to estimate the rocket's velocity and acceleration at each time. 
 
-\textbf{21.12} A jet fighter’s position on an aircraft carrier’s runway
+\textbf{21.12} A jet fighter's position on an aircraft carrier's runway
 was timed during landing: \\
 \begin{tabular}{lccccccc}
 \hline
@@ -899,48 +901,48 @@ was timed during landing: \\
 \textbf{$x, m$} & 153 & 185 & 208 & 249 & 261 & 271 & 273\\  \hline
 \end{tabular}\\
 where x is the distance from the end of the carrier. Estimate
-\textbf{(a)} velocity $(dx/dt)$ and \textbf{(b)} acceleration $(dv/dt)$ using numerical differentiation.
+\textbf{(a)} velocity $(dx/dt)$ and \textbf{(b)} acceleration $(dv/dt)$ using numerical differentiation.
 
-\textbf{21.13} Use the following data to find the velocity and acceleration at $t$ = 10 seconds:\\
+\textbf{21.13} Use the following data to find the velocity and acceleration at $t$ = 10 seconds:\\
 \begin{tabular}{lccccccccc}
-\hline
+	\hline
 	
 	\tiny{\textbf{$Time, t, s$}} & \tiny{0} & \tiny{2} & \tiny{4} & \tiny{6} & \tiny{8} & \tiny{10} & \tiny{12} & \tiny{14} & \tiny{16}\\
 
-	\tiny{\textbf{$Position, x, m$} & \tiny{0} & \tiny{0.7} & \tiny{1.8} & \tiny{3.4} & \tiny{5.1} & \tiny{6.3} & \tiny{7.3} & \tiny{8.0} & \tiny{8.4}\\ \hline
+	\tiny{\textbf{$Position, x, m$}} & \tiny{0} & \tiny{0.7} & \tiny{1.8} & \tiny{3.4} & \tiny{5.1} & \tiny{6.3} & \tiny{7.3} & \tiny{8.0} & \tiny{8.4}\\ \hline
 \end{tabular}\\
 Use second-order correct \textbf{(a)} centered finite-difference, 
-\textbf{(b)} forward finite-difference, and \textbf{(c)} backward finitedifference methods.
+\textbf{(b)} forward finite-difference, and \textbf{(c)} backward finitedifference methods.
 
 \textbf{21.14} A plane is being tracked by radar, and data are taken
 every second in polar coordinates $\theta$ and $r$.\\
 \begin{tabular}{lcccccc}
 \hline
 
-	\small{\textbf{$ t $, s}} & \small{200} & \small{202} & \small{204} & \small{206} & \small{208} & \small{21C}\\
+	{\textbf{$ t $, s}} & {200} & {202} & {204} & {206} & {208} & {21C}\\
 	
-	\small{\textbf{$\theta$, (rad)}} & \small{0.75} & \small{0.72} & \small{0.70} & \small{0.68} & \small{0.67} & \small{0.66}\\
+	{\textbf{$\theta$, (rad)}} & {0.75} & {0.72} & {0.70} & {0.68} & {0.67} & {0.66}\\
 	
-	\small{\textbf{$ r $, m}} & \small{5120} & \small{5370} & \small{5560} & \small{5800} & \small{6030} & \small{6240}\\
+	{\textbf{$ r $, m}} & {5120} & {5370} & {5560} & {5800} & {6030} & {6240}\\
 		
 \hline
-\end{tabular}\\
-At 206 seconds, use the centered finite-difference (secondorder correct) to find the vector expressions for velocity v
-and acceleration a. The velocity and acceleration given in
+\end{tabular}
+At 206 seconds, use the centered finite-difference (secondorder correct) to find the vector expressions for velocity v
+and acceleration a. The velocity and acceleration given in
 polar coordinates are
 
 $\vec{v} = \dot{r} \vec{e}_{r} + r \dot{\theta} \vec{e}_{\theta} \; \; \; \; \textit{and} \; \; \; \; \vec{a} = (\ddot{r} - r \dot{\theta}^{2}) \vec{e}_{r} + (r \ddot{\theta} + 2\vec{r} \vec{\theta} \vec{e}_{\theta} $\\
 
 \textbf{21.15} Use regression to estimate the acceleration at each
-time for the following data with second-, third-, and fourthorder polynomials. Plot the results:\\
+time for the following data with second-, third-, and fourthorder polynomials. Plot the results:\\
 \begin{tabular}{lcccccccccc}
 \hline
 
-	\small{\textbf{t}} & \small{1} & \small{2} & \small{3.25} & \small{4.5} & \small{6} & \small{7} & \small{8} & \small{8.5} & \small{9.3} & \small{10}\\
+	{\textbf{t}} & {1} & {2} & {3.25} & {4.5} & {6} & {7} & {8} & {8.5} & {9.3} & {10}\\
 	
-	\small{\textbf{v}} & \small{10} & \small{12} & \small{11} & \small{14} & \small{17} & \small{16} & \small{12} & \small{14} & \small{14} & \small{10}\\
+	{\textbf{v}} & {10} & {12} & {11} & {14} & {17} & {16} & {12} & {14} & {14} & {10}\\
 
-\hline
+	\hline
 \end{tabular}\
 
 \textbf{21.16} The normal distribution is defined as
@@ -958,11 +960,11 @@ distribution:\\
 	
 	\footnotesize{\textbf{f(x)}} & \footnotesize{0.05399} & \footnotesize{0.12952} & \footnotesize{0.24197} & \footnotesize{0.35207} & \footnotesize{0.39894}\\
 	
-	\vspace{}\\
+	\vspace{0,1in}\\
 	
-	\footnotesize{\textbf{x}} & \footnotesize{0.5} & \footnotesize{1} & \footnotesize{1.5} & \footnotesize{2} & \vspace{}\\
+	\footnotesize{\textbf{x}} & \footnotesize{0.5} & \footnotesize{1} & \footnotesize{1.5} & \footnotesize{2} & \vspace{0,1in}\\
 	
-	\footnotesize{\textbf{f(x)}} & \footnotesize{0.35207} & \footnotesize{0.24197} & \footnotesize{0.12952} & \footnotesize{0.05399} & \vspace{}\\
+	\footnotesize{\textbf{f(x)}} & \footnotesize{0.35207} & \footnotesize{0.24197} & \footnotesize{0.12952} & \footnotesize{0.05399} & \vspace{0,1in}\\
 
 \hline
 \end{tabular}\
@@ -982,20 +984,20 @@ below. Use finite-difference approximations that are second order correct, $O (x
 \hline
 \end{tabular}
 
-\textbf{21.19} The objective of this problem is to compare secondorder accurate forward, backward, and centered finitedifference approximations of the first derivative of a function
+\textbf{21.19} The objective of this problem is to compare secondorder accurate forward, backward, and centered finitedifference approximations of the first derivative of a function
 to the actual value of the derivative. This will be done for
 
 	$$f(x) = e^{-2x} - x$$
 
 \begin{enumerate}
-	\item[\textbf{(a)}] Use calculus to determine the correct value of the derivative at $x = 2$
+	\item[\textbf{(a)}] Use calculus to determine the correct value of the derivative at $x = 2$
 	
 	\item[\textbf{(b)}] Develop an M-file function to evaluate the centered
-finite-difference approximations, starting with $x=0.5$. Thus, for the first evaluation, the $x$ values for the centered difference approximation will be $x = 2 \pm 0.5$ or
+finite-difference approximations, starting with $x=0.5$. Thus, for the first evaluation, the $x$ values for the centered difference approximation will be $x = 2 \pm 0.5$ or
 $x = 1.5$ and $2.5$. Then, decrease in increments of $0.1$
 down to a minimum value of $\Delta x = 0.01$.
 
-	\item[\textbf{(c)}] Repeat part \textbf{(b)} for the second-order forward and backward differences. (Note that these can be done at the same
+	\item[\textbf{(c)}] Repeat part \textbf{(b)} for the second-order forward and backward differences. (Note that these can be done at the same
 time that the centered difference is computed in the loop.)
  
 	\item[\textbf{(d)}] Plot the results of \textbf{(b)} and \textbf{(c)} versus $x$. Include the exact
@@ -1003,48 +1005,48 @@ result on the plot for comparison.
 \end{enumerate}
 
 \textbf{21.20} You have to measure the flow rate of water through a
-small pipe. In order to do it, you place a bucket at the pipe’s
+small pipe. In order to do it, you place a bucket at the pipe's
 outlet and measure the volume in the bucket as a function of
 time as tabulated below. Estimate the flow rate at $t = 7$ s.\\
 \begin{tabular}{lcccc}
 \hline
 
-	\small{\textbf{Time, s}} & \small{0} & \small{1} & \small{5} & \small{8}\\
+	{\textbf{Time, s}} & {0} & {1} & {5} & {8}\\
 	
-	\small{\textbf{Volume, $cm^{3}$}} & \small{0} & \small{1} & \small{8} & \small{16.4}\\
+	{\textbf{Volume, $cm^{3}$}} & {0} & {1} & {8} & {16.4}\\
 
 \hline
 \end{tabular}
 
 \textbf{21.21} The velocity $v$ (m/s) of air flowing past a flat surface
-is measured at several distances y (m) away from the surface. Use $Newton’s viscosity law$ to determine the shear stress $\tau (N/m^{2})$ at the surface $(y=0)$,
+is measured at several distances y (m) away from the surface. Use $Newton's viscosity law$ to determine the shear stress $\tau (N/m^{2})$ at the surface $(y=0)$,
 
 $ \tau = \mu \dfrac{du}{dy} $\
 Assume a value of dynamic viscosity $\mu = 1.8 x 10^{-5} N \cdot{} s/m^{2}$.\\
 \begin{tabular}{lcccccc}
 \hline
 
-	\small{\textbf{$y$, m}} & \small{0} & \small{0.002} & \small{0.006} & \small{0.012} & \small{0.018} & \small{0.024}\\
+	{\textbf{$y$, m}} & {0} & {0.002} & {0.006} & {0.012} & {0.018} & {0.024}\\
 	
-	\small{\textbf{$u$, m/s}} & \small{0} & \small{0.287} & \small{0.899} & \small{1.915} & \small{3.048} & \small{4.299}\\
+	{\textbf{$u$, m/s}} & {0} & {0.287} & {0.899} & {1.915} & {3.048} & {4.299}\\
 	
 \hline
 \end{tabular}
 
-\textbf{21.22} $Fick’s first diffusion law$ states that
+\textbf{21.22} $Fick's first diffusion law$ states that
 \begin{equation}
 \tag{P21.22}
 \textrm{Mass ux} = -D\dfrac{dc}{dx}
 \end{equation}\\
 where mass flux = the quantity of mass that passes across a
-unit area per unit time $(g/cm^{2}/s), D=a$ diffusion coefficient $(cm^{2}/s), c = \textrm \; {concentration} (g/cm^{3}), \; \textrm{and} \; x = \textrm{distance} \; (cm)$. An environmental engineer measures the following concentration of a pollutant in the pore waters of sediments underlying a lake ($x = 0$ at the sediment-water interface and
+unit area per unit time $(g/cm^{2}/s), D=a$ diffusion coefficient $(cm^{2}/s), c = \textrm \; {concentration} (g/cm^{3}), \; \textrm{and} \; x = \textrm{distance} \; (cm)$. An environmental engineer measures the following concentration of a pollutant in the pore waters of sediments underlying a lake ($x = 0$ at the sediment-water interface and
 increases downward): \\
 \begin{tabular}{lcccc}
 \hline
 
-	\textbf{$x$, cm} & \vspace{} & 0 & 1 & 3\\
+	\textbf{$x$, cm} & \vspace{0,1in} & 0 & 1 & 3\\
 	
-	\textbf{$c, 10^{-6} g/cm^{3}$} & \vspace{} & 0.06 & 0.32 & 0.6\\
+	\textbf{$c, 10^{-6} g/cm^{3}$} & \vspace{0,1in} & 0.06 & 0.32 & 0.6\\
 
 \hline
 \end{tabular}\\
@@ -1053,50 +1055,50 @@ estimate the derivative at $x = 0$. Employ this estimate in
 conjunction with Eq. (P21.22) to compute the mass flux of
 pollutant out of the sediments and into the overlying waters $(D=1.52 x 10^{-6} cm^{2}/s)$. For a lake with $3.6 x 10^{6} m^{2}$ of
 sediments, how much pollutant would be transported into
-the lake over a year’s time? 
+the lake over a year's time? 
 
 \textbf{21.23} The following data were collected when a large oil
 tanker was loading: \\
 \begin{tabular}{lccccccc}
-\hline
+	\hline
 
 	\scriptsize{\textbf{$t$, min}} & \scriptsize{0} & \scriptsize{10} & \scriptsize{20} & \scriptsize{30} & \scriptsize{45} & \scriptsize{60} & \scriptsize{75}\\
 	
 	\scriptsize{$V$, $10^{6}$ barrels} & \scriptsize{0.4} & \scriptsize{0.7} & \scriptsize{0.77} & \scriptsize{0.88} & \scriptsize{1.05} & \scriptsize{1.17} & \scriptsize{1.35}\\
 
-\hline
+	\hline
 \end{tabular}\\
 Calculate the flow rate $Q$ (i.e., $dV/dt$) for each time to the
 order of $h^{2}$.
 
-\textbf{21.24} Fourier’s law is used routinely by architectural engineers to determine heat flow through walls. The following
+\textbf{21.24} Fourier's law is used routinely by architectural engineers to determine heat flow through walls. The following
 temperatures are measured from the surface $(x = 0)$ into a
 stone wall: \\
 \begin{tabular}{lcccccccccccc}
-\hline
+	\hline
 
-	$x$, m & \vspace{} & \vspace{} & \vspace{} & 0 & \vspace{} & \vspace{} & \vspace{} & 0.08 & \vspace{} & \vspace{} & \vspace{} & 0.16\\
+	$x$, m & \vspace{0,1in} & \vspace{0,1in} & \vspace{0,1in} & 0 & \vspace{0,1in} & \vspace{0,1in} & \vspace{0,1in} & 0.08 & \vspace{0,1in} & \vspace{0,1in} & \vspace{0,1in} & 0.16\\
 	
-	$T$, ^{\circ}C & \vspace{} & \vspace{} & \vspace{} & 19 & \vspace{} & \vspace{} & \vspace{} & 17 & \vspace{} & \vspace{} & \vspace{} & 15\\
+	$T$, $^{\circ}C$ & \vspace{0,1in} & \vspace{0,1in} & \vspace{0,1in} & 19 & \vspace{0,1in} & \vspace{0,1in} & \vspace{0,1in} & 17 & \vspace{0,1in} & \vspace{0,1in} & \vspace{0,1in} & 15\\
 
 
-\hline
+	\hline
 \end{tabular}\\
 If the flux at $x = 0$ is $60 W/m^2$, compute $k$.
 
-\textbf{21.25} The horizontal surface area $A_{s} (m^2)$ of a lake at a particular depth can be computed from volume by differentiation: 
+\textbf{21.25} The horizontal surface area $A_{s} (m^2)$ of a lake at a particular depth can be computed from volume by differentiation: 
 
 $A_{s}(z) = \dfrac{dV}{dz} (z)$
 \\
 where V = volume ($m^3$) and $z$ = depth (m) as measured
-from the surface down to the bottom. The average concentration of a substance that varies with depth, $\overline{c} (g/m^3)$, can be
+from the surface down to the bottom. The average concentration of a substance that varies with depth, $\overline{c} (g/m^3)$, can be
 computed by integration:
 
 $\overline{c} = \dfrac{\int^{Z}_{0} c(z) A_{s}(z)dz}  {\int^{Z}_{0} A_{s}(z)dz   }$
 \\
-where $Z$ = the total depth (m). Determine the average concentration based on the following data:\\
+where $Z$ = the total depth (m). Determine the average concentration based on the following data:\\
 \begin{tabular}{lccccc}
-\hline
+	\hline
 
 	\footnotesize{\textbf{$z$, m}} & \footnotesize{0} & \footnotesize{4} & \footnotesize{8} & \footnotesize{12} & \footnotesize{16}\\
 	
@@ -1104,66 +1106,66 @@ where $Z$ = the total depth (m). Determine the average concentration based on t
 	
 	\footnotesize{$c, g/m^3$} & \footnotesize{10.2} & \footnotesize{8.5} & \footnotesize{7.4} & \footnotesize{5.2} & \footnotesize{4.1}\\ 
 
-\hline
+	\hline
 \end{tabular}
 
-\textbf{21.26} Faraday’s law characterizes the voltage drop across
+\textbf{21.26} Faraday's law characterizes the voltage drop across
 an inductor as
 
 $V_{L} = L\dfrac{di}{dt}$
 \\
 where $V_{L}$ = voltage drop (V), L = inductance (in henrys; 
-1 H = 1 V · s/A), i = current (A), and t = time (s). Determine the voltage drop as a function of time from the following data for an inductance of 4 H.
+1 H = 1 V · s/A), i = current (A), and t = time (s). Determine the voltage drop as a function of time from the following data for an inductance of 4 H.
 \\
 \begin{tabular}{lcccccc}
-\hline
+	\hline
 
 	$t$ \; & 0 \; & 0.1 \; & 0.2 \; & 0.3 \; & 0.5 \; & 0.7\\
 	
 	$i$ \; & 0 \; & 0.16 \; & 0.32 \; & 0.56 \; & 0.84 \; & 2.0\\
 
-\hline
+	\hline
 \end{tabular}
 \\
 
 
-\textbf{21.27} Based on Faraday’s law (Prob. 21.26), use the following voltage data to estimate the inductance if a current of 2 A
+\textbf{21.27} Based on Faraday's law (Prob. 21.26), use the following voltage data to estimate the inductance if a current of 2 A
 is passed through the inductor over 400 milliseconds.\\
 \begin{tabular}{lcccccccccc}
-\hline
+	\hline
 
 	 \tiny{\textbf{$t$, ms}} &  \tiny{0} &  \tiny{10} &  \tiny{20} &  \tiny{40} &  \tiny{60} &  \tiny{80} &  \tiny{120} &  \tiny{180} &  \tiny{280} &  \tiny{400}\\
 	 
 	 \tiny{\textbf{$V$, volts}} & \tiny{0} & \tiny{18} & \tiny{29} & \tiny{44} & \tiny{49} & \tiny{46} & \tiny{35} & \tiny{26} & \tiny{15} & \tiny{7}\\	
 
-\hline
+	 \hline
 \end{tabular}
 
-\textbf{21.28} The rate of cooling of a body (Fig. P21.28) can be expressed as
+\textbf{21.28} The rate of cooling of a body (Fig. P21.28) can be expressed as
 
 $\dfrac{dT}{dt} = -k(T-T_{a})$
 \\
 where $T$ = temperature of the body ($^{\circ}C$), $T_{a}$ = temperature of
-the surrounding medium ($^{\circ}C$), and $k = a$ proportionality constant (per minute). Thus, this equation (called $Newton’s law of cooling$) specifies that the rate of cooling is proportional to
+the surrounding medium ($^{\circ}C$), and $k = a$ proportionality constant (per minute). Thus, this equation (called $Newton's law of cooling$) specifies that the rate of cooling is proportional to
 
 
 \end{multicols}
 \begin{figure}[hbt!]
 	\includegraphics[width=0.50\textwidth]{pic.21.28}
 	\label{pic.21.28}
-\end{figure}\\
+\end{figure}
 \begin{multicols}{2}
-the difference in the temperatures of the body and of the surrounding medium. If a metal ball heated to $80 ^{\circ}C$ is dropped
+the difference in the temperatures of the body and of the surrounding medium. If a metal ball heated to $80 ^{\circ}C$ is dropped
 into water that is held constant at $T_{a} = 20 ^{\circ}C$, the temperature
 of the ball changes, as in\\
 \begin{tabular}{lcccccc}
-\hline
+	\hline
 
-	\small{\textbf{Time, min}} & \small{0} & \small{5} & \small{10} & \small{15} & \small{20} & \small{25}\\
+	{\textbf{Time, min}} & {0} & {5} & {10} & {15} & {20} & {25}\\
 	
-	\small{\textbf{$T,^{\circ}$C}} & \small{80} & \small{44.5} & \small{30.0} & \small{24.1} & \small{21.7} & \small{20.7}\\
+	{\textbf{$T,^{\circ}$C}} & {80} & {44.5} & {30.0} & {24.1} & {21.7} & {20.7}\\
 	
-\hline
+	\hline
 \end{tabular}\\
 \\
 Utilize numerical differentiation to determine $dT/dt$ at each
@@ -1171,23 +1173,23 @@ value of time. Plot $dT/dt$ versus $T - T_{a}$ and employ linear
 regression to evaluate $k$.
 
 \textbf{21.29} The enthalpy of a real gas is a function of pressure as
-described below. The data were taken for a real fluid. Estimate the enthalpy of the fluid at 400 K and 50 atm (evaluate
+described below. The data were taken for a real fluid. Estimate the enthalpy of the fluid at 400 K and 50 atm (evaluate
 the integral from 0.1 atm to 50 atm).
 
 $H = \int^{P}_{0} \left(V - T \left( \dfrac{\partial V}{\partial T} \right)_{P}\right)dP  $\\
 \\
 \\
 \begin{tabular}{cccc}
-\hline
-\vspace{}
+	\hline
+\vspace{0,1in}
 
-	\vspace{} & \vspace{} & $V$, L & \vspace{}\\
+	\vspace{0,1in} & \vspace{0,1in} & $V$, L & \vspace{0,1in}\\
 	
-\hline
+	\hline
 	
 	\textbf{$P$, atm} & \textbf{$T$ = 350 K} & \textbf{$T$ = 400 K} & \textbf{$T$ = 450 K}\\
 	
-\hline
+	\hline
 	
 	0.1 & 220 & 250 & 282.5\\
 	5 & 4.1 & 4.7 & 5.23\\
@@ -1200,34 +1202,34 @@ $H = \int^{P}_{0} \left(V - T \left( \dfrac{\partial V}{\partial T} \right)_{P}\
 	50 & 0.54 & 0.6 & 0.62\\
 		
 	
-\hline
+	\hline
 \end{tabular}
 
 \vspace{0,15 cm}
 
-\textbf{21.30} For fluid flow over a surface, the heat flux to the surface can be computed with Fourier’s law: y = distance normal to the surface (m). The following measurements are made for air flowing over a flat plate where y = distance normal to the surface:\\
+\textbf{21.30} For fluid flow over a surface, the heat flux to the surface can be computed with Fourier's law: y = distance normal to the surface (m). The following measurements are made for air flowing over a flat plate where y = distance normal to the surface:\\
 \begin{tabular}{lcccc}
-\hline
+	\hline
 
 	\textbf{$y$, cm} & 0 & 1 & 3 & 5\\
 	
 	\textbf{$T$}, K & 900 & 480 & 270 & 210\\
 	
-\hline
+	\hline
 \end{tabular}\\
-If the plate’s dimensions are 200 cm long and 50 cm wide,
-and $k = 0.028 J/(s · m · K)$, \textbf{(a)} determine the flux at the surface, and \textbf{(b)} the heat transfer in watts. Note that 1 J = 1 W· s.
+If the plate's dimensions are 200 cm long and 50 cm wide,
+and $k = 0.028 J/(s · m · K)$, \textbf{(a)} determine the flux at the surface, and \textbf{(b)} the heat transfer in watts. Note that 1 J = 1 W· s.
 
-\textbf{21.31} The pressure gradient for laminar flow through a constant radius tube is given by
+\textbf{21.31} The pressure gradient for laminar flow through a constant radius tube is given by
 
-$\dfrac{dp}{dx} = - \dfrac{8\muQ}{\pi r^4}$\\
-where $p$ = pressure ($N/m^2$), $x$ = distance along the tube’s
+$\dfrac{dp}{dx} = - \dfrac{8\mu Q}{\pi r^4}$\\
+where $p$ = pressure ($N/m^2$), $x$ = distance along the tube's
 centerline (m), $μ$ = dynamic viscosity ($N · s/m^2$), $Q$ = flow
 $(m^3/s)$ and r = radius (m).
 \begin{enumerate}
 	\item[\textbf{(a)}] Determine the pressure drop for a 10-cm length tube
 for a viscous liquid ($μ = 0.005 N · s/m^2, density = ρ = 1 × 103 kg/m^3$) with a flow of $10 × 10−6 m^3/s$ and the following varying radii along its length: 
-\end{enumerate}\\
+\end{enumerate}
 \begin{tabular}{lccccccc}
 \hline
 
@@ -1248,38 +1250,38 @@ where $v$ = velocity).
 
 
 \textbf{21.32} The following data for the specific heat of benzene
-were generated with an $n$th-order polynomial. Use numerical differentiation to determine $n$.\\
+were generated with an $n$th-order polynomial. Use numerical differentiation to determine $n$.\\
 \begin{tabular}{lcccc}
-\hline
+	\hline
 
 	\tiny{\textbf{$T$, K}} & \tiny{300} & \tiny{400} & \tiny{500} & \tiny{600}\\
 	
 	\tiny{\textbf{$C_{p}$, kJ/(kmol $\cdot$ K)}} &  \tiny{82.888} & \tiny{112.136} & \tiny{136.933} & \tiny{157.744}\\
 	
-	\vspace{}\\
+	\vspace{0,1in}\\
 	
 	\tiny{\textbf{$T$, K}} & \tiny{700} & \tiny{800} & \tiny{900} & \tiny{1000}\\
 	
 	\tiny{\textbf{$C_{p}$, kJ/(kmol $\cdot$ K)}} & \tiny{175.036} & \tiny{189.273} & \tiny{200.923} & \tiny{210.450}\\
 
-\hline
+	\hline
 \end{tabular}
 
 \textbf{21.33} The specific heat at constant pressure $c_{p}$ [J/(kg · K)]
 of an ideal gas is related to enthalpy by
 
   $ c_{p} = \dfrac{dh}{dT} $\\
-where $h$ = enthalpy (kJ/kg), and $T$ = absolute temperature (K). The following enthalpies are provided for carbon dioxide ($CO_{2}$) at several temperatures. Use these values to
-determine the specific heat in J/(kg · K) for each of the tabulated temperatures. Note that the atomic weights of carbon
+where $h$ = enthalpy (kJ/kg), and $T$ = absolute temperature (K). The following enthalpies are provided for carbon dioxide ($CO_{2}$) at several temperatures. Use these values to
+determine the specific heat in J/(kg · K) for each of the tabulated temperatures. Note that the atomic weights of carbon
 and oxygen are 12.011 and 15.9994 g/mol, respectively\\
 \begin{tabular}{lcccc}
-\hline
+	\hline
 
 	\textbf{$T$, K} & 750 & 800 & 900 & 1000\\
 	
 	\textbf{$h$, kJ/kmol} & 29,629 & 32,179 & 37,405 & 42,769\\
 
-\hline
+	\hline
 \end{tabular}
 
 
@@ -1302,13 +1304,13 @@ method and linear regression to determine $k$ and $n$ for the
 following data for the conversion of ammonium cyanate to
 urea:\\
 \begin{tabular}{lccccc}
-\hline
+	\hline
 
 	\textbf{$t$, min} & 0 & 5 & 15 & 30 & 45\\
 
 	\textbf{$c$, mole} & 0.750 & 0.594 & 0.420 & 0.291 & 0.223\\
 	
-\hline
+	\hline
 \end{tabular}
 
 
@@ -1317,8 +1319,8 @@ $g/(m^2 · d)$] is an important parameter in determining the
 dissolved oxygen content of a natural water. It is measured
 by placing a sediment core in a cylindrical container 
 (Fig. P21.35). After carefully introducing a layer of distilled,
-oxygenated water above the sediments, the container is covered to prevent gas transfer. A stirrer is used to mix the water
-gently, and an oxygen probe tracks how the water’s oxygen
+oxygenated water above the sediments, the container is covered to prevent gas transfer. A stirrer is used to mix the water
+gently, and an oxygen probe tracks how the water's oxygen
 concentration decreases over time. The SOD can then be
 computed as
 
@@ -1326,37 +1328,37 @@ $ \textnormal{SOD} = -H\dfrac{do}{dt} $\\
 where $H$ = the depth of water (m), $o$ = oxygen concentration
 ($g/m^3$), and $t$ = time (d).
 \end{multicols}
-\pagebreak
+
 \begin{figure}[hbt!]
 	\includegraphics[width=0.50\textwidth]{pic.21.35}
 	\label{pic.21.35}
-\end{figure}\\
+\end{figure}
 \begin{multicols}{2}
 
-Based on the following data and $H$ = 0.1 m, use numerical differentiation to generate plots of \textbf{(a)} SOD versus
+Based on the following data and $H$ = 0.1 m, use numerical differentiation to generate plots of \textbf{(a)} SOD versus
 time and \textbf{(b)} SOD versus oxygen concentration:\\
 \begin{tabular}{lccccccc}
-\hline
+	\hline
 
 	\scriptsize{\textbf{$t$, d}} & \scriptsize{0} & \scriptsize{0.125} & \scriptsize{0.25} & \scriptsize{0.375} & \scriptsize{0.5} & \scriptsize{0.625} & \scriptsize{0.75}\\
 	
 	\scriptsize{\textbf{$o$, mg/L}} & \scriptsize{10} & \scriptsize{7.11} & \scriptsize{4.59} & \scriptsize{2.57} & \scriptsize{1.15} & \scriptsize{0.33} & \scriptsize{0.03}\\
 	
-\hline
+	\hline
 \end{tabular}
 
 \textbf{21.36} The following relationships can be used to analyze
 uniform beams subject to distributed loads:
 
-\small{$$ \dfrac{dy}{dx} = \theta(x) \; \; \dfrac{d\theta}{dx} = \dfrac{M(x)}{EI} \; \; \dfrac{dM}{dx} = V(x) \; \; \dfrac{dV}{dx} = -\omega (x) $$}\\
-where $x$ = distance along beam (m), $y$ = deflection (m),$\theta(x)$ = slope (m/m), E = modulus of elasticity (Pa = $N/m^2$),
+{$$ \dfrac{dy}{dx} = \theta(x) \; \; \dfrac{d\theta}{dx} = \dfrac{M(x)}{EI} \; \; \dfrac{dM}{dx} = V(x) \; \; \dfrac{dV}{dx} = -\omega (x) $$}\\
+where $x$ = distance along beam (m), $y$ = deflection (m),$\theta(x)$ = slope (m/m), E = modulus of elasticity (Pa = $N/m^2$),
 I = moment of inertia ($m^4$), M(x) = moment (N m), V($x$) =
 shear (N), and $w(x)$ = distributed load (N/m). For the case of
 a linearly increasing load (recall Fig. P5.13), the slope can
 be computed analytically as 
 \begin{equation}
 \tag{P21.36}
-\samll{\theta(x) = \dfrac{\omega_{0}}{120EIL}(-5x^4 + 6L^2x^2 - L^4)}
+{\theta(x) = \dfrac{\omega_{0}}{120EIL}(-5x^4 + 6L^2x^2 - L^4)}
 \end{equation}\\
 Employ \textbf{(a)} numerical integration to compute the deflection
 (in m) and \textbf{(b)} numerical differentiation to compute the
@@ -1369,25 +1371,25 @@ beam are set at $y$(0) = $y$(L) = 0. Be careful of units.
 \textbf{21.37} You measure the following deflections along the
 length of a simply supported uniform beam (see Prob. 21.36)\\
 \begin{tabular}{lcccc}
-\hline
+	\hline
 
 	\textbf{$x$, m} \; 0 &  0.375 & 0.75 & 1.125 & 1.5\\
 
 	\textbf{$y$, cm} \; 0 & -0.2571 & -0.9484 & -1.9689 & -3.2262\\
 	
-	\vspace{}\\
+	\vspace{0,1in}\\
 	
 	\textbf{$x$, m} & 1.875 & 2.25 & 2.625 & 3\\
 	
 	\textbf{$y$, cm} & -4.6414 & -6.1503 & -7.7051 & -9.275\\
 
-\hline
+	\hline
 \end{tabular}\\
 Employ numerical differentiation to compute the slope, the
 moment (in N m), the shear (in N) and the distributed load
-(in N/m). Use the following parameter values in your computation: $E$ = 200 GPa, and $I$ = 0.0003 $m^4$.
+(in N/m). Use the following parameter values in your computation: $E$ = 200 GPa, and $I$ = 0.0003 $m^4$.
 
-\textbf{21.38} Evaluate $ \partial f/ \partial x $, $ \partial f / \partial y $, and $ \partial f (\partial x \partial ) $ for the following function at $x=y=1$ \textbf{(a)} analytically and \textbf{(b)} numerically $ \Delta x = \Delta y = 0.0001 $:
+\textbf{21.38} Evaluate $ \partial f/ \partial x $, $ \partial f / \partial y $, and $ \partial f (\partial x \partial ) $ for the following function at $x=y=1$ \textbf{(a)} analytically and \textbf{(b)} numerically $ \Delta x = \Delta y = 0.0001 $:
 
 $ f(x,y) =3xy + 3x - x^3 - 3y^3 $
 

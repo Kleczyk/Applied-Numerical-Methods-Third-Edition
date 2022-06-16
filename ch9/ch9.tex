@@ -539,39 +539,39 @@ $n-1$ & $n,n$ & (1)(2) & (1)(3)
 
 \noindent Therefore, the total addition/subtraction flops for elimination can be computed as \bigskip
 
-$\sum_{k=1}^{n-1}(n-k)(n+1-k)=\sum_{k=1}^{n-1}\left[n(n+1)-k(2 n+1)+k^{2}\right]$ \hfill{(9.16)} 
+$\sum_{k=1}^{n-1}(n-k)(n+1-k)=\sum_{k=1}^{n-1}\left[n(n+1)-k(2 n+1)+k^{2}\right]$ \hfill{(9.16)}
 \bigskip
 
 Or
 $$
 n(n+1) \sum_{k=1}^{n-1} 1-(2 n+1) \sum_{k=1}^{n-1} k+\sum_{k=1}^{n-1} k^{2}
-$$\hfill{(9.17)} 
+$$\hfill{(9.17)}
 
 Applying some of the relationships from Eq. (9.14) yields
 $$
 \left[n^{3}+O(n)\right]-\left[n^{3}+O\left(n^{2}\right)\right]+\left[\frac{1}{3} n^{3}+O\left(n^{2}\right)\right]=\frac{n^{3}}{3}+O(n)
-$$\hfill{(9.18)} 
+$$\hfill{(9.18)}
 
 A similar analysis for the multiplication/division flops yields
 $$
 \left[n^{3}+O\left(n^{2}\right)\right]-\left[n^{3}+O(n)\right]+\left[\frac{1}{3} n^{3}+O\left(n^{2}\right)\right]=\frac{n^{3}}{3}+O\left(n^{2}\right)
-$$\hfill{(9.19)} 
+$$\hfill{(9.19)}
 
 Summing these results gives
 $$
 \frac{2 n^{3}}{3}+O\left(n^{2}\right)
-$$\hfill{(9.20)} 
+$$\hfill{(9.20)}
 
 Thus, the total number of flops is equal to $2 n^{3} / 3$ plus an additional component proportional to terms of order $n^{2}$ and lower. The result is written in this way because as $n$ gets large, the $O\left(n^{2}\right)$ and lower terms become negligible. We are therefore justified in concluding that for large $n$, the effort involved in forward elimination converges on $2 n^{3} / 3$.
 
 Because only a single loop is used, back substitution is much simpler to evaluate. The number of addition/subtraction flops is equal to $n(n-1) / 2$. Because of the extra division prior to the loop, the number of multiplication/division flops is $n(n+1) / 2$. These can be added to arrive at a total of
 $$
 n^{2}+O(n)
-$$\hfill{(9.21)} 
+$$\hfill{(9.21)}
 
 Thus, the total effort in naive Gauss elimination can be represented as\bigskip
 
-$\frac{2 n^{3}}{3}+O\left(n^{2}\right)+n^{2}+O(n) \stackrel{\text { as } n \text { increases }}{\longrightarrow} \frac{2 n^{3}}{3}+O\left(n^{2}\right)$\hfill{(9.22)} 
+$\frac{2 n^{3}}{3}+O\left(n^{2}\right)+n^{2}+O(n) \stackrel{\text { as } n \text { increases }}{\longrightarrow} \frac{2 n^{3}}{3}+O\left(n^{2}\right)$\hfill{(9.22)}
 \bigskip
 
 Two useful general conclusions can be drawn from this analysis:
@@ -624,7 +624,7 @@ The following example illustrates the advantages of partial pivoting. Aside from
     Note that in this form the first pivot element, $a_{11}=0.0003$, is very close to zero. Then repeat the computation, but partial pivot by reversing the order of the equations. The exact solution is $x_{1}=1 / 3$ and $x_{2}=2 / 3$.
 
     \noindent\textbf{Solution.}\quad Multiplying the first equation by $1 /(0.0003)$ yields\\
-    
+
     $$
     x_{1}+10,000 x_{2}=6667
     $$
@@ -665,7 +665,7 @@ The following example illustrates the advantages of partial pivoting. Aside from
     \bigskip
 
     Elimination and substitution again yields $x_{2}=2 / 3$. For different numbers of significant figures, $x_{1}$ can be computed from the first equation, as in
-    
+
     $$
     x_{1}=\frac{1-(2 / 3)}{1}
     $$
@@ -673,7 +673,7 @@ The following example illustrates the advantages of partial pivoting. Aside from
     This case is much less sensitive to the number of significant figures in the computation:
     \bigskip
 
-    \begin{tabular}{clcc} 
+    \begin{tabular}{clcc}
     Significant Figgures & \multicolumn{1}{c}{$x_{2}$} & \multicolumn{1}{c}{$x_{1}$} & \multicolumn{1}{c}{ Absolute Value of Percent Relative Error for $x_{1}$} \\
     \hline 3 & $0.667$ & $0.333$ & $0.1$ \\
     4 & $0.6667$ & $0.3333$ & $0.01$ \\
@@ -821,7 +821,7 @@ An algorithm to solve such systems can be directly patterned after Gauss elimina
     200.8
     \end{array}\right\}
     $$
-    
+
     \noindent\textbf{Solution.}\quad As with Gauss elimination, the first step involves transforming the matrix to upper triangular form. This is done by multiplying the first equation by the factor $e_{2} / f_{1}$ and subtracting the result from the second equation. This creates a zero in place of $e_{2}$ and transforms the other coefficients to new values,\\
 
     $$
@@ -904,7 +904,7 @@ Recall that the computational effort for Gauss elimination was proportional to $
 \textbf{Background.} Linear algebraic equations can arise when modeling distributed systems. For example, Fig. $9.7$ shows a long, thin rod positioned between two walls that are held at constant temperatures. Heat flows through the rod as well as between the rod and the surrounding air. For the steady-state case, a differential equation based on heat conservation can be written for such a system as
 
 $$
-\frac{d^{2} T}{d x^{2}}+h^{\prime}\left(T_{a}-T\right)=0 
+\frac{d^{2} T}{d x^{2}}+h^{\prime}\left(T_{a}-T\right)=0
 $$ \hfill{(9.24)}
 
 \begin{figure}[H]
@@ -935,5 +935,303 @@ $$
 \frac{T_{i+1}-2 T_{i}+T_{i-1}}{\Delta x^{2}}+h^{\prime}\left(T_{a}-T_{i}\right)=0
 $$
 
+Collecting terms and substituting the parameters gives
+\begin{equation}
+-T_{i-1}+2.04T_{i}-T_{i+1}=0.8\tag{9.26}
+\end{equation}
+
+Thus, Eq. (9.24) has been transformed from a differential equation into an algebraic equation. Equation (9.26) can now be applied to each of the interior nodes:
+\begin{equation}
+-T_{0}+2.04T_{1}-T_{2}=0.8
+\end{equation}
+\begin{equation}
+-T_{1}+2.04T_{2}-T_{3}=0.8
+\end{equation}
+\begin{equation}
+-T_{2}+2.04T_{3}-T_{4}=0.8
+\end{equation}
+\begin{equation}
+-T_{3}+2.04T_{4}-T_{5}=0.8\tag{9.27}
+\end{equation}
+
+The values of the fixed end temperatures, $T_{0}=40$ and $T_{5}=200$, can be substituted and moved to the right-hand side. The results are four equations with four unknowns expressed in matrix form as
+\begin{equation}
+\left [\begin{array}{ccccc}
+2.04 	& -1 	& 0 	& 0	 	\\
+-1 		& 2.04	& -1 	& 0 	\\
+0 		& -1 	& 2.04	& -1 	\\
+0 		& 0 	& -1 	& 2.04	\\
+\end{array} \right ]
+\begin{Bmatrix}
+T_{1}\\
+T_{2}\\
+T_{3}\\
+T_{4}\\
+\end{Bmatrix} =
+\begin{Bmatrix}
+40.8\\
+0.8\\
+0.8\\
+200.8\\
+\end{Bmatrix}\tag{9.28}
+\end{equation}
+
+So our original differential equation has been converted into an equivalent system of linear algebraic equations. Consequently, we can use the techniques described in this chapter to solve for the temperatures. For example, using MATLAB
+\begin{lstlisting}[numbers=none]
+>> A=[2.04 -1 0 0
+	-1 2.04 -1 0
+	0 -1 2.04 -1
+	0 0 -1 2.04];
+>> b=[40.8 0.8 0.8 200.8]';
+>> T=(A\b)'
+T = 65.9698 93.7785 124.5382 159.4795
+\end{lstlisting}
+A plot can also be developed comparing these results with the analytical solution obtained with Eq. (9.25),
+\begin{lstlisting}[numbers=none]
+>> T=[40 T 200];
+>> x=[0:2:10];
+>> xanal=[0:10];
+>> TT=@(x) 73.4523*exp(0.1*x)-53.4523* ...
+	exp(-0.1*x)+20;
+>> Tanal=TT(xanal);
+>> plot(x,T,'o',xanal,Tanal)
+\end{lstlisting}
+As in Fig. 9.8, the numerical results are quite close to those obtained with calculus.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_9_8}
+	\caption{\textsf{A plot of temperature versus distance along a heated rod. Both analytical (line) and numerical (points) solutions are displayed.}}
+	\label{fig:fig_9_8}
+\end{figure}
+
+In addition to being a linear system, notice that Eq. (9.28) is also tridiagonal. We can use an efficient solution scheme like the M-file in Fig. 9.6 to obtain the solution:
+\begin{lstlisting}[numbers=none]
+>> e=[0 -1 -1 -1];
+>> f=[2.04 2.04 2.04 2.04];
+>> g=[-1 -1 -1 0];
+>> r=[40.8 0.8 0.8 200.8];
+>> Tridiag(e,f,g,r)
+ans = 65.9698 93.7785 124.5382 159.4795
+\end{lstlisting}
+The system is tridiagonal because each node depends only on its adjacent nodes.
+Because we numbered the nodes sequentially, the resulting equations are tridiagonal. Such
+cases often occur when solving differential equations based on conservation laws.
+
+
+\pagebreak
+\subsection*{PROBLEMS}
+
+\begin{multicols}{2}
+\begin{enumerate}
+	\item Determine the number of total flops as a function of the number of equations $n$ for the tridiagonal algorithm (Fig. 9.6).
+	\item Use the graphical method to solve
+		$$2x_{1}-6x_{2}=-18$$
+		$$-x_{1}+8x_{2}=40$$
+		Check your results by substituting them back into the equations.
+	\item Given the system of equations
+		$$0.77x_{1}+x_{2}=14.25$$
+		$$1.2x_{1}+1.7x_{2}=20$$
+		\begin{enumerate}
+			\item Solve graphically and check your results by substituting them back into the equations.
+			\item On the basis of the graphical solution, what do you expect regarding the condition of the system?
+			\item Compute the determinant.
+		\end{enumerate}
+	\item Given the system of equations
+		$$2x_{2}+5x_{3}=1$$
+		$$2x_{1}+x_{2}+x_{3}=1$$
+		$$3x_{1}+x_{2}=2$$
+		\begin{enumerate}
+			\item Compute the determinant.
+			\item Use Cramer’s rule to solve for the x’s.
+			\item Use Gauss elimination with partial pivoting to solve for the x’s. As part of the computation, calculate the determinant in order to verify the value computed in (a)
+			\item Substitute your results back into the original equations to check your solution.
+		\end{enumerate}
+	\item Given the equations
+		$$0.5x_{1}-x_{2}=-9.5$$
+		$$1.02x_{1}-2x_{2}=-18.8$$
+		\begin{enumerate}
+			\item Solve graphically.
+			\item Compute the determinant.
+			\item On the basis of \textbf{(a)} and \textbf{(b)}, what would you expect regarding the system’s condition?
+			\item Solve by the elimination of unknowns.
+			\item Solve again, but with $a_{11}$ modified slightly to 0.52. Interpret your results.
+		\end{enumerate}
+	\item Given the equations
+		$$10x_{1}+2x_{2}-x_{3}=27$$
+		$$-3x_{1}-5x_{2}+2x_{3}=-61.5$$
+		$$x_{1}+x_{2}+6x_{3}=-21.5$$
+		\begin{enumerate}
+			\item Solve by naive Gauss elimination. Show all steps of the computation.
+			\item Substitute your results into the original equations to check your answers.
+		\end{enumerate}
+	\item Given the equations
+		$$2x_{1}-6x_{2}-x_{3}=-38$$
+		$$-3x_{1}-x_{2}+7x_{3}=-34$$
+		$$-8x_{1}+x_{2}-2x_{3}=-20$$
+		\begin{enumerate}
+			\item Solve by Gauss elimination with partial pivoting. As part of the computation, use the diagonal elements to calculate the determinant. Show all steps of the computation.
+			\item Substitute your results into the original equations to check your answers.
+		\end{enumerate}
+	\item Perform the same calculations as in Example 9.5, but for the tridiagonal system:
+\begin{equation}
+\left [\begin{array}{ccccc}
+0.8 	& -0.4 	& 	 	\\
+-0.4	& 0.8	& -0.4 	\\
+ 		& -0.4 	& 0.8	\\
+\end{array} \right ]
+\begin{Bmatrix}
+x_{1}\\
+x_{2}\\
+x_{3}\\
+\end{Bmatrix} =
+\begin{Bmatrix}
+41\\
+25\\
+105\\
+\end{Bmatrix}
+\end{equation}
+	\item Figure P9.9 shows three reactors linked by pipes. As indicated, the rate of transfer of chemicals through each pipe is equal to a flow rate ($Q$, with units of cubic meters per second) multiplied by the concentration of the reactor from which the flow originates ($c$, with units of milligrams per cubic meter). If the system is at a steady state, the transfer into each reactor will balance the transfer out. Develop mass-balance equations for the reactors and solve the three simultaneous linear algebraic equations for their concentrations.
+	\item A civil engineer involved in construction requires 4800, 5800, and 5700 $m^{3}$ of sand, fine gravel, and coarse gravel, respectively, for a building project. There are three
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\linewidth]{fig_9_9}
+		\caption{\textsf{Three reactors linked by pipes. The rate of mass transfer through each pipe is equal to the product of flow \textbf{$Q$} and concentration $c$ of the reactor from which the flow originates.}}
+		\label{fig:fig_9_9}
+	\end{figure}
+	pits from which these materials can be obtained. The composition of these pits is
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\linewidth]{fig_9_10}
+	\end{figure}
+	How many cubic meters must be hauled from each pit in order to meet the engineer’s needs?
+	\item An electrical engineer supervises the production of three types of electrical components. Three kinds of material - metal, plastic, and rubber—are required for production. The amounts needed to produce each component are
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\linewidth]{fig_9_11}
+	\end{figure}
+	If totals of 2.12, 0.0434, and 0.164 kg of metal, plastic, and rubber, respectively, are available each day, how many components can be produced per day?
+	\item As described in Sec. 9.4, linear algebraic equations can arise in the solution of differential equations. For example, the following differential equation results from a steady-state mass balance for a chemical in a one-dimensional canal:
+	$$0=D\frac{d^{2}c}{dx^{2}}-U\frac{dc}{dx}-kc$$
+	where c = concentration, t = time, x = distance, D = diffusion coefficient, U = fluid velocity, and $k=a$ first-order decay rate. Convert this differential equation to an equivalent system of simultaneous algebraic equations. Given $D=2$, $U=1$, $k=0.2$, $c(0)=80$ and $c(10)=10$, solve these equations from $x=0$ to 10 and develop a plot of concentration versus distance.
+	\item A stage extraction process is depicted in Fig. P9.13. In such systems, a stream containing a weight fraction $y_{in}$ of a chemical enters from the left at a mass flow rate of $F_{1}$. Simultaneously, a solvent carrying a weight fraction $x_{in}$ of the same chemical enters from the right at a flow rate of $F_{2}$. Thus, for stage $i$, a mass balance can be represented as
+	$$ F_{1}y_{i-1}+F_{2}x_{i+1}=F_{1}y_{i}+F_{2}x_{i} $$
+	\begin{flushright}
+	(P9.13a)
+	\end{flushright}
+	At each stage, an equilibrium is assumed to be established between $y_{i}$ and $x_{i}$ as in
+	$$ K=\frac{x_{i}}{y_{i}} $$
+	\begin{flushright}
+	(P9.13b)
+	\end{flushright}
+	where $K$ is called a distribution coefficient. Equation (P9.13b) can be solved for $x_{i}$ and substituted into Eq. (P9.13a) to yield
+	$$y_{i-1}-(1+\frac{F_{2}}{F_{1}}K)y_{i}+(\frac{F_{2}}{F_{1}}K)y_{i+1}=0$$
+	\begin{flushright}
+	(P9.13c)
+	\end{flushright}
+	If $F_{1}=400 kg/h$, $y_{in}=0.1$, $F_{2}=800 kg/h$, $x_{in}=0$, and $K=5$, determine the values of $y_{out}$ and $x_{out}$ if a five-stage reactor is used. Note that Eq. (P9.13c) must be modified to account for the inflow weight fractions when applied to the first and last stages.
+	\item A peristaltic pump delivers a unit flow ($Q_{1}$) of a highly viscous fluid. The network is depicted in Fig. P9.14. Every pipe section has the same length and diameter. The mass and mechanical energy balance can be simplified to obtain the
+\end{enumerate}
+\end{multicols}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig_9_12}
+	\caption{\textsf{A stage extraction process.}}
+	\label{fig:fig_9_12}
+\end{figure}
+\pagebreak
+\begin{multicols}{2}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\linewidth]{fig_9_13}
+		\caption{}
+		\label{fig:fig_9_13}
+	\end{figure}
+	flows in every pipe. Solve the following system of equations to obtain the flow in every stream.
+
+	$Q_{3}+2Q_{4}-2Q_{2}=0$ \hfill $Q_{1}=Q_{2}+Q_{3}$
+
+	$Q_{5}+2Q_{6}-2Q_{4}=0$ \hfill $Q_{3}=Q_{4}+Q_{5}$
+
+	$3Q_{7}-2Q_{6}=0$ \hfill $Q_{5}=Q_{6}+Q_{7}$
+	\begin{enumerate}\setcounter{enumi}{14}
+		\item A truss is loaded as shown in Fig. P9.15. Using the following set of equations, solve for the 10 unknowns, $AB$, $BC$, $AD$, $BD$, $CD$, $DE$, $CE$, $A_{x}$, $A_{y}$, and $E_{y}$.
+
+	$A_{x}+AD=0$ \hfill $-24-CD-(4/5)CE=0$
+
+	$A_{y}+AB=0$ \hfill $-AD+DE-(3/5)BD=0$
+
+	$74+BC+(3/5)BD=0$ \hfill $CD+(4/5)BD=0$
+
+	$-AB-(4/5)BD=0$ \hfill $-DE-(3/5)CE=0$
+
+	$-BC+(3/5)CE=0$ \hfill $E_{y}+(4/5)CE=0$
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=1\linewidth]{fig_9_14}
+			\caption{}
+			\label{fig:fig_9_14}
+		\end{figure}
+		\item A \textit{pentadiagonal} system with a bandwidth of five can be expressed generally as
+\[\begin{bmatrix}
+f_{1} 	& g_{1}	& h_{1}	& 	 		& 	 		& 	 		& 		 	& 		\\
+e_{2}	& f_{2} 	& g_{2}	& h_{2}	& 	 		& 	 		& 		 	& 		\\
+d_{3} 	& e_{3}	& f_{3} 	& g_{3}	& h_{3}	& 	 		& 		 	& 		\\
+	 	& 			& \cdot	& \cdot	& \cdot	& 	 		& 		 	& 		\\
+	 	& 			& 	 		& \cdot	& \cdot 	& \cdot	& 		 	& 		\\
+	 	& 			& 	 		&			& \cdot	& \cdot	& \cdot 	& 		\\
+	 	& 			& 	 		&			& d_{n-1}	& e_{n-1}	& f_{n-1}	&g_{n-1}\\
+	 	& 			& 	 		&			& 			& d_{n}	& e_{n} 	&f_{n}	\\
+\end{bmatrix}\]
+
+\[\times \begin{Bmatrix}
+x_{1}\\
+x_{2}\\
+x_{3}\\
+\cdot\\
+\cdot\\
+\cdot\\
+x_{n-1}\\
+x_{n}
+\end{Bmatrix} = \begin{Bmatrix}
+r_{1}\\
+r_{2}\\
+r_{3}\\
+\cdot\\
+\cdot\\
+\cdot\\
+r_{n-1}\\
+r_{n}
+\end{Bmatrix}\]
+Develop an M-file to efficiently solve such systems without
+pivoting in a similar fashion to the algorithm used for tridiagonal matrices in Sec. 9.4.1. Test it for the following case:
+\[\begin{bmatrix}
+8 	& -2	& -1	& 0		& 0		\\
+-2	& 9 	& -4	& -1	& 0		\\
+-1 	& -3	& 7 	& -1	& -2	\\
+0 	& -4	& -2 	& 12	& -5	\\
+0 	& 0		& -7 	& -3	& 15	\\
+\end{bmatrix} \begin{Bmatrix}
+x_{1}\\
+x_{2}\\
+x_{3}\\
+x_{4}\\
+x_{5}
+\end{Bmatrix} = \begin{Bmatrix}
+5\\
+2\\
+1\\
+1\\
+5
+\end{Bmatrix}\]
+	\item Develop an M-file function based on Fig. 9.5 to implement Gauss elimination with partial pivoting. Modify the function so that it computes and returns the determinant (with the correct sign), and detects whether the system is singular based on a near-zero determinant. For the latter, define "near-zero" as being when the absolute value of the determinant is below a tolerance. When this occurs, design the function so that an error message is displayed and the function terminates. Here is the functions first line:
+	\begin{verbatim}
+	function [x, D] = GaussPivotNew(A, b, tol)
+	\end{verbatim}
+	where $D =$ the determinant and $tol =$ the tolerance. Test your program for Prob. 9.5 with $tol = 1 \times 10^{-5}$.
+	\end{enumerate}
+
+\end{multicols}
 
 \end{document}

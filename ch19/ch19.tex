@@ -386,7 +386,7 @@ following Eq. (19.18).
 \begin{center}
 \begin{tabular}{rlrr}
 \hline $\boldsymbol{n}$ & \multicolumn{1}{c}{$\boldsymbol{h}$} & \multicolumn{1}{c}{$\boldsymbol{I}$} & $\boldsymbol{\varepsilon}_{\boldsymbol{t}}(\%)$ \\
-\hline 2 & $0.4$ & $1.0688$ & $34.9$ \\
+2 & $0.4$ & $1.0688$ & $34.9$ \\
 3 & $0.2667$ & $1.3695$ & $16.5$ \\
 4 & $0.2$ & $1.4848$ & $9.5$ \\
 5 & $0.16$ & $1.5399$ & $6.1$ \\
@@ -602,7 +602,7 @@ from $a=0$ to $b=0.8$. Employ Eq. (19.27) to estimate the error. Recall that the
 
 		\subsection{ Simpson's 3/8 Rule}
 
-		In a similar manner to the derivation of the trapezoidal and Simpson’s 1/3 rule, a thirdorder Lagrange polynomial can be fit to four points and integrated to yield
+		In a similar manner to the derivation of the trapezoidal and Simpson's 1/3 rule, a thirdorder Lagrange polynomial can be fit to four points and integrated to yield
 
 		$$
 I=\frac{3 h}{8}\left[f\left(x_{0}\right)+3 f\left(x_{1}\right)+3 f\left(x_{2}\right)+f\left(x_{3}\right)\right]
@@ -728,8 +728,8 @@ where $h_{i}=$ the width of segment $i$. Note that this was the same approach us
 	\textit{TABLE 19.3} Data for $f(x)=0.2+25 x-200 x^{2}+675 x^{3}-900 x^{4}+400 x^{5}$, with unequally spaced values of $x$.\\
 	\begin{center}
 \begin{tabular}{cccc}
-\hline $\boldsymbol{x}$ & $\boldsymbol{f}(\boldsymbol{x} \boldsymbol{)}$ & $\boldsymbol{x}$ & $\boldsymbol{f}(\boldsymbol{x} \boldsymbol{)}$ \\
-\hline $0.00$ & $0.200000$ & $0.44$ & $2.842985$ \\
+	\hline $\boldsymbol{x}$ & $\boldsymbol{f}(\boldsymbol{x} \boldsymbol{)}$ & $\boldsymbol{x}$ & $\boldsymbol{f}(\boldsymbol{x} \boldsymbol{)}$ \\
+	\hline $0.00$ & $0.200000$ & $0.44$ & $2.842985$ \\
 $0.12$ & $1.309729$ & $0.54$ & $3.507297$ \\
 $0.22$ & $1.305241$ & $0.64$ & $3.181929$ \\
 $0.32$ & $1.743393$ & $0.70$ & $2.363000$ \\
@@ -979,191 +979,471 @@ Here is an example of how this function can be used to compute the double integr
 		2816
 \end{lstlisting}
 
-\section{CASE STUDY: COMPUTING WORK WITH NUMERICAL INTEGRATION}
-\noindent \textbf{Background.} The calculation of work is an important component of many areas of
-engineering and science. The general formula is
+\section*{{CASE STUDY}}\,COMPUTING WORK WITH NUMERICAL INTEGRATION \\
 
-$$
-		\text { Work }= \text { force } \times \text { distance }
-		$$
+\large\textbf{Background.} \,  The calculation of work is an important
+component of many areas of engineering and science. The general formula is\\
 
-		When you were introduced to this concept in high school physics, simple applications were
-		presented using forces that remained constant throughout the displacement. For example,
-		if a force of 10 N was used to pull a block a distance of 5 m, the work would be calculated
-		as 50 J (1 joule = 1 N · m).\\
-		Although such a simple computation is useful for introducing the concept, realistic
-		problem settings are usually more complex. For example, suppose that the force varies during the course of the calculation. In such cases, the work equation is reexpressed as
+Work = force x distance
 
-		\begin{equation}
-			\tag{19.33}
-W=\int_{x_{0}}^{x_{n}} F(x) d x
-\end{equation}
-where $W=$ work $(\mathrm{J}), x_{0}$ and $x_{n}=$ the initial and final positions $(\mathrm{m})$, respectively, and $F(x)=$ a force that varies as a function of position (N). If $F(x)$ is easy to integrate, Eq. (19.33) can be evaluated analytically. However, in a realistic problem setting, the force might not be expressed in such a manner. In fact, when analyzing measured data, the force might be available only in tabular form. For such cases, numerical integration is the only viable option for the evaluation.
+When you were introduced to this concept in high school physics, simple
+applications were
+presented using forces that remained constant throughout the displacement.
+For example,
+if a force of 10 N was used to pull a block a distance of 5 m, the work
+would be calculated
+as 50 J (1 joule = 1 N $\cdot$  m).
 
-Further complexity is introduced if the angle between the force and the direction of movement also varies as a function of position (Fig. 19.18). The work equation can be modified further to account for this effect, as in
+
+Although such a simple computation is useful for introducing the concept,
+realistic
+problem settings are usually more complex. For example, suppose that the
+force varies dur-ing the course of the calculation. In such cases, the work
+equation is reexpressed as
+
 \begin{equation}
-    \tag{19.34}
-W=\int_{x_{0}}^{x_{n}} F(x) \cos [\theta(x)] d x
-\end{equation}
+	\tag{19.33}
+	\mathrm{W}=\int^{X_{n}}_{x_{0}}F(x)dx
+\end{equation}\\
+where W = work (J), x0 and xn = the initial and final positions (m), respectively, and F(x) =
+a force that varies as a function of position (N). If F(x) is easy to integrate, Eq. (19.33) can
+be evaluated analytically. However, in a realistic problem setting, the force might not be ex-pressed in such a manner. In fact, when analyzing measured data, the force might be avail-able only in tabular form. For such cases, numerical integration is the only viable option for
+the evaluation.
 
-Again, if $F(x)$ and $\theta(x)$ are simple functions, Eq. (19.34) might be solved analytically. However, as in Fig. 19.18, it is more likely that the functional relationship is complicated. For this situation, numerical methods provide the only alternative for determining the integral.
-Suppose that you have to perform the computation for the situation depicted in Fig. 19.18. Although the figure shows the continuous values for $F(x)$ and $\theta(x)$, assume that, because of experimental constraints, you are provided with only discrete measurements at $x=5-\mathrm{m}$ intervals (Table 19.5). Use single- and composite versions of the trapezoidal rule and Simpson's $1 / 3$ and $3 / 8$ rules to compute work for these data.
-\vspace{0.5cm}\\
-\noindent \textbf{Solution.} The results of the analysis are summarized in Table 19.6. A percent relative error $\varepsilon_{t}$ was computed in reference to a true value of the integral of $129.52$ that was estimated on the basis of values taken from Fig. $19.18$ at 1 -m intervals.
+Further complexity is introduced if the angle between the force and the direction of
+movement also varies as a function of position (Fig. 19.18). The work equation can be
+modified further to account for this effect, as in
 
-The results are interesting because the most accurate outcome occurs for the simple two-segment trapezoidal rule. More refined estimates using more segments, as well as Simpson's rules, yield less accurate results.
+\begin{equation}
+	\tag{19.34}
+	\mathrm{W}=\int^{X_{n}}_{X_{0}}F(x)\cos[\theta(x)]dx
+\end{equation}\\
+Again, if F(x) and $\theta(x)$ are simple functions, Eq. (19.34) might be solved analytically. However, as in Fig. 19.18, it is more likely that the functional relationship is complicated. For
+this situation, numerical methods provide the only alternative for determining the integral.
 
-The reason for this apparently counterintuitive result is that the coarse spacing of the points is not adequate to capture the variations of the forces and angles. This is particularly
+Suppose that you have to perform the computation for the situation depicted in
+Fig. 19.18. Although the figure shows the continuous values for F(x) and 
+$\theta(x)$, assume that, 
+because of experimental constraints, you are provided with only discrete measurements at
+x = 5-m intervals (Table 19.5). Use single- and composite versions of the trapezoidal rule
+and Simpson's 1/3 and 3/8 rules to compute work for these data.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.8]{fig_19_18}
-   \caption{\textsf{The case of a variable force acting on a block. For this case the angle, as well as the
-   magnitude, of the force varies.}}\label{fig:fig_19_18}
+\vspace{0.1in}
+
+\large\textbf{Solution.} \, The results of the analysis are summarized in
+Table 19.6. A percent relative error $\varepsilon_{t}$ was computed in reference to a true value of the integral of 129.52 that was esti-mated on the basis of values taken from Fig. 19.18 at 1-m intervals.
+
+The results are interesting because the most accurate outcome occurs for the simple
+two-segment trapezoidal rule. More refined estimates using more segments, as well as
+Simpson's rules, yield less accurate results. 
+
+The reason for this apparently counterintuitive result is that the coarse spacing of the
+points is not adequate to capture the variations of the forces and angles. This is particularly
+
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=0.75\textwidth]{pic.001}
+	\caption{\textsf{The case of a variable force acting on a block. For
+	   this case the angle, as well as themagnitude, of the force varies.}} 
+	\label{pic.001}
 \end{figure}
 
-\textit{TABLE 19.5} Data for force $F(x)$ and angle $\theta(x)$ as a function of position $x$.
-\begin{center}
+\vspace{0,2in}
+
+\begin{table}[htb!]
+\centering
+\caption{Data for force $F(x)$ and angle $\theta(x)$ as a function of
+position $x$.}
+\def\arraystretch{1.2}
+\setlength{\tabcolsep}{36pt}
 \begin{tabular}{cccc}
-\hline $\boldsymbol{x}, \mathbf{m}$ & $\boldsymbol{F}(\boldsymbol{x}), \mathbf{N}$ & $\boldsymbol{\theta}$, rad & $\boldsymbol{F}(\boldsymbol{x}) \cos \boldsymbol{\theta}$ \\
-\hline 0 & $0.0$ & $0.50$ & $0.0000$ \\
-5 & $9.0$ & $1.40$ & $1.5297$ \\
-10 & $13.0$ & $0.75$ & $9.5120$ \\
-15 & $14.0$ & $0.90$ & $8.7025$ \\
-20 & $10.5$ & $1.30$ & $2.8087$ \\
-25 & $12.0$ & $1.48$ & $1.0881$ \\
-30 & $5.0$ & $1.50$ & $0.3537$ \\
-\hline
+	\hline
+	$x, \textbf{m}$ & $F(x),\textbf{N}$ &  $\theta, \textbf{rad}$ & $F(x) \textbf{cos}\, \theta$\\ \hline
+	0 & 0.0 & 0.50 & 0.0000\\
+	5 & 9.0 & 1.40 & 1.5297\\
+	10 & 13.0 & 0.75 & 9.5120\\
+	15 & 14.0 & 0.90 & 8.7025\\
+	20 & 10.5 & 1.30 & 2.8087\\
+	25 & 12.0 & 1.48 & 1.0881\\
+	30 & 5.0 & 1.50 & 0.3537\\ \hline
 \end{tabular}
-\end{center}
+\end{table}
 
-\textit{TABLE 19.6} Estimates of work calculated using the trapezoidal rule and Simpson's rules. The percent relative error $\varepsilon_{t}$ as computed in reference to a true value of the integral $(129.52 \mathrm{~Pa})$ that was estimated on the basis of values at $1-\mathrm{m}$ intervals.
+\pagebreak
 
-\begin{center}
-\begin{tabular}{lcrr}
-\hline Technique & Segments & Work & $\boldsymbol{\varepsilon}_{\boldsymbol{t}}\%{}$ \\
-\hline Trapezoidal rule & 1 & $5.31$ & $95.9$ \\
-& 2 & $133.19$ & $2.84$ \\
-& 3 & $124.98$ & $3.51$ \\
-& 6 & $119.09$ & $8.05$ \\
-Simpson's $1 / 3$ rule & 2 & $175.82$ & $35.75$ \\
-& 6 & $117.13$ & $9.57$ \\
-Simpson's $3 / 8$ rule & 3 & $139.93$ & $8.04$ \\
-\hline
+\begin{table}[htb!]
+\centering
+\caption{Estimates of work calculated using the trapezoidal rule and
+Simpson's rules. The percent relative error $\varepsilon_t$ as computed in
+reference to a true value of the integral (129.52 Pa) that was
+estimated on the basis of values at 1-m intervals.}
+\def\arraystretch{1.2}
+\setlength{\tabcolsep}{36pt}
+\begin{tabular}{cccc}
+	\hline
+	\textbf{Technique} & \textbf{Segments} &  \textbf{Work} & $\varepsilon_t' \,\%$\\ \hline
+	Trapezoidal rule & 1 & 5.31 & 95.9\\
+	 & 2 & 133.19 & 2.84\\
+	 & 3 & 124.98 & 3.51\\
+	 & 6 & 119.09 & 8.05\\
+	Simpson's 1/3 rule & 2 & 175.82 & 35.75\\
+	 & 6 & 117.13 & 9.57\\
+	Simpson's 3/8 rule & 3 & 139.93 & 8.04\\ \hline
 \end{tabular}
-\end{center}
+\end{table}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.8]{fig_19_19}
-   \caption{\textsf{A continuous plot of F(x) cos [$\theta$(x)] versus position with the seven discrete points used to develop
-   the numerical integration estimates in Table 19.6. Notice how the use of seven points to
-   characterize this continuously varying function misses two peaks at x = 2.5 and 12.5 m.}}\label{fig:fig_19_19}
+\vspace{0.5 in}
+
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=0.75\textwidth]{pic.003}
+	\caption{\textsf{A continuous plot of $F(x) \cos [\theta(x)]$ versus position with the seven discrete points used to develop
+the numerical integration estimates in Table 19.6. Notice how the use of seven points to
+characterize this continuously varying function misses two peaks at $x$ = 2.5 and 12.5 m.}} 
+	\label{pic.003}
 \end{figure}
 
-evident in Fig. 19.19, where we have plotted the continuous curve for the product of F(x)
-and cos [$\theta$(x)]. Notice how the use of seven points to characterize the continuously varying
-function misses the two peaks at x = 2.5 and 12.5 m. The omission of these two points effectively limits the accuracy of the numerical integration estimates in Table 19.6. The fact
+\vspace{0.2in}
+
+evident in Fig. 19.19, where we have plotted the continuous curve for the product of $F(x)$
+and cos $[\theta(x)]$. Notice how the use of seven points to characterize the continuously varying
+function misses the two peaks at $x$ = 2.5 and 12.5 m. The omission of these two points ef-fectively limits the accuracy of the numerical integration estimates in Table 19.6. The fact
 that the two-segment trapezoidal rule yields the most accurate result is due to the chance
-positioning of the points for this particular problem (Fig. 19.20).\\
-The conclusion to be drawn from Fig. 19.20 is that an adequate number of measurements must be made to accurately compute integrals. For the present case, if data were
-available at F(2.5) cos [$\theta$(2.5)] = 3.9007 and F(12.5) cos [$\theta$(12.5)] = 11.3940, we could
+positioning of the points for this particular problem (Fig. 19.20).
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.8]{fig_19_20}
-   \caption{\textsf{Graphical depiction of why the two-segment trapezoidal rule yields a good estimate of the
-   integral for this particular case. By chance, the use of two trapezoids happens to lead to an
-   even balance between positive and negative errors.}}\label{fig:fig_19_20}
+The conclusion to be drawn from Fig. 19.20 is that an adequate number of measure-ments must be made to accurately compute integrals. For the present case, if data were
+available at $F(2.5) \cos [\theta(2.5)] = 3.9007 and F(12.5) \cos [\theta(12.5)] = 11.3940$, we could
+
+\pagebreak
+
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=0.75\textwidth]{pic.004}
+	\caption{\textsf{Graphical depiction of why the two-segment trapezoidal rule yields a good estimate of the
+integral for this particular case. By chance, the use of two trapezoids happens to lead to an
+even balance between positive and negative errors.}} 
+
+\hrule
+	\label{pic.004}
 \end{figure}
 
-determine an improved integral estimate. For example, using the MATLAB trapz function, we could compute
+\vspace{0.2in}
 
-\begin{lstlisting}[numbers=none]
->> x=[0 2.5 5 10 12.5 15 20 25 30];
->> y=[0 3.9007 1.5297 9.5120 11.3940 8.7025 2.8087 ...
-1.0881 0.3537];
->> trapz(x,y)
-ans =
-132.6458
-\end{lstlisting}
+determine an improved integral estimate. For example, using the MATLAB trapz func-tion, we could compute
 
-Including the two additional points yields an improved integral estimate of 132.6458
-($\epsilon\textsubscript{t}$ = 2.16\%{}). Thus, the inclusion of the additional data incorporates the peaks that were
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=0.75\textwidth]{pic.005}
+	\label{pic.005}
+\end{figure}
+
+Including the two additional points yields an improved integral estimate of 132.6458 ($\varepsilon_t = 2.16\%$). Thus, the inclusion of the additional data incorporates the peaks that were
 missed previously and, as a consequence, lead to better results.
-\vspace{1cm}
-\section{PROBLEMS}
 
-\noindent\textit{19.1} Derive Eq. (19.4) by integrating Eq. (19.3).
-\\\noindent\textit{19.2} Evaluate the following integral:
-$$\int_{0}^{4}\left(1-e^{-x}\right) d x$$
+\vspace{0.3in}
+
+\section*{PROBLEMS} \hrule
+
+\begin{multicols}{2}
+\textbf{19.1} Derive Eq. (19.4) by integrating Eq. (19.3).
+
+\textbf{19.2} Evaluate the following integral:
+
+	$$\int^{4}_{0}|(1-e^{-x})dx$$\\
 (a) analytically, (b) single application of the trapezoidal rule,
 (c) composite trapezoidal rule with n = 2 and 4, (d) single
 application of Simpson's 1/3 rule, (e) composite Simpson's
-1/3 rule with n = 4, (f) Simpson's 3/8 rule, and (g) composite Simpson's rule, with n = 5. For each of the numerical
+1/3 rule with n = 4, (f) Simpson's 3/8 rule, and (g) com-posite Simpson's rule, with n = 5. For each of the numerical
 estimates (b) through (g), determine the true percent relative
 error based on (a).
-\\\noindent\textit{19.3} Evaluate the following integral:
-$$\int_{0}^{\pi / 2}(8+4 \cos x) d x$$
+
+\textbf{19.3} Evaluate the following integral:
+
+	$$\int^{\pi/2}_{0}(8+4\cos{x})dx$$\\	
 (a) analytically, (b) single application of the trapezoidal rule,
 (c) composite trapezoidal rule with n = 2 and 4, (d) single
 application of Simpson's 1/3 rule, (e) composite Simpson's
-1/3 rule with n = 4, (f) Simpson's 3/8 rule, and (g) composite Simpson's rule, with n = 5. For each of the numerical
+1/3 rule with n = 4, (f) Simpson's 3/8 rule, and (g) com-posite Simpson's rule, with n = 5. For each of the numerical
 estimates (b) through (g), determine the true percent relative
 error based on (a).
-\\\noindent\textit{19.4} Evaluate the following integral:
-$$\int_{-2}^{4}\left(1-x-4 x^{3}+2 x^{5}\right) d x$$
+
+\textbf{19.4} Evaluate the following integral:
+	
+	$$\int^{4}_{-2}(1-x-4x^{3}+2x^5)dx$$
 (a) analytically, (b) single application of the trapezoidal rule,
-(c) composite trapezoidal rule with n = 2 and 4, (d)single application of Simpson's 1/3 rule, (e) Simpson's 3/8 rule, and
+(c) composite trapezoidal rule with n = 2 and 4, (d)single ap-plication of Simpson's 1/3 rule, (e) Simpson's 3/8 rule, and
 (f)Boole's rule. For each of the numerical estimates(b)through
 (f), determine the true percent relative error based on (a).
-\\\noindent\textit{19.5} The function
-$$
-f(x)=e^{-x}
-$$
-can be used to generate the following table of unequally spaced data:
-\begin{center}
-\begin{tabular}{llllllll}
-\hline $\boldsymbol{x}$ & 0 & $0.1$ & $0.3$ & $0.5$ & $0.7$ & $0.95$ & $1.2$ \\
-$\boldsymbol{f}(\boldsymbol{x})$ & 1 & $0.9048$ & $0.7408$ & $0.6065$ & $0.4966$ & $0.3867$ & $0.3012$ \\
-\hline
-\end{tabular}
-\end{center}
 
-Evaluate the integral from a = 0 to b = 0.6 using (a) analytical means, (b) the trapezoidal rule, and (c) a combination
+\textbf{19.5} The function
+
+	$$f(x)=e^{-x}$$\\
+can be used to generate the following table of unequally spaced data:\\
+\begin{tabular}{cccccccc}
+	\hline
+\tiny{$x$} & \tiny{0} & \tiny{0.1} & \tiny{0.3} & \tiny{0.5} & \tiny{0.7} & \tiny{0.95} & \tiny{1.2}\\
+\tiny{$f(x)$} & \tiny{1} & \tiny{0.9048} & \tiny{0.7408} & \tiny{0.6065} & \tiny{0.4966} & \tiny{0.3867} & \tiny{0.3012}\\ \hline
+\end{tabular}\\
+\vspace{0.1pt}\\
+Evaluate the integral from a = 0 to b = 0.6 using (a) ana-lytical means, (b) the trapezoidal rule, and (c) a combination
 of the trapezoidal and Simpson's rules wherever possible to
 attain the highest accuracy. For (b) and (c), compute the true
 percent relative error.
 
-\noindent\textit{19.6} Evaluate the double integral
-$$\int_{-2}^{2} \int_{0}^{4}\left(x^{2}-3 y^{2}+x y^{3}\right) d x d y$$
+\textbf{19.6} Evaluate the double integral
+
+	$$\int^{2}_{-2}\int^{4}_{0}(x^{2}-3v^{2}+xy^{3})dx\,dy$$\\
 (a) analytically, (b) using the composite trapezoidal rule
 with n = 2, and (c) using single applications of Simpson's
-1/3 rule. For (b) and (c), compute the percent relative error.\\
-\\\noindent\textit{19.7} Evaluate the triple integral
-$$
-\int_{-4}^{4} \int_{0}^{6} \int_{-1}^{3}\left(x^{3}-2 y z\right) d x d y d z
-$$
-(a) analytically, and (b) using single applications of Simpson's $1 / 3$ rule. For (b), compute the true percent relative error.\\
-\\\noindent\textit{19.8} Determine the distance traveled from the following velocity data:
+1/3 rule. For (b) and (c), compute the percent relative error.
 
-\begin{center}
-\begin{tabular}{llllllllllr}
-\hline $\boldsymbol{t}$ & 1 & 2 & $3.25$ & $4.5$ & 6 & 7 & 8 & $8.5$ & 9 & 10 \\
-$\boldsymbol{v}$ & 5 & 6 & $5.5$ & 7 & $8.5$ & 8 & 6 & 7 & 7 & 5 \\
-\hline
-\end{tabular}
-\end{center}
+\textbf{19.7} Evaluate the triple integral
+	
+	$$\int^{4}_{-4}\int^{6}_{0}\int^{3}_{-1}(x^{3}-2yz)dx\,dy\,dz$$\\
+(a) analytically, and (b) using single applications of
+Simpson's 1/3 rule. For (b), compute the true percent rela-tive error.
 
-(a) Use the trapezoidal rule. In addition, determine the average velocity.
-(b) Fit the data with a cubic equation using polynomial
+\textbf{19.8} Determine the distance traveled from the following
+velocity data:\\
+\begin{tabular}{ccccccccccc}
+	\hline
+\tiny{$t$} & \tiny{1} & \tiny{2} & \tiny{3.25} & \tiny{4.5} & \tiny{6} & \tiny{7} & \tiny{8} & \tiny{8.5} & \tiny{9} & \tiny{10}\\
+\tiny{$v$} & \tiny{5} & \tiny{6} & \tiny{5.5} & \tiny{7} & \tiny{8.5} & \tiny{8} & \tiny{6} & \tiny{7} & \tiny{7} & \tiny{5}\\ \hline
+\end{tabular}\\
+\vspace{0.1pt}\\
+
+\textbf{(a)}Use the trapezoidal rule. In addition, determine the aver-age velocity
+
+\textbf{(b)} Fit the data with a cubic equation using polynomial
 regression. Integrate the cubic equation to determine the
 distance.
 
-\noindent\textit{19.9}
+\textbf{19.9} Water exerts pressure on the upstream face of a dam as
+shown in Fig. P19.9. The pressure can be characterized by
+
+	$$p(z) = \rho g(D-z)$$\\
+where p(z) = pressure in pascals (or N/m2) exerted at an
+elevation z meters above the reservoir bottom; ρ = density of
+water, which for this problem is assumed to be a constant
+$10^3 kg/m^3$; g = acceleration due to gravity ($9.81 m/s^2$); and
+D = elevation (in m) of the water surface above the reservoir
+bottom. According to Eq. (P19.9), pressure increases linearly
+with depth, as depicted in Fig. P19.9a. Omitting atmospheric
+pressure (because it works against both sides of the dam face
+and essentially cancels out), the total force ft can be deter-mined by multiplying pressure times the area of the dam face
+(as shown in Fig. P19.9b). Because both pressure and area
+vary with elevation, the total force is obtained by evaluating
+
+	$$f_t=\int^{D}_{0}\rho gw(z)(D-z)dz$$
+
+\end{multicols}
+\pagebreak
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=0.75\textwidth]{pic.006}
+	\caption{\textsf{Water exerting pressure on the upstream face of a dam: ($a$) side view showing force increasing
+linearly with depth; ($b$) front view showing width of dam in meters.}} \hrule
+	\label{pic.006}
+\end{figure}
+
+\begin{multicols}{2}
+where $w(z) =$ width of the dam face (m) at elevation z
+(Fig. P19.9b). The line of action can also be obtained by
+evaluating
+
+	$$d=\dfrac{\int^{D}_{0}\rho gzw(z)(D-z)dz}{\int^{D}_{0}\rho gw(z)(D-z)dz}$$\\
+Use Simpson's rule to compute $f_t$ and $d$.
+
+\textbf{19.10} The force on a sailboat mast can be represented by the
+following function:
+
+	$$f(z)=200\left(\dfrac{z}{5+z}\right)e^{-2z/H}$$\\
+where z = the elevation above the deck and H = the height of
+the mast. The total force F exerted on the mast can be deter-mined by integrating this function over the height of the mast:
+
+	$$F=\int^{H}_{0}\:f(z)dz$$\\
+The line of action can also be determined by integration:
+
+	$$d=\dfrac{\int^{H}_{0} zf(z)dz}{\int^{H}_{0} f(z)dz}$$\\
+	
+\textbf{(a)} Use the composite trapezoidal rule to compute F and d
+for the case where $H$ = 30 ($n$ = 6).
+
+\textbf{(b)} Repeat (a), but use the composite Simpson s 1/3 rule.
+
+\textbf{19.11} A wind force distributed against the side of a sky-scraper is measured as\\
+\begin{tabular}{lccccc}
+	\hline
+\scriptsize{\textbf{Height $l$, m}} & \scriptsize{0} & \scriptsize{30} & \scriptsize{60} & \scriptsize{90} & \scriptsize{120}\\
+\scriptsize{\textbf{Force, $F(l)$, N/m}} & \scriptsize{0} & \scriptsize{340} & \scriptsize{1200} & \scriptsize{1550} & \scriptsize{2700}\\
+\vspace{0in}\\
+\scriptsize{\textbf{Height $l$, m}} & \scriptsize{150} & \scriptsize{180} & \scriptsize{210} & \scriptsize{240} & \vspace{0in} \\
+\scriptsize{\textbf{Force, $F(l)$, N/m}} & \scriptsize{3100} & \scriptsize{3200} & \scriptsize{3500} & \scriptsize{3750} & \vspace{0in} \\ \hline
+\end{tabular}\\
+\vspace{0.1pt}\\
+Compute the net force and the line of action due to this dis-tributed wind.
+
+
+\textbf{19.12} An 11-m beam is subjected to a load, and the shear
+force follows the equation
+
+	$$V(x)=5+0.25x^2$$\\
+where $V$ is the shear force, and $x$ is length in distance along
+the beam. We know that $V = dM/dx$, and $M$ is the bending
+moment. Integration yields the relationship
+
+	$$M=M_{0}+\int^{x}_{0}V\,dx$$\\
+If Mo is zero and x = 11, calculate M using (a) analytical in-tegration, (b) composite trapezoidal rule, and (c) composite
+Simpson's rules. For (b) and (c) use 1-m increments.
+
+\textbf{19.13} The total mass of a variable density rod is given by
+
+	$$m=\int^{L}_{0} \rho(x)A_c(x)dx$$\\
+where $m$ = mass, $ρ(x)$ = density, $A_c(x)$ = cross-sectional area,
+$x$ = distance along the rod and $L$ = the total length of the rod.
+The following data have been measured for a 20-m length
+rod. Determine the mass in grams to the best possible
+accuracy.\\
+\begin{tabular}{lccccccc}
+	\hline
+	\scriptsize{\textbf{$x$, m}} & \scriptsize{0} & \scriptsize{4} & \scriptsize{6} & \scriptsize{8} & \scriptsize{12} & \scriptsize{16} & \scriptsize{20}\\
+	\scriptsize{\textbf{$\rho, g/cm^3$}} & \scriptsize{4.00} & \scriptsize{3.95} & \scriptsize{3.89} & \scriptsize{3.80} & \scriptsize{3.60} & \scriptsize{3.41} & \scriptsize{3.30}\\
+	\scriptsize{\textbf{$A_{c'}cm^{2}$}} & \scriptsize{100} & \scriptsize{103} & \scriptsize{106} & \scriptsize{110} & \scriptsize{120} & \scriptsize{133} & \scriptsize{150}\\ 	\hline
+\end{tabular}
+
+\textbf{19.14} A transportation engineering study requires that you
+determine the number of cars that pass through an intersec-tion traveling during morning rush hour. You stand at the
+side of the road and count the number of cars that pass every
+4 minutes at several times as tabulated below. Use the best
+numerical method to determine (a) the total number of cars
+that pass between 7:30 and 9:15, and (b) the rate of cars
+going through the intersection per minute. (Hint: Be careful
+with units.)\\
+\begin{tabular}{p{0.6in}cccccc}
+	\hrule
+	\scriptsize{\textbf{Time (hr)}} & \scriptsize{7:30} & \scriptsize{7:45} & \scriptsize{8:00} & \scriptsize{8:15} & \scriptsize{8:45} & \scriptsize{9:15}\\
+	\scriptsize{\textbf{Rate (cars per 4 min)}} & \scriptsize{18} & \scriptsize{23} & \scriptsize{14} & \scriptsize{24} & \scriptsize{20} & \scriptsize{9}\\ \hrule
+\end{tabular}\\
+
+\textbf{19.15} Determine the average value for the data in Fig. P19.15.
+Perform the integral needed for the average in the order shown
+by the following equation:
+	
+	$$I=\int^{X_{n}}_{X_{0}}\left[\int^{y_{m}}_{y_{0}} f(x,y)dy \right]dx$$\\
+	
+\textbf{19.16} Integration provides a means to compute how much
+mass enters or leaves a reactor over a specified time period,
+as in
+
+	$$M=\int^{t_2}_{t_1}\ Q c\,dt$$\\
+where $t_1$ and $t_2$ = the initial and final times, respectively.
+This formula makes intuitive sense if you recall the analogy
+between integration and summation. Thus, the integral
+represents the summation of the product of flow times
+
+\end{multicols}
+
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=0.75\textwidth]{pic.007}
+	\caption{\textsf{}} \hrule
+	\label{pic.007}
+\end{figure}
+
+\begin{multicols}{2}
+concentration to give the total mass entering or leaving from
+$t_1$ to $t_2$. Use numerical integration to evaluate this equation
+for the data listed below:\\
+\begin{tabular}{lcccccccc}
+	\hline
+	\scriptsize{\textbf{$t$, min}} & \scriptsize{0} & \scriptsize{10} & \scriptsize{20} & \scriptsize{30} & \scriptsize{35} & \scriptsize{40} & \scriptsize{45} & \scriptsize{50}\\
+	\scriptsize{\textbf{$Q, m^3/min$}} & \scriptsize{4} & \scriptsize{4.8} & \scriptsize{5.2} & \scriptsize{5.0} & \scriptsize{4.6} & \scriptsize{4.3} & \scriptsize{4.3} & \scriptsize{5.0}\\
+	\scriptsize{\textbf{$c, mg/m^3$}} & \scriptsize{10} & \scriptsize{35} & \scriptsize{55} & \scriptsize{52} & \scriptsize{40} & \scriptsize{37} & \scriptsize{32} & \scriptsize{34}\\ 	\hline
+
+\end{tabular}
+
+\textbf{19.17} The cross-sectional area of a channel can be com-puted as
+
+	$$A_c=\int^{B}_{0}H(y)dy$$\\
+where $B$ = the total channel width (m), $H$ = the depth (m),
+and $y$ = distance from the bank (m). In a similar fashion, the
+average flow $Q$ ($m^3/s$) can be computed as
+
+	$$Q=\int^{B}_{0}U(y)H(y)dy$$\\
+where $U$ = water velocity (m/s). Use these relationships and
+a numerical method to determine $A_c$ and $Q$ for the following
+data:\\
+\begin{tabular}{lcccccc}
+	\hline
+	\scriptsize{\textbf{$y$,m}} & \scriptsize{0} & \scriptsize{2} & \scriptsize{4} & \scriptsize{5} & \scriptsize{6} & \scriptsize{9}\\
+	\scriptsize{\textbf{$H$,m}} & \scriptsize{0.5} & \scriptsize{1.3} & \scriptsize{1.25} & \scriptsize{1.8} & \scriptsize{1} & \scriptsize{0.25}\\
+	\scriptsize{\textbf{$U$,m/s}} & \scriptsize{0.03} & \scriptsize{0.06} & \scriptsize{0.05} & \scriptsize{0.13} & \scriptsize{0.11} & \scriptsize{0.02}\\ 	\hline
+\end{tabular}
+\vspace{0.2in}
+
+\textbf{19.18} The average concentration of a substance $\bar{c}(g/m^3
+)$ in a lake where the area $A_{s}(m^2)$ varies with depth $z$(m) can be
+computed by integration:
+	
+	$$\bar{c} = \dfrac{\int^{Z}_{0}c(z)A_{S}(z)dz} {\int^{Z}_{0} A_{S}(z)dz}$$\\
+where $Z$ = the total depth (m). Determine the average con-centration based on the following data:\\
+\begin{tabular}{lccccc}
+	\hline
+	\scriptsize{\textbf{$z$,m}} & \scriptsize{0} & \scriptsize{4} & \scriptsize{8} & \scriptsize{12} & \scriptsize{16}\\
+	\scriptsize{\textbf{$A,10^{6}m^{2}$}} & \scriptsize{9.8175} & \scriptsize{5.1051} & \scriptsize{1.9635} & \scriptsize{0.3927} & \scriptsize{0.0000}\\
+	\scriptsize{\textbf{$c, g/m^{3}$}} & \scriptsize{10.2} & \scriptsize{8.5} & \scriptsize{7.4} & \scriptsize{5.2} & \scriptsize{4.1}\\ 	\hline
+\end{tabular}
+
+\textbf{19.19} As was done in Section 19.9, determine the work per-formed if a constant force of 1 N applied at an angle $\theta$ results
+in the following displacements. Use the $cumtrapz$ function to
+determine the cumulative work and plot the result versus $\theta$. \\
+\begin{tabular}{lccccccc}
+	\hline
+	\scriptsize{\textbf{$x$,m}} & \scriptsize{0} & \scriptsize{1} & \scriptsize{2.8} & \scriptsize{3.9} & \scriptsize{3.8} & \scriptsize{3.2} & \scriptsize{1.3}\\
+	\scriptsize{\textbf{$\theta$,deg}} & \scriptsize{0} & \scriptsize{30} & \scriptsize{60} & \scriptsize{90} & \scriptsize{120} & \scriptsize{150} & \scriptsize{180}\\ \hline
+\end{tabular}
+
+\textbf{19.20} Compute work as described in Sec. 19.9, but use the
+following equations for $F(x)$ and $\theta(x)$:
+
+	$$F(x)=1.6x-0.045x^{2}$$\\
+	$$\theta(x)=-0.00055x^{3} + 0.0123x^{2} + 0.13x$$\\
+The force is in Newtons and the angle is in radians. Perform
+the integration from x = 0 to 30 m.
+
+\textbf{19.21} As specified in the following table, a manufactured
+spherical particle has a density that varies as a function of the
+distance from its center ($r$ = 0):\\
+\begin{tabular}{lccccc}
+	\hline
+	\scriptsize{\textbf{$r$,mm}} & \scriptsize{0} & \scriptsize{0.12} & \scriptsize{0.24} & \scriptsize{0.36} & \scriptsize{0.49}\\
+	\scriptsize{\textbf{$\rho(g/m^{3}$}} & \scriptsize{6} & \scriptsize{5.81} & \scriptsize{5.14} & \scriptsize{4.29} & \scriptsize{3.39}
+	\vspace{0in}\\
+	\scriptsize{\textbf{$r$,mm}} & \scriptsize{0.62} & \scriptsize{0.79} & \scriptsize{0.86} & \scriptsize{0.93} & \scriptsize{1}\\
+	\scriptsize{\textbf{$\rho(g/m^{3}$}} & \scriptsize{2.7} & \scriptsize{2.19} & \scriptsize{2.1} & \scriptsize{2.04} & \scriptsize{2}\\ 	\hline
+\end{tabular}
+\vspace{0.2in}\\
+Use numerical integration to estimate the particle's mass
+(in g) and average density (in $g/cm^3$).
+
+\textbf{19.22} As specified in the following table, the earth's density
+varies as a function of the distance from its center ($r$ =- 0):\\
+\begin{tabular}{lcccccc}
+	\hline
+	\scriptsize{\textbf{$r$,km}} & \scriptsize{0} & \scriptsize{1100} & \scriptsize{1500} & \scriptsize{2450} & \scriptsize{3400} & \scriptsize{3630}\\
+	\scriptsize{\textbf{$\rho(g/m^{3}$}} & \scriptsize{13} & \scriptsize{12.4} & \scriptsize{12} & \scriptsize{11.2} & \scriptsize{9.7} & \scriptsize{5.7}\\
+	\vspace{0in}\\
+	\scriptsize{\textbf{$r$,km}} & \scriptsize{4500} & \scriptsize{5380} & \scriptsize{6060} & \scriptsize{6280} & \scriptsize{6380}\\
+	\scriptsize{\textbf{$\rho(g/m^{3}$}} & \scriptsize{5.2} & \scriptsize{4.7} & \scriptsize{3.6} & \scriptsize{3.4} & \scriptsize{3}\\
+	\hline
+\end{tabular}
+\vspace{0.2in}\\
+Use numerical integration to estimate the earth's mass (in met-ric tonnes) and average density (in $g/cm^3$). Develop vertically stacked subplots of (top) density versus radius, and (bottom) mass versus radius. Assume that the earth is a perfect sphere.
+	
 
 
 
+\end{multicols}
 
 \end{document}
 

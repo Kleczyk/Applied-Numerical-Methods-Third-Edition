@@ -1,11 +1,11 @@
-
+\documentclass[../main.tex]{subfiles}
 
 \begin{document}
 \part*{Initial-Value Problems}
 
 \vspace{1,5in}
 
-\begin{center}\begin{Large}\textbf{CHAPTER OBJECTIVES}\end{Large}\end{center}\\
+\begin{center}\begin{Large}\textbf{CHAPTER OBJECTIVES}\end{Large}\end{center}
 The primary objective of this chapter is to introduce you to numerical differentiation.
 Specific objectives and topics covered are
 
@@ -18,20 +18,20 @@ Euler\\
 Heun\\
 Midpoint\\
 Fourth-order RK
-	\item Knowing how to iterate the corrector of Heun’s method.
+	\item Knowing how to iterate the corrector of Heun's method.
 	\item Knowing how to implement the following Runge-Kutta methods for systems of ODEs:\\
 Euler\\
 Fourth-order RK\\
-\end{itemize}\\
+\end{itemize}
 \vspace{0.3in}
-\begin{Large}\textbf{YOU’VE GOT A PROBLEM}\end{Large}\\
+\begin{Large}\textbf{YOU'VE GOT A PROBLEM}\end{Large}\\
 We started this book with the problem of simulating the velocity of a free-falling
 bungee jumper. This problem amounted to formulating and solving an ordinary
-differential equation, the topic of this chapter. Now let’s return to this problem
+differential equation, the topic of this chapter. Now let's return to this problem
 and make it more interesting by computing what happens when the jumper reaches the end
 of the bungee cord.
 
-To do this, we should recognize that the jumper will experience different forces depending on whether the cord is slack or stretched. If it is slack, the situation is that of free
+To do this, we should recognize that the jumper will experience different forces depending on whether the cord is slack or stretched. If it is slack, the situation is that of free
 fall where the only forces are gravity and drag. However, because the jumper can now
 move up as well as down, the sign of the drag force must be modified so that it always tends
 to retard velocity,
@@ -51,7 +51,7 @@ velocity.
 nomenclature \texttt{sign(x)}}
 
 Once the cord begins to stretch, it obviously exerts an upward force on the jumper. As
-done previously in Chap. 8, Hooke’s law can be used as a first approximation of this force.
+done previously in Chap. 8, Hooke's law can be used as a first approximation of this force.
 In addition, a dampening force should also be included to account for frictional effects as
 the cord stretches and contracts. These factors can be incorporated along with gravity and
 drag into a second force balance that applies when the cord is stretched. The result is the
@@ -60,38 +60,38 @@ following differential equation:
 \tag{22.1b}
 \dfrac{dv}{dt} = g - sign(v) \dfrac{c_{d}}{m} v^2 - \dfrac{k}{m} (x-L) - \dfrac{\gamma}{m}v
 \end{equation}\\
-where $k$ is the cord’s spring constant (N/m), $x$ is vertical distance measured downward from
-the bungee jump platform (m), $L $is the length of the unstretched cord (m), and $\gamma$ is a dampening coefficient (N · s/m).
+where $k$ is the cord's spring constant (N/m), $x$ is vertical distance measured downward from
+the bungee jump platform (m), $L $is the length of the unstretched cord (m), and $\gamma$ is a dampening coefficient (N · s/m).
 
 Because Eq. (22.1b) only holds when the cord is stretched ($x > L$), the spring force
-will always be negative. That is, it will always act to pull the jumper back up. The dampening force increases in magnitude as the jumper’s velocity increases and always acts to
+will always be negative. That is, it will always act to pull the jumper back up. The dampening force increases in magnitude as the jumper's velocity increases and always acts to
 slow the jumper down.
 
-If we want to simulate the jumper’s velocity, we would initially solve Eq. (22.1a) until
+If we want to simulate the jumper's velocity, we would initially solve Eq. (22.1a) until
 the cord was fully extended. Then, we could switch to Eq. (22.1b) for periods that the cord
 is stretched. Although this is fairly straightforward, it means that knowledge of the
-jumper’s position is required. This can be done by formulating another differential equation for distance:\\
+jumper's position is required. This can be done by formulating another differential equation for distance:\\
 \begin{equation}
 \tag{22.2}
 \dfrac{dx}{dt} = v
 \end{equation}
 
-Thus, solving for the bungee jumper’s velocity amounts to solving two ordinary differential equations where one of the equations takes different forms depending on the value of one of the dependent variables. Chapters 22 and 23 explore methods for solving this and
+Thus, solving for the bungee jumper's velocity amounts to solving two ordinary differential equations where one of the equations takes different forms depending on the value of one of the dependent variables. Chapters 22 and 23 explore methods for solving this and
 similar problems involving ODEs.
 
 \vspace{0,6in}
-\chapter{22.1 OVERVIEW}
+\section{22.1 OVERVIEW}
 \vspace{0,1in}
-\hline\\
-\vspace{0,1in}\\
+\hrule
+\vspace{0,1in}
 This chapter is devoted to solving ordinary differential equations of the form
 \begin{equation}
 \tag{22.3}
 \dfrac{dy}{dt} = f(t,y)
 \end{equation}\\
-where the slope $\phi$ is called an $increment function$. According to this equation, the slope estimate of $\phi$ is used to extrapolate from an old value $y_{i}$ to a new value $y_{i+1}$ over a distance $h$ This formula can be applied step by step to trace out the trajectory of the solution into
+where the slope $\phi$ is called an $increment function$. According to this equation, the slope estimate of $\phi$ is used to extrapolate from an old value $y_{i}$ to a new value $y_{i+1}$ over a distance $h$ This formula can be applied step by step to trace out the trajectory of the solution into
 the future. Such approaches are called $one-step methods$ because the value of the increment
-function is based on information at a single point $i$. They are also referred to as $RungeKutta methods$ after the two applied mathematicians who first discussed them in the early
+function is based on information at a single point $i$. They are also referred to as $RungeKutta methods$ after the two applied mathematicians who first discussed them in the early
 1900s. Another class of methods called $multistep methods$ use information from several
 previous points as the basis for extrapolating to a new value. We will describe multistep
 methods briefly in Chap. 23.
@@ -100,21 +100,21 @@ All one-step methods can be expressed in the general form of Eq. (22.4), with th
 difference being the manner in which the slope is estimated. The simplest approach is to
 use the differential equation to estimate the slope in the form of the first derivative at ti . In
 other words, the slope at the beginning of the interval is taken as an approximation of the
-average slope over the whole interval. This approach, called Euler’s method, is discussed
+average slope over the whole interval. This approach, called Euler's method, is discussed
 next. This is followed by other one-step methods that employ alternative slope estimates
 that result in more accurate predictions.
 
 \vspace{0,6in}
-\chapter{22.2 EULER’S METHOD}
+\section{22.2 EULER'S METHOD}
 \vspace{0,1in}
-\hline\\
-\vspace{0,1in}\\
+\hrule
+\vspace{0,1in}
 The first derivative provides a direct estimate of the slope at $t_{i}$ (Fig. 22.1):
 \begin{equation}
 \tag{22.5}
 y_{i+1} = y_{i} + f(t_{i},y_{i})h
 \end{equation}\\
-This formula is referred to as $Euler’s method$ (or the Euler-Cauchy or point-slope method).
+This formula is referred to as $Euler's method$ (or the Euler-Cauchy or point-slope method).
 A new value of $y$ is predicted using the slope (equal to the first derivative at the original
 value of $t$) to extrapolate linearly over the step size h (Fig. 22.1).\\
 \begin{figure}[hbt!]
@@ -123,17 +123,17 @@ value of $t$) to extrapolate linearly over the step size h (Fig. 22.1).\\
 \end{figure}\\
 
 \vspace{0,3in}
-\chapter{Euler’s Method}
+\section{Euler's Method}
 \vspace{0,1in}
-\hline\\
+\hrule
 \vspace{0,1in}
-\textbf{Problem Statement.} Use Euler’s method to integrate $y' = 4e^{0.8t} - 0.5y$ from $t = 0$ to 4 with a step size of 1. The initial condition at $t$ = 0 is $y$ = 2. Note that the exact solution can
+\textbf{Problem Statement.} Use Euler's method to integrate $y' = 4e^{0.8t} - 0.5y$ from $t = 0$ to 4 with a step size of 1. The initial condition at $t$ = 0 is $y$ = 2. Note that the exact solution can
 be determined analytically as\\
 
 $y= \dfrac{4}{1.3} (e^{0.8t} - e^{-0.5t}) + 2e^{-0.5t} $
 
-\vspace{0.2in}\\
-\textbf{Solution.} Equation (22.5) can be used to implement Euler’s method:
+\vspace{0.2in}
+\textbf{Solution.} Equation (22.5) can be used to implement Euler's method:
 
 $y(1) = y(0) + f(0,2)(1)$\\
 
@@ -162,7 +162,7 @@ $$= 5 + [4e^{0.8(1)} - 0.5(5)](1) = 11.40216 $$
 \vspace{0,3in}
 \textbf{Table 22.1}
 Comparison of true and numerical values of the integral
-of $y' = 4e^{0.8t} - 0.5y$, with the initial condition that $y = 2$ at $t = 0$. The numerical values were computed using Euler’s
+of $y' = 4e^{0.8t} - 0.5y$, with the initial condition that $y = 2$ at $t = 0$. The numerical values were computed using Euler's
 method with a step size of 1.\\
 \begin{tabular}{lccc}
 \hline
@@ -171,7 +171,7 @@ method with a step size of 1.\\
 	
 \hline
 
-	0 \; \; \; \; \; & 2.00000 \; \; \; \; \; & 2.00000 \; \; \; \; \; & \vspace{}\\
+	0 \; \; \; \; \; & 2.00000 \; \; \; \; \; & 2.00000 \; \; \; \; \; & \vspace{0in}\\
 	
 	1 \; \; \; \; \; & 6.19463 \; \; \; \; \; & 5.00000 \; \; \; \; \; & 19.28\\
 
@@ -188,14 +188,14 @@ method with a step size of 1.\\
 \begin{figure}[hbt!]
 	\includegraphics[width=0.95\textwidth]{F22.2}
 	\label{F22.2}
-\end{figure}\\
+\end{figure}
 The true solution at t = 2.0 is 14.84392 and, therefore, the true percent relative error is
 23.19\%. The computation is repeated, and the results compiled in Table 22.1 and Fig. 22.2.
 Note that although the computation captures the general trend of the true solution, the error
 is considerable. As discussed in the next section, this error can be reduced by using a
 smaller step size.
 
-\section{Error Analysis for Euler’s Method}
+\subsection{Error Analysis for Euler's Method}
 
 The numerical solution of ODEs involves two types of error (recall Chap. 4):
 \begin{enumerate}
@@ -208,9 +208,9 @@ by a computer.
 The truncation errors are composed of two parts. The first is a local truncation error that results from an application of the method in question over a single step. The second is
 a propagated truncation error that results from the approximations produced during the previous steps. The sum of the two is the total error. It is referred to as the global truncation error.
 
-Insight into the magnitude and properties of the truncation error can be gained by deriving Euler’s method directly from the Taylor series expansion. To do this, realize that the
+Insight into the magnitude and properties of the truncation error can be gained by deriving Euler's method directly from the Taylor series expansion. To do this, realize that the
 differential equation being integrated will be of the general form of Eq. (22.3), where
-$dy/dt = y$, and $t$ and $y$ are the independent and the dependent variables, respectively. If
+$dy/dt = y$, and $t$ and $y$ are the independent and the dependent variables, respectively. If
 the solution—that is, the function describing the behavior of $y$—has continuous derivatives,
 it can be represented by a Taylor series expansion about a starting value ($t_{i}$, $y_{i}$), as in
 [recall Eq. (4.13)]:\\
@@ -223,7 +223,7 @@ where $h = t_{i+1} − t_{i}$ and $R_{n}$ = the remainder term, defined as\\
 \tag{22.7}
 R_{n} = \dfrac{y^{(n+1)}(\xi)}{(n+1)!}h^{n+1}
 \end{equation}\\
-where $\xi$ lies somewhere in the interval from $t_{i}$ to $t_{i+1}$. An alternative form can be developed by substituting Eq. (22.3) into Eqs. (22.6) and (22.7) to yield\\
+where $\xi$ lies somewhere in the interval from $t_{i}$ to $t_{i+1}$. An alternative form can be developed by substituting Eq. (22.3) into Eqs. (22.6) and (22.7) to yield\\
 \begin{equation}
 \tag{22.8}
 y_{i+1} = y_{i} + f(t_{i},y_{i})h + \dfrac{f^{'} (t_{i}, y_{i})}{2!}h^2 + \cdots + \dfrac{f^{(n-1)} (t_{i}, y_{i})}{n!}h^n + O(h^{n+1})
@@ -231,9 +231,9 @@ y_{i+1} = y_{i} + f(t_{i},y_{i})h + \dfrac{f^{'} (t_{i}, y_{i})}{2!}h^2 + \cdots
 where $O(h^{n+1})$ specifies that the local truncation error is proportional to the step size
 raised to the ($n + 1$)th power.
 
-By comparing Eqs. (22.5) and (22.8), it can be seen that Euler’s method corresponds to the Taylor series up to and including the term $f(t_{i}, y_{i})h$. Additionally, the comparison
-indicates that a truncation error occurs because we approximate the true solution using a finite number of terms from the Taylor series. We thus truncate, or leave out, a part of the true
-solution. For example, the truncation error in Euler’s method is attributable to the remaining terms in the Taylor series expansion that were not included in Eq. (22.5). Subtracting
+By comparing Eqs. (22.5) and (22.8), it can be seen that Euler's method corresponds to the Taylor series up to and including the term $f(t_{i}, y_{i})h$. Additionally, the comparison
+indicates that a truncation error occurs because we approximate the true solution using a finite number of terms from the Taylor series. We thus truncate, or leave out, a part of the true
+solution. For example, the truncation error in Euler's method is attributable to the remaining terms in the Taylor series expansion that were not included in Eq. (22.5). Subtracting
 Eq. (22.5) from Eq. (22.8) yields\\
 \begin{equation}
 \tag{22.9}
@@ -253,15 +253,15 @@ E_{a} = O(h^2)
 where $E_{a}$ = the approximate local truncation error.
 
 According to Eq. (22.11), we see that the local error is proportional to the square of
-the step size and the first derivative of the differential equation. It can also be demonstrated that the global truncation error is $O(h)$—that is, it is proportional to the step size (Carnahan et al., 1969). These observations lead to some useful conclusions:
+the step size and the first derivative of the differential equation. It can also be demonstrated that the global truncation error is $O(h)$—that is, it is proportional to the step size (Carnahan et al., 1969). These observations lead to some useful conclusions:
 
 \begin{enumerate}
 \item The global error can be reduced by decreasing the step size.
 \item The method will provide error-free predictions if the underlying function (i.e., the
 solution of the differential equation) is linear, because for a straight line the second
 derivative would be zero.
-\end{enumerate}\\
-This latter conclusion makes intuitive sense because Euler’s method uses straight-line segments to approximate the solution. Hence, Euler’s method is referred to as a first-order
+\end{enumerate}
+This latter conclusion makes intuitive sense because Euler's method uses straight-line segments to approximate the solution. Hence, Euler's method is referred to as a first-order
 method.
 
 
@@ -270,12 +270,12 @@ methods described in the following pages. That is, an nth-order method will yiel
 results if the underlying solution is an nth-order polynomial. Further, the local truncation
 error will be $O(h^{n+1})$ and the global error $O(h^n)$.
 
-\section{Stability of Euler’s Method}\\
-In the preceding section, we learned that the truncation error of Euler’s method depends on
+\subsection{Stability of Euler's Method}
+In the preceding section, we learned that the truncation error of Euler's method depends on
 the step size in a predictable way based on the Taylor series. This is an accuracy issue.
 
-The stability of a solution method is another important consideration that must be considered when solving ODEs. A numerical solution is said to be unstable if errors grow
-exponentially for a problem for which there is a bounded solution. The stability of a particular application can depend on three factors: the differential equation, the numerical
+The stability of a solution method is another important consideration that must be considered when solving ODEs. A numerical solution is said to be unstable if errors grow
+exponentially for a problem for which there is a bounded solution. The stability of a particular application can depend on three factors: the differential equation, the numerical
 method, and the step size.
 
 Insight into the step size required for stability can be examined by studying a very
@@ -290,7 +290,7 @@ $y=y_{0}e^{-at}$\\
 \\
 Thus, the solution starts at $y_{0}$ and asymptotically approaches zero.
 
-Now suppose that we use Euler’s method to solve the same problem numerically:\\
+Now suppose that we use Euler's method to solve the same problem numerically:\\
 
 $y_{i+1} = y_{i} + \dfrac{dy_{i}}{dt} h$
 \\
@@ -304,22 +304,22 @@ y_{i+1} = y_{i}(1-ah)
 \end{equation}\\
 The parenthetical quantity $1 − ah$ is called an $amplification factor$. If its absolute value is
 greater than unity, the solution will grow in an unbounded fashion. So clearly, the stability
-depends on the step size $h$. That is, if $ h > 2/a, |y_{i}| \rightarrow \infty$ as $ i \rightarrow \infty $. Based on this analysis, Euler’s method is said to be $conditionally stable$.
+depends on the step size $h$. That is, if $ h > 2/a, |y_{i}| \rightarrow \infty$ as $ i \rightarrow \infty $. Based on this analysis, Euler's method is said to be $conditionally stable$.
 
 Note that there are certain ODEs where errors always grow regardless of the method.
 Such ODEs are called $ill-conditioned$.
 
-Inaccuracy and instability are often confused. This is probably because (a) both represent situations where the numerical solution breaks down and (b) both are affected by step
+Inaccuracy and instability are often confused. This is probably because (a) both represent situations where the numerical solution breaks down and (b) both are affected by step
 size. However, they are distinct problems. For example, an inaccurate method can be very
 stable. We will return to the topic when we discuss stiff systems in Chap. 23.
 
-\section{MATLAB M-file Function: \texttt{eulode}}\\
-We have already developed a simple M-file to implement Euler’s method for the falling
-bungee jumper problem in Chap. 3. Recall from Section 3.6, that this function used Euler’s
-method to compute the velocity after a given time of free fall. Now, let’s develop a more
+\subsection{MATLAB M-file Function: \texttt{eulode}}
+We have already developed a simple M-file to implement Euler's method for the falling
+bungee jumper problem in Chap. 3. Recall from Section 3.6, that this function used Euler's
+method to compute the velocity after a given time of free fall. Now, let's develop a more
 general, all-purpose algorithm.
 
-Figure 22.3 shows an M-file that uses Euler’s method to compute values of the dependent
+Figure 22.3 shows an M-file that uses Euler's method to compute values of the dependent
 variable \texttt{y} over a range of values of the independent variable \texttt{t}. The name of the function
 holding the right-hand side of the differential equation is passed into the function as the\\
 \begin{figure}[hbt!]
@@ -333,31 +333,31 @@ h, respectively.
 The function first generates a vector \texttt{t} over the desired range of the dependent variable
 using an increment of \texttt{h}. In the event that the step size is not evenly divisible into the range,
 the last value will fall short of the final value of the range. If this occurs, the final value is
-added to \texttt{t} so that the series spans the complete range. The length of the \texttt{t} vector is determined as \texttt{n}. In addition, a vector of the dependent variable \texttt{y} is preallocated with \texttt{n} values
+added to \texttt{t} so that the series spans the complete range. The length of the \texttt{t} vector is determined as \texttt{n}. In addition, a vector of the dependent variable \texttt{y} is preallocated with \texttt{n} values
 of the initial condition to improve efficiency.
 
-At this point, Euler’s method (Eq. 22.5) is implemented by a simple loop:
+At this point, Euler's method (Eq. 22.5) is implemented by a simple loop:
 
 \begin{verbatim}
    for i = 1:n-1 
       y(i+1) = y(i) + dydt(t(i),y(i),varargin{:})*(t(i+1)-
    t(i));
    end
-\end{verbatim}\\
-Notice how a function is used to generate a value for the derivative at the appropriate values of the independent and dependent variables. Also notice how the time step is automatically calculated based on the difference between adjacent values in the vector \texttt{t}.
+\end{verbatim}
+Notice how a function is used to generate a value for the derivative at the appropriate values of the independent and dependent variables. Also notice how the time step is automatically calculated based on the difference between adjacent values in the vector \texttt{t}.
 
 The ODE being solved can be set up in several ways. First, the differential equation can
 be defined as an anonymous function object. For example, for the ODE from Example 22.1:
 
 \begin{verbatim}
    >> dydt=@(t,y) 4*exp(0.8*t) - 0.5*y;
-\end{verbatim}\\
+\end{verbatim}
 The solution can then be generated as
 
 \begin{verbatim}
    >> [t,y] = eulode(dydt,[0 4],2,1);
    >> disp([t,y])
-\end{verbatim}\\
+\end{verbatim}
 with the result (compare with Table 22.1):
 
 \begin{verbatim}
@@ -373,22 +373,22 @@ more complex problems where the definition of the ODE requires several lines of 
 such instances, creating a separate M-file is the only option.
 
 \vspace{0,3in}
-\chapter{22.3 IMPROVEMENTS OF EULER’S METHOD}
+\section{22.3 IMPROVEMENTS OF EULER'S METHOD}
 \vspace{0,1in}
-\hline\\
+\hrule
 \vspace{0,1in}
-\\
-A fundamental source of error in Euler’s method is that the derivative at the beginning of
+
+A fundamental source of error in Euler's method is that the derivative at the beginning of
 the interval is assumed to apply across the entire interval. Two simple modifications are
 available to help circumvent this shortcoming. As will be demonstrated in Section 22.4,
-both modifications (as well as Euler’s method itself) actually belong to a larger class of solution techniques called Runge-Kutta methods. However, because they have very straightforward graphical interpretations, we will present them prior to their formal derivation as
+both modifications (as well as Euler's method itself) actually belong to a larger class of solution techniques called Runge-Kutta methods. However, because they have very straightforward graphical interpretations, we will present them prior to their formal derivation as
 Runge-Kutta methods.
 
-\section{Heun’s Method}\\
-One method to improve the estimate of the slope involves the determination of two derivatives for the interval—one at the beginning and another at the end. The two derivatives are
-then averaged to obtain an improved estimate of the slope for the entire interval. This approach, called $Heun’s method$, is depicted graphically in Fig. 22.4.
+\subsection{Heun's Method}
+One method to improve the estimate of the slope involves the determination of two derivatives for the interval—one at the beginning and another at the end. The two derivatives are
+then averaged to obtain an improved estimate of the slope for the entire interval. This approach, called $Heun's method$, is depicted graphically in Fig. 22.4.
 
-Recall that in Euler’s method, the slope at the beginning of an interval
+Recall that in Euler's method, the slope at the beginning of an interval
 
 \begin{equation}
 \tag{22.14}
@@ -400,7 +400,7 @@ is used to extrapolate linearly to $y_{i+1}$:
 \tag{22.15}
 y^{0}_{i+1} = y_{i} + f( t_{i}, y_{i} )h
 \end{equation}\\
-For the standard Euler method we would stop at this point. However, in Heun’s method the $y^{0}_{i+1}$ calculated in Eq. (22.15) is not the final answer, but an intermediate prediction. This is
+For the standard Euler method we would stop at this point. However, in Heun's method the $y^{0}_{i+1}$ calculated in Eq. (22.15) is not the final answer, but an intermediate prediction. This is
 why we have distinguished it with a superscript 0. Equation (22.15) is called a $predictor equation$. It provides an estimate that allows the calculation of a slope at the end of the interval:
 
 \begin{equation}
@@ -413,8 +413,8 @@ for the interval:
 
 $$\overline{y}^{'} = \dfrac{f(t_{i},y_{i} ) + f(t_{i+1}, y^{0}_{i+1}) }{2}$$
 
-\\
-This average slope is then used to extrapolate linearly from $y_{i}$ to $y_{i+1}$ using Euler’s
+
+This average slope is then used to extrapolate linearly from $y_{i}$ to $y_{i+1}$ using Euler's
 method:
 
 \begin{equation}
@@ -432,7 +432,7 @@ which is called a corrector equation.\\
 	\label{F22.5}
 \end{figure}\\
 
-The Heun method is a $predictor-corrector$ approach. As just derived, it can be expressed concisely as
+The Heun method is a $predictor-corrector$ approach. As just derived, it can be expressed concisely as
 
 \begin{equation}
 \tag{22.18}
@@ -441,29 +441,28 @@ The Heun method is a $predictor-corrector$ approach. As just derived, it can be 
 \begin{equation}
 \tag{22.19}
 \textnormal{Corrector (Fig. 22.4b):} \; \; \; \; \; \; \; y^{j}_{i+1} = y^{m}_{i} + \dfrac{ f(t_{i},y^{m}_{i}) + f(t_{i+1},y^{j-1}_{i+1}) }{ 2 }h
-
 \textnormal{(for j = 1, 2, . . . , m)}
-\end{equation}\\
+\end{equation}
 Note that because Eq. (22.19) has $y_{i+1}$ on both sides of the equal sign, it can be applied in
 an iterative fashion as indicated. That is, an old estimate can be used repeatedly to provide
 an improved estimate of $y_{i+1}$ The process is depicted in Fig. 22.5.
 
-As with similar iterative methods discussed in previous sections of the book, a termination criterion for convergence of the corrector is provided by
+As with similar iterative methods discussed in previous sections of the book, a termination criterion for convergence of the corrector is provided by
 \\
 
 $|\xi_{a}| = \left| \dfrac{y^{j}_{i+1} - y^{j-1}_{i+1}}{y^{j}_i+1} \right| x 100\% $
 \\
 \\
 where $y^{j-1}_{i+1}$ and $y^{j}_{i+1}$ are the result from the prior and the present iteration of the corrector,
-respectively. It should be understood that the iterative process does not necessarily converge on the true answer but will converge on an estimate with a finite truncation error, as
+respectively. It should be understood that the iterative process does not necessarily converge on the true answer but will converge on an estimate with a finite truncation error, as
 demonstrated in the following example.\\
 
 \vspace{0,3in}
-\chapter{Heun’s Method}
+\section{Heun's Method}
 \vspace{0,1in}
-\hline\\
+\hrule
 \vspace{0,1in}
-\textbf{Problem Statement.} Use Heun’s method with iteration to integrate $y^{'} = 4e^{0.8t} - 0.5y$ from t = 0 to 4 with a step size of 1. The initial condition at t = 0 is y = 2. Employ a stopping criterion of 0.00001\% to terminate the corrector iterations.
+\textbf{Problem Statement.} Use Heun's method with iteration to integrate $y^{'} = 4e^{0.8t} - 0.5y$ from t = 0 to 4 with a step size of 1. The initial condition at t = 0 is y = 2. Employ a stopping criterion of 0.00001\% to terminate the corrector iterations.
 \\
 \vspace{0.2in}\\
 \textbf{Solution.} First, the slope at ($t_{0}, y_{0}$) is calculated as\\
@@ -472,21 +471,21 @@ $y^{'}_{0} = 4e^0 - 0.5(2) = 3$\\
 \\
 Then, the predictor is used to compute a value at 1.0:\\
 
-$y&{0}_{1} = 2 + 3(1) = 5$\\
+$y^{0}_{1} = 2 + 3(1) = 5$\\
 
 \vspace{0,3in}
 \textbf{Table 22.1} Comparison of true and numerical values of the integral of $y^{'} = 4e^{0.8t} - 0.5y$, with the initial condition that $y=2$ at $t=0$. The numerical values
 were computed using the Euler and Heun methods with a step size of 1.
 The Heun method was implemented both without and with iteration of
 the corrector.\\
-\hline
+\hrule
 \begin{flushright}
 \underline{Without Iteration} \; \; \underline{With Iteration}
 \end{flushright} 
 \begin{tabular}{lccccccc}
 \textbf{$t$} \; \; \; \; & \textbf{$y_{true}$} \; \; \; \; & \textbf{$y_{Euler}$} \; \; \; \; & \textbf{$|\xi_{t}|(\%)$} \; \; \; \; &  \textbf{$y_{Heun}$} \; \; \; \; & \textbf{$|\xi_{t}|(\%)$} \; \; \; \; & \textbf{$y_{Heun}$} \; \; \; \; & \textbf{$|\xi_{t}|(\%)$}\\
 \hline
-0 & 2.00000 & 2.00000 & \vspace{} & 2.00000 & \vspace{} & 2.00000 & \vspace{}\\
+0 & 2.00000 & 2.00000 & \vspace{0in} & 2.00000 & \vspace{0in} & 2.00000 & \vspace{0in}\\
 
 1 & 6.19463 & 5.00000 & 19.28 & 6.70108 & 8.18 & 6.36087 & 2.68\\
 
@@ -522,7 +521,7 @@ $y^1_1 = 2 + 4.701082(1) = 6.701082$\\
 \\
 which represents a true percent relative error of −8.18\%. Thus, the Heun method without
 iteration of the corrector reduces the absolute value of the error by a factor of about 2.4 as
-compared with Euler’s method. At this point, we can also compute an approximate error as\\
+compared with Euler's method. At this point, we can also compute an approximate error as\\
 
 $ |\xi_{a}| = \left| \dfrac{6.701082 − 5}{6.701082} \right| x 100\% = 25.39\% $\\
 
@@ -542,10 +541,10 @@ $y^2_1 = 2 + \dfrac{3 + 4e^{0.8(1)} - 0.5(6.275811)}{2}1 = 6.382129$\\
 \\
 which represents a true error of 3.03\% and an approximate error of 1.666\%.
 
-The approximate error will keep dropping as the iterative process converges on a stable final result. In this example, after 12 iterations the approximate error falls below the
-stopping criterion. At this point, the result at t = 1 is 6.36087, which represents a true relative error of 2.68\%. Table 22.2 shows results for the remainder of the computation along
-with results for Euler’s method and for the Heun method without iteration of the corrector.
-\hline
+The approximate error will keep dropping as the iterative process converges on a stable final result. In this example, after 12 iterations the approximate error falls below the
+stopping criterion. At this point, the result at t = 1 is 6.36087, which represents a true relative error of 2.68\%. Table 22.2 shows results for the remainder of the computation along
+with results for Euler's method and for the Heun method without iteration of the corrector.
+\hrule
 
 Insight into the local error of the Heun method can be gained by recognizing that it is
 related to the trapezoidal rule. In the previous example, the derivative is a function of both
@@ -604,7 +603,7 @@ where $h = t_{i+1} - t_{i}$. Substituting Eq. (22.25) into Eq. (22.24) yields
 y_{i+1} = y_{i} + \dfrac{f(t_{i}) + f(t_{i+1}) }{2}h
 \end{equation}\\
 \\
-which is equivalent to Eq. (22.20). For this reason, Heun’s method is sometimes referred to
+which is equivalent to Eq. (22.20). For this reason, Heun's method is sometimes referred to
 as the trapezoidal rule.
 
 Because Eq. (22.26) is a direct expression of the trapezoidal rule, the local truncation
@@ -615,13 +614,13 @@ error is given by [recall Eq. (19.14)]
 E_{t} = - \dfrac{f^{"}(\xi)}{12} h^3
 \end{equation}\\
 \\
-where $\xi$ is between $t_{i}$ and $t_{i+1}$. Thus, the method is second order because the second derivative of the ODE is zero when the true solution is a quadratic. In addition, the local and
+where $\xi$ is between $t_{i}$ and $t_{i+1}$. Thus, the method is second order because the second derivative of the ODE is zero when the true solution is a quadratic. In addition, the local and
 global errors are $O(h^3)$ and $O(h^2)$, respectively. Therefore, decreasing the step size
-decreases the error at a faster rate than for Euler’s method.
+decreases the error at a faster rate than for Euler's method.
 
-\section{The Midpoint Method}
+\subsection{The Midpoint Method}
 
-Figure 22.6 illustrates another simple modification of Euler’s method. Called the $midpoint method$, this technique uses Euler’s method to predict a value of y at the midpoint of the
+Figure 22.6 illustrates another simple modification of Euler's method. Called the $midpoint method$, this technique uses Euler's method to predict a value of y at the midpoint of the
 interval (Fig. 22.6a):
 
 \begin{equation}
@@ -650,9 +649,9 @@ y_{i+1} = y_{1} + f( t_{i+1/2}, y_{i+1/2})h
 \end{equation}\\
 \\
 Observe that because $_{i+1}$ is not on both sides, the corrector [Eq. (22.30)] cannot be applied
-iteratively to improve the solution as was done with Heun’s method.
+iteratively to improve the solution as was done with Heun's method.
 
-As in our discussion of Heun’s method, the midpoint method can also be linked to
+As in our discussion of Heun's method, the midpoint method can also be linked to
 Newton-Cotes integration formulas. Recall from Table 19.4 that the simplest Newton-Cotes
 open integration formula, which is called the midpoint method, can be represented as
 
@@ -673,18 +672,18 @@ Substitution of this formula into Eq. (22.24) yields Eq. (22.30). Thus, just as 
 method can be called the trapezoidal rule, the midpoint method gets its name from the
 underlying integration formula on which it is based.
 
-The midpoint method is superior to Euler’s method because it utilizes a slope estimate
-at the midpoint of the prediction interval. Recall from our discussion of numerical differentiation in Section 4.3.4 that centered finite differences are better approximations of derivatives than either forward or backward versions. In the same sense, a centered approximation
+The midpoint method is superior to Euler's method because it utilizes a slope estimate
+at the midpoint of the prediction interval. Recall from our discussion of numerical differentiation in Section 4.3.4 that centered finite differences are better approximations of derivatives than either forward or backward versions. In the same sense, a centered approximation
 such as Eq. (22.29) has a local truncation error of $O(h^2)$ in comparison with the forward
-approximation of Euler’s method, which has an error of $O(h)$. Consequently, the local and
+approximation of Euler's method, which has an error of $O(h)$. Consequently, the local and
 global errors of the midpoint method are $O(h^3)$ and $O(h^2)$,  respectively.
 
 \vspace{0,3in}
-\chapter{22.4 RUNGE-KUTTA METHODS}
+\section{22.4 RUNGE-KUTTA METHODS}
 \vspace{0,1in}
-\hline\\
+\hrule
 \vspace{0,1in}
-\\
+
 Runge-Kutta (RK) methods achieve the accuracy of a Taylor series approach without
 requiring the calculation of higher derivatives. Many variations exist but all can be cast in
 the generalized form of Eq. (22.4):
@@ -702,7 +701,7 @@ over the interval. The increment function can be written in general form as
 \phi = a_{1}k_{1} + a_{2}k_{2} + \cdots + a_{n}k_{n}
 \end{equation}\\
 \\
-where the $a$’s are constants and the $k$’s are
+where the $a$'s are constants and the $k$'s are
 
 \begin{equation}
 \tag{22.34a}
@@ -718,19 +717,19 @@ k_{2} = f( t_{i} + p_{1}h, y_{i} + q_{11}k_{1}h)
 \tag{22.34c}
 k_{3} = f(t_{i} + p_{2}h, y_{i} + q_{21}k_{1}h + q_{22}k_{2}h)
 \end{equation}
-$$\textbf{\vdots}$$
+\textbf{$\vdots$}
 \begin{equation}
 \tag{22.34d}
 k_{n} = f( t_{i} + p_{n-1}h, y_{i} + q_{n-1,1} k_{1} h + q_{n-1,2}k_{2}h + \cdots + q_{n-1, n-1} k_{n-1} h )
 \end{equation}\\
 \\
-where the p’s and q’s are constants. Notice that the k’s are recurrence relationships. That is,
-k1 appears in the equation for $k_{2}$, which appears in the equation for $k_{3}$, and so forth. Because each k is a functional evaluation, this recurrence makes RK methods efficient for
+where the p's and q's are constants. Notice that the k's are recurrence relationships. That is,
+k1 appears in the equation for $k_{2}$, which appears in the equation for $k_{3}$, and so forth. Because each k is a functional evaluation, this recurrence makes RK methods efficient for
 computer calculations.
 
-Various types of Runge-Kutta methods can be devised by employing different numbers of terms in the increment function as specified by n. Note that the first-order RK
-method with n = 1 is, in fact, Euler’s method. Once n is chosen, values for the a’s, p’s, and
-q’s are evaluated by setting Eq. (22.33) equal to terms in a Taylor series expansion. Thus,
+Various types of Runge-Kutta methods can be devised by employing different numbers of terms in the increment function as specified by n. Note that the first-order RK
+method with n = 1 is, in fact, Euler's method. Once n is chosen, values for the a's, p's, and
+q's are evaluated by setting Eq. (22.33) equal to terms in a Taylor series expansion. Thus,
 at least for the lower-order versions, the number of terms n usually represents the order of
 the approach. For example, in Section 22.4.1, second-order RK methods use an increment
 function with two terms (n = 2). These second-order methods will be exact if the solution
@@ -738,7 +737,7 @@ to the differential equation is quadratic. In addition, because terms with $h^3$
 dropped during the derivation, the local truncation error is $O(h^3)$ and the global error is $O(h^2)$. In Section 22.4.2, the fourth-order RK method (n = 4) is presented for which the
 global truncation error is $O(h^4)$.
 
-\section{Second-Order Runge-Kutta Methods}
+\subsection{Second-Order Runge-Kutta Methods}
 
 The second-order version of Eq. (22.33) is
 
@@ -792,13 +791,13 @@ a_{1} = 1 - a_{2}
 p_{1} = q_{11} = \dfrac{1}{2a_{2}}
 \end{equation}
 
-Because we can choose an infinite number of values for $a_{2}$, there are an infinite number of second-order RK methods. Every version would yield exactly the same results if the
-solution to the ODE were quadratic, linear, or a constant. However, they yield different results when (as is typically the case) the solution is more complicated. Three of the most
+Because we can choose an infinite number of values for $a_{2}$, there are an infinite number of second-order RK methods. Every version would yield exactly the same results if the
+solution to the ODE were quadratic, linear, or a constant. However, they yield different results when (as is typically the case) the solution is more complicated. Three of the most
 commonly used and preferred versions are presented next.\\
 \\
 \\
 \textbf{Heun Method without Iteration} \textbf{($a_{2} = 1/2$).} If $a_{2}$ is assumed to be 1/2, Eqs. (22.39)
-and (22.40) can be solved for $a_{1} = 1/2$ and $p_{1} = q_{11} = 1$. These parameters, when substituted into Eq. (22.35), yield
+and (22.40) can be solved for $a_{1} = 1/2$ and $p_{1} = q_{11} = 1$. These parameters, when substituted into Eq. (22.35), yield
 
 \begin{equation}
 \tag{22.41}
@@ -816,7 +815,7 @@ k_{2} = f(t_{i} + h, y_{i} + k_{1}h)
 \end{equation}\\
 \\
 Note that $k_1$ is the slope at the beginning of the interval and $k_2$ is the slope at the end of the
-interval. Consequently, this second-order Runge-Kutta method is actually Heun’s technique without iteration of the corrector.\\
+interval. Consequently, this second-order Runge-Kutta method is actually Heun's technique without iteration of the corrector.\\
 \\
 \textbf{The Midpoint Method} \text{($a_{2} = 1$).} If $a_{2}$ is assumed to be 1, then $a_1 = 0, p_1 = q_{11} = 1/2$, and Eq. (22.35) becomes
 \begin{equation}
@@ -836,7 +835,7 @@ k_2 = f(t_i + h/2, y_i + k_1h/2)
 \end{equation}\\
 This is the midpoint method.\\
 \\
-\textbf{Ralston’s Method} \textbf{($a_2 = 2/3$).} Ralston (1962) and Ralston and Rabinowitz (1978) determined that choosing $a_2 = 2/3$ provides a minimum bound on the truncation error for
+\textbf{Ralston's Method} \textbf{($a_2 = 2/3$).} Ralston (1962) and Ralston and Rabinowitz (1978) determined that choosing $a_2 = 2/3$ provides a minimum bound on the truncation error for
 the second-order RK algorithms. For this version,$a_1 = 1/3$ and $p_1 = q_{11} = 3/4$, and Eq. (22.35) becomes
 
 \begin{equation}
@@ -854,8 +853,8 @@ k_i = f(t_i, y_i)
 k_2 = f \left(t_i + \dfrac{3}{4}h, y_i + \dfrac{3}{4}k_1h \right)
 \end{equation}
  
- \section{Classical Fourth-Order Runge-Kutta Method}
-\\
+ \subsection{Classical Fourth-Order Runge-Kutta Method}
+
  The most popular RK methods are fourth order. As with the second-order approaches, there
 are an infinite number of versions. The following is the most commonly used form, and we
 therefore call it the $classical fourth-order RK method$:
@@ -891,18 +890,18 @@ k_4 = f(t_i + h, y_i + k_3h)
 \end{equation}
 
 Notice that for ODEs that are a function of t alone, the classical fourth-order RK
-method is similar to Simpson’s 1/3 rule. In addition, the fourth-order RK method is similar to the Heun approach in that multiple estimates of the slope are developed to come up
+method is similar to Simpson's 1/3 rule. In addition, the fourth-order RK method is similar to the Heun approach in that multiple estimates of the slope are developed to come up
 with an improved average slope for the interval. As depicted in Fig. 22.7, each of the $k$'s represents a slope. Equation (22.44) then represents a weighted average of these to arrive
 at the improved slope\\
 
 \vspace{0,3in}
-\chapter{Euler’s Method}
+\section{Euler's Method}
 \vspace{0,1in}
-\hline\\
+\hrule
 \vspace{0,1in}
 \textbf{Problem Statement.} Employ the classical fourth-order RK method to integrate $y' = 4e^{0.8t} - 0.5y$ from $t=0$ to 1 using a step size of 1 with y(0) = 2.
 
-\vspace{0.2in}\\
+\vspace{0.2in}
 \textbf{Solution.}  For this case, the slope at the beginning of the interval is computed as 
 
 $k_1 = f(0,2) = 4e^{0.8(0)} - 0.5(2) = 3$
@@ -933,11 +932,11 @@ $\phi = \dfrac{1}{6} [3 + 2(4.217299) + 2(3.912974) + 5.945677] = 4.201037$
 $y(1.0) = 2 + 4.201037(1.0) = 6.201037$\\
 \\
 which compares favorably with the true solution of 6.194631 ($\varepsilon_{t} = 0.103\%$).
-\hline\\
+\hrule
 
 \vspace{0.2in}
 It is certainly possible to develop fifth- and higher-order RK methods. For example,
-Butcher’s (1964) fifth-order RK method is written as
+Butcher's (1964) fifth-order RK method is written as
 
 \begin{equation}
 \tag{22.45}
@@ -975,22 +974,22 @@ k_5 = f \left(t_i + \dfrac{3}{4}h, y_i + \dfrac{3}{16}k_1h + \dfrac{9}{16}k_4h \
 k_6 = f \left( t_i + h, y_i - \dfrac{3}{7}k_1h + \dfrac{2}{7}k_2h + \dfrac{12}{7}k_3h - \dfrac{12}{7} k_4h + \dfrac{8}{7}k_5h \right)
 \end{equation}\\
 \\
-Note the similarity between Butcher’s method and Boole’s rule in Table 19.2. As expected,
+Note the similarity between Butcher's method and Boole's rule in Table 19.2. As expected,
 this method has a global truncation error of $O(h^5)$.
 
-Although the fifth-order version provides more accuracy, notice that six function evaluations are required. Recall that up through the fourth-order versions, n function evaluations are required for an nth-order RK method. Interestingly, for orders higher than four, one or
+Although the fifth-order version provides more accuracy, notice that six function evaluations are required. Recall that up through the fourth-order versions, n function evaluations are required for an nth-order RK method. Interestingly, for orders higher than four, one or
 two additional function evaluations are necessary. Because the function evaluations account
-for the most computation time, methods of order five and higher are usually considered relatively less efficient than the fourth-order versions. This is one of the main reasons for the
+for the most computation time, methods of order five and higher are usually considered relatively less efficient than the fourth-order versions. This is one of the main reasons for the
 popularity of the fourth-order RK method.
 
 
 \vspace{0,6in}
-\chapter{22.5 SYSTEMS OF EQUATIONS}
+\section{22.5 SYSTEMS OF EQUATIONS}
 \vspace{0,1in}
-\hline\\
-\vspace{0,1in}\\
-\\
-Many practical problems in engineering and science require the solution of a system of simultaneous ordinary differential equations rather than a single equation. Such systems may
+\hrule
+\vspace{0,1in}
+
+Many practical problems in engineering and science require the solution of a system of simultaneous ordinary differential equations rather than a single equation. Such systems may
 be represented generally as
 
 $$\dfrac{dy_1}{dt} = f_1(t,y_1,y_2, \cdots , y_n)$$
@@ -1003,7 +1002,7 @@ $$\dfrac{dy_n}{dt} = f_n(t,y_1,y_2, \cdots , y_n)$$\\
 The solution of such a system requires that n initial conditions be known at the starting
 value of t.
 
-An example is the calculation of the bungee jumper’s velocity and position that we set
+An example is the calculation of the bungee jumper's velocity and position that we set
 up at the beginning of this chapter. For the free-fall portion of the jump, this problem
 amounts to solving the following system of ODEs:
 
@@ -1020,23 +1019,23 @@ amounts to solving the following system of ODEs:
 If the stationary platform from which the jumper launches is defined as x = 0, the initial
 conditions would be x(0) = v(0) = 0.
 
-\section{ Euler’s Method}
-\\
+\subsection{ Euler's Method}
+
 All the methods discussed in this chapter for single equations can be extended to systems
 of ODEs. Engineering applications can involve thousands of simultaneous equations. In
 each case, the procedure for solving a system of equations simply involves applying the
 one-step technique for every equation at each step before proceeding to the next step. This
-is best illustrated by the following example for Euler’s method.
+is best illustrated by the following example for Euler's method.
 
 
 \vspace{0,3in}
-\chapter{Euler’s Method}
+\section{Euler's Method}
 \vspace{0,1in}
-\hline\\
+\hrule
 \vspace{0,1in}
 \textbf{Problem Statement.} Solve for the velocity and position of the free-falling bungee jumper
-using Euler’s method. Assuming that at t = 0, x = v = 0, and integrate to t = 10 s with a
-step size of 2 s. As was done previously in Examples 1.1 and 1.2, the gravitational acceleration is $9.81 m/s^2$, and the jumper has a mass of 68.1 kg with a drag coefficient of 0.25 kg/m. 
+using Euler's method. Assuming that at t = 0, x = v = 0, and integrate to t = 10 s with a
+step size of 2 s. As was done previously in Examples 1.1 and 1.2, the gravitational acceleration is $9.81 m/s^2$, and the jumper has a mass of 68.1 kg with a drag coefficient of 0.25 kg/m. 
 
 Recall that the analytical solution for velocity is [Eq. (1.9)]:
 
@@ -1049,14 +1048,14 @@ $x(t) = \dfrac{m}{c_d} ln \left[ cosh \left( \sqrt{\dfrac{gc_d}{m}}t \right) \ri
 \\
 Use these analytical solutions to compute the true relative errors of the results.
 
-\vspace{0.2in}\\
+\vspace{0.2in}
 \textbf{Solution.} The ODEs can be used to compute the slopes at $t$ = 0 as
 
 $\dfrac{dx}{dt} = 0$
 
 $\dfrac{dv}{dt} = 9.81 - \dfrac{0.25}{68.1} (0)^2 = 9.81$\\
 \\
-Euler’s method is then used to compute the values at t = 2 s,
+Euler's method is then used to compute the values at t = 2 s,
 
 $x = 0 + 0(2) = 0$
 
@@ -1074,7 +1073,7 @@ $v = 19.62 + \left( 9.81 − \dfrac{0.25}{68.1} (19.62)^2 \right)2 = 36.41368$\\
 Proceeding in a like manner gives the results displayed in Table 22.3.
 
 \textbf{Table 22.3} Distance and velocity of a free-falling bungee jumper as computed
-numerically with Euler’s method.\\
+numerically with Euler's method.\\
 
 \begin{tabular}{lcccccc}
 \hline
@@ -1083,7 +1082,7 @@ numerically with Euler’s method.\\
 	
 \hline
 
-	0 & 0 & 0 & 0 & 0 & \vspace{} & \vspace{}\\
+	0 & 0 & 0 & 0 & 0 & \vspace{0in} & \vspace{0in}\\
 	
 	2 & 19.1663 & 18.7292 & 0 & 19.6200 & 100.00\% & 4.76\%\\
 	
@@ -1099,30 +1098,30 @@ numerically with Euler’s method.\\
 \end{tabular}\\
 \\
 \\
-\hline
+\hrule
 \vspace{0.2in}
-Although the foregoing example illustrates how Euler’s method can be implemented for
+Although the foregoing example illustrates how Euler's method can be implemented for
 systems of ODEs, the results are not very accurate because of the large step size. In addition,
 the results for distance are a bit unsatisfying because x does not change until the second
 iteration. Using a much smaller step greatly mitigates these deficiencies. As described next,
 using a higher-order solver provides decent results even with a relatively large step size.
 
-\section{Runge-Kutta Methods}
-\\
+\subsection{Runge-Kutta Methods}
+
 Note that any of the higher-order RK methods in this chapter can be applied to systems of
 equations. However, care must be taken in determining the slopes. Figure 22.7 is helpful in
 visualizing the proper way to do this for the fourth-order method. That is, we first develop
 slopes for all variables at the initial value. These slopes (a set of $k_1$'s) are then used to make
-predictions of the dependent variable at the midpoint of the interval. These midpoint values are in turn used to compute a set of slopes at the midpoint (the $k_2$'s). These new slopes
+predictions of the dependent variable at the midpoint of the interval. These midpoint values are in turn used to compute a set of slopes at the midpoint (the $k_2$'s). These new slopes
 are then taken back to the starting point to make another set of midpoint predictions that
 lead to new slope predictions at the midpoint (the $k_3$'s). These are then employed to make
-predictions at the end of the interval that are used to develop slopes at the end of the interval (the $k_4$’s). Finally, the k’s are combined into a set of increment functions [as in
-Eq. (22.44)] that are brought back to the beginning to make the final predictions. The following example illustrates the approach.
+predictions at the end of the interval that are used to develop slopes at the end of the interval (the $k_4$'s). Finally, the k's are combined into a set of increment functions [as in
+Eq. (22.44)] that are brought back to the beginning to make the final predictions. The following example illustrates the approach.
 
 \vspace{0,3in}
-\chapter{Solving Systems of ODEs with the Fourth-Order RK Method}
+\section{Solving Systems of ODEs with the Fourth-Order RK Method}
 \vspace{0,1in}
-\hline\\
+\hrule
 \vspace{0,1in}
 \textbf{Problem Statement.} Use the fourth-order RK method to solve for the same problem we
 addressed in Example 22.4.
@@ -1185,7 +1184,7 @@ $ x(2) = 0 + \dfrac{1}{6} [0 + 2(9.8100 + 9.4567) + 18.9634] 2 = 19.1656$\\
 $ v(2) = 0 + \dfrac{1}{6} [9.8100 + 2(9.4567 + 9.4817) + 8.4898] 2 = 18.7256$\\
 
 Proceeding in a like manner for the remaining steps yields the values displayed in
-Table 22.4. In contrast to the results obtained with Euler’s method, the fourth-order RK
+Table 22.4. In contrast to the results obtained with Euler's method, the fourth-order RK
 predictions are much closer to the true values. Further, a highly accurate, nonzero value is
 computed for distance on the first step.
 
@@ -1205,7 +1204,7 @@ numerically with the fourth-order RK method.
 	
 \hline
 
-	0 & 0 & 0 & 0 & 0 & \vspace{} & \vspace{}\\
+	0 & 0 & 0 & 0 & 0 & \vspace{0in} & \vspace{0in}\\
 
 	2 & 19.1663 & 18.7292 & 19.1656 & 18.7256 & 0.004\% & 0.019\%\\
 
@@ -1221,11 +1220,11 @@ numerically with the fourth-order RK method.
 \hline
 \end{tabular}
 
-\section{MATLAB M-file Function: \texttt{rk4sys}}
-\\
+\subsection{MATLAB M-file Function: \texttt{rk4sys}}
+
 Figure 22.8 shows an M-file called rk4sys that uses the fourth-order Runge-Kutta method
 to solve a system of ODEs. This code is similar in many ways to the function developed
-earlier (Fig. 22.3) to solve a single ODE with Euler’s method. For example, it is passed the
+earlier (Fig. 22.3) to solve a single ODE with Euler's method. For example, it is passed the
 function name defining the ODEs through its argument.
 \pagebreak
 \begin{figure}[hbt!]
@@ -1236,7 +1235,7 @@ function name defining the ODEs through its argument.
 \begin{figure}[hbt!]
 	\includegraphics[width=0.75\textwidth]{F22.8.2}
 	\label{F22.8.2}
-\end{figure}\\
+\end{figure}
 
 However, it has an additional feature that allows you to generate output in two ways,
 depending on how the input variable \texttt{tspan} is specified. As was the case for Fig. 22.3, you
@@ -1251,8 +1250,8 @@ develop an M-file to hold the ODEs:
 \begin{verbatim}
    function dy = dydtsys(t, y)
    dy = [y(2);9.81-0.25/68.1*y(2)^2];
-\end{verbatim}\\
-\\
+\end{verbatim}
+
 where \texttt{y(1)} = distance ($x$) and \texttt{y(2)} = velocity ($v$). The solution can then be generated as
 
 \begin{verbatim}
@@ -1267,7 +1266,7 @@ where \texttt{y(1)} = distance ($x$) and \texttt{y(2)} = velocity ($v$). The sol
      10.0000   334.1626    49.4027
 \end{verbatim}
 
-We can also use \texttt{tspan} to generate results at specific values of the independent variable. For example,
+We can also use \texttt{tspan} to generate results at specific values of the independent variable. For example,
 
 \begin{verbatim}
    >> tspan=[0 6 10];
@@ -1279,7 +1278,7 @@ We can also use \texttt{tspan} to generate results at specific values of the ind
       10.0000    334.1626    49.4027
 \end{verbatim}
 
-\section{Case Study: Predator-Prey Models and Chaos}
+\subsection{Case Study: Predator-Prey Models and Chaos}
 
 \noindent\textbf{Background}. Engineers and scientists deal with a variety of problems involving systems of nonlinear ordinary differential equations. This case study focuses on two of these
 applications. The first relates to predator-prey models that are used to study species interactions. The second are equations derived from fluid dynamics that are used to simulate the
@@ -1423,7 +1422,7 @@ are designed to demonstrate this issue.
 \end{figure}\vspace{2cm}
 
 
-\section{Problems}
+\subsection{Problems}
 
 \begin{multicols}{2}
 
