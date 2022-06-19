@@ -1,0 +1,1229 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\noindent \textbf{Vectorization}. The \texttt{for} loop is easy to implement and understand. However, for MATLAB, it is not necessarily the most efficient means to repeat statements a specific number of times. Because of MATLAB's ability to operate directly on arrays, \emph{vectorization} provides a much more efficient option. For example, the following \texttt{for} loop structure:\\
+
+\texttt{i=0;\\
+\indent t=0: 0.02: 50\\
+\indent\hspace{2mm} i=i+1;\\
+\indent\hspace{2mm} y(i)=cos (t);\\
+\indent end}\\
+
+\noindent can be represented in vectorized form as\\
+
+\texttt{t = 0:0.02:50;\\
+\indent y = cos(t);\\}
+
+\noindent It should be noted that for more complex code, it may not be obvious how to vectorize the code. That said, wherever possible, vectorization is recommended.
+Preallocation of Memory. MATLAB automatically increases the size of arrays every time you add a new element. This can become time consuming when you perform actions such as adding new values one at a time within a loop. For example, here is some code that\\
+
+\noindent\textbf{Preallocation of Memory.} MATLAB automatically increases the size of arrays every
+time you add a new element. This can become time consuming when you perform actions
+such as adding new values one at a time within a loop. For example, here is some code that
+sets value of elements of \texttt{y} depending on whether or not values of t are greater than one:\\
+
+\texttt{t = 0:.01:5;\\
+\indent for i = 1:length(t)\\
+\indent\hspace{2mm} if t(i)>1\\
+\indent\hspace{4mm} y(i) = 1/t(i);\\
+\indent\hspace{2mm} else\\
+\indent\hspace{4mm} y(i) = 1;\\
+\indent\hspace{2mm} end\\
+\indent end\\}
+
+\noindent For this case, MATLAB must resize \texttt{y} every time a new value is determined. The following
+code preallocates the proper amount of memory by using a vectorized statement to
+assign ones to y prior to entering the loop.\\
+
+\texttt{t = 0:.01:5;\\
+\indent y = ones(size(t));\\
+\indent for i = 1:length(t)\\
+\indent\hspace{2mm} if t(i)>1\\
+\indent\hspace{4mm} y(i) = 1/t(i);\\
+\indent\hspace{2mm} end\\
+\indent end}\\
+
+\noindent Thus, the array is only sized once. In addition, preallocation helps reduce memory fragmentation,
+which also enhances efficiency.\\
+
+\noindent\textbf{The \texttt{while} Structure.} A \texttt{while} loop repeats as long as a logical condition is true. Its
+general syntax is\\
+
+\texttt{while \emph{condition}\\
+\indent\hspace{2mm} statements\\
+\indent end}\\
+
+\noindent The \emph{statements} between the \texttt{while} and the \texttt{end} are repeated as long as the \texttt{\emph{condition}} is
+true. A simple example is\\
+
+\texttt{x = 8\\
+\indent while x > 0\\
+\indent\hspace{2mm} x = x - 3\\
+\indent\hspace{2mm} disp(x)\\
+\indent end}\\
+
+\noindent When this code is run, the result is\\
+
+\texttt{x =\\
+\indent\indent 8\\
+\indent\indent 5\\
+\indent\indent 2\\
+\indent\indent -1}\\
+
+\noindent\textbf{The \texttt{while...break} Structure.} Although the \texttt{while} structure is extremely useful, the
+fact that it always exits at the beginning of the structure on a false result is somewhat
+constraining. For this reason, languages such as Fortran 90 and Visual Basic have special
+structures that allow loop termination on a true condition anywhere in the loop. Although
+such structures are currently not available inMATLAB, their functionality can be mimicked
+by a special version of the \texttt{while} loop. The syntax of this version, called a \texttt{while...break} structure, can be written as\\
+
+\texttt{while (1)\\
+\indent\hspace{2mm} \emph{statements}\\
+\indent\hspace{2mm} if \emph{condition}, break, end\\
+\indent\hspace{2mm} \emph{statements}\\
+\indent end}\\
+
+\noindent where \texttt{break} terminates execution of the loop. Thus, a single line \texttt{if} is used to exit the
+loop if the condition tests true. Note that as shown, the \texttt{break} can be placed in the middle
+of the loop (i.e., with statements before and after it). Such a structure is called a \emph{midtest}
+\emph{loop}.\\
+\indent If the problem required it, we could place the \texttt{break} at the very beginning to create a
+\emph{pretest loop}. An example is\\
+
+\texttt{while (1)\\
+\indent\hspace{2mm} If x < 0, break, end\\
+\indent\hspace{2mm} x = x - 5;\\
+\indent end}\\
+
+\noindent Notice how \texttt{5} is subtracted from \texttt{x} on each iteration. This represents a mechanism so that
+the loop eventually terminates. Every decision loop must have such a mechanism. Otherwise
+it would become a so-called \emph{infinite loop} that would never stop.\\
+\indent Alternatively, we could also place the \texttt{if...break} statement at the very end and create
+a \emph{posttest loop},\\
+
+\texttt{while (1)\\
+\indent\hspace{2mm} x = x - 5;\\
+\indent\hspace{2mm} if x < 0, break, end\\
+\indent end}\\
+
+It should be clear that, in fact, all three structures are really the same. That is, depending
+on where we put the exit (beginning, middle, or end) dictates whether we have a pre-,
+mid- or posttest. It is this simplicity that led the computer scientists who developed
+Fortran 90 and Visual Basic to favor this structure over other forms of the decision loop
+such as the conventional \texttt{while} structure.\\
+
+\noindent\textbf{The \texttt{pause} Command.} There are often times when you might want a program to temporarily
+halt. The command \texttt{pause} causes a procedure to stop and wait until any key is hit.
+A nice example involves creating a sequence of plots that a user might want to leisurely
+peruse before moving on to the next. The following code employs a \texttt{for} loop to create a
+sequence of interesting plots that can be viewed in this manner:\\
+
+\texttt{for n = 3:10\\
+\indent\hspace{2mm} mesh(magic(n))\\
+\indent\hspace{2mm} pause\\
+\indent end}\\
+
+The \texttt{pause} can also be formulated as \texttt{pause(n)}, in which case the procedure will halt
+for \texttt{n} seconds. This feature can be demonstrated by implementing it in conjunction with
+several other useful MATLAB functions. The \texttt{beep} command causes the computer to emit
+a beep sound. Two other functions, \texttt{tic} and \texttt{toc}, work together to measure elapsed time.
+The \texttt{tic} command saves the current time that \texttt{toc} later employs to display the elapsed
+time. The following code then confirms that \texttt{pause(n)} works as advertised complete with
+sound effects:\\
+
+\texttt{tic\\
+\indent beep\\
+\indent pause(5)\\
+\indent beep\\
+\indent toc}\\
+
+\noindent When this code is run, the computer will beep. Five seconds later it will beep again and display
+the following message:\\
+
+\texttt{Elapsed time is 5.006306 seconds.}\\
+
+\noindent By the way, if you ever have the urge to use the command \texttt{pause(inf)}, MATLAB will go
+into an infinite loop. In such cases, you can return to the command prompt by typing
+\textbf{Ctrl+c or Ctrl+Break}.
+Although the foregoing examples might seem a tad frivolous, the commands can be
+quite useful. For instance, \texttt{tic} and \texttt{toc} can be employed to identify the parts of an algorithm
+that consume the most execution time. Further, the \textbf{Ctrl+c} or \textbf{Ctrl+Break} key combinations
+come in real handy in the event that you inadvertently create an infinite loop in
+one of your M-files.\\
+
+\subsection{Animation}
+
+\noindent There are two simple ways to animate a plot in MATLAB. First, if the computations are
+sufficiently quick, the standard \texttt{plot} function can be employed in a way that the animation
+can appear smooth. Here is a code fragment that indicates how a \texttt{for} loop and standard
+plotting functions can be employed to animate a plot,\\
+
+\texttt{\% create animation with standard plot functions\\
+\indent for j=1:n\\
+\indent \emph{plot commands}\\
+\indent end}\\
+
+\noindent Thus, because we do not include \texttt{hold on}, the plot will refresh on each loop iteration.
+Through judicious use of axis commands, this can result in a smoothly changing image.\\
+\indent Second, there are special functions, \texttt{getframe} and \texttt{movie}, that allow you to capture a
+sequence of plots and then play them back. As the name implies, the \texttt{getframe} function
+captures a snapshot (\emph{pixmap}) of the current axes or figure. It is usually used in a \texttt{for} loop
+to assemble an array of movie frames for later playback with the \texttt{movie} function, which
+has the following syntax:\\
+
+\texttt{movie(m,n,fps)}\\
+
+\noindent where \emph{m} = the vector or matrix holding the sequence of frames constituting the movie,
+\emph{n} = an optional variable specifying how many times the movie is to be repeated (if it is
+omitted, the movie plays once), and \emph{fps} = an optional variable that specifies the
+movie's \emph{frame rate} (if it is omitted, the default is 12 frames per second). Here is a code
+fragment that indicates how a \texttt{for} loop along with the two functions can be employed
+to create a movie,\\
+
+\texttt{\% create animation with standard plot functions\\
+\indent for j=1:n\\
+\indent\hspace{2mm} plot commands\\
+\indent\hspace{2mm} M(j) = getframe;\\
+\indent end\\
+\indent movie(M)}\\
+
+Each time the loop executes, the \texttt{\emph{plot commands}} create an updated version of a plot,
+which is then stored in the vector M. After the loop terminates, the \texttt{n} images are then played
+back by \texttt{movie}.\\
+
+\begin{example} Animation of Projectile Motion
+    \bigskip\\
+    \textbf{Problem Statement.}\quad In the absence of air resistance, the Cartesian coordinates of a projectile
+    launched with an initial velocity ($v_0$) and angle ($\theta_0$) can be computed with\\
+    
+    $x = v_0 \cos(\theta_0)t$\\
+    \indent
+    $y = v_0 \sin(\theta_0)t - 0.5gt^2$\\
+
+    \noindent where $g = 9.81$ $m/s^2$. Develop a script to generate an animated plot of the projectile's
+    trajectory given that $v_0 = 5$ m/s and $\theta_0 = 45^{\circ}$.\\
+
+    \noindent\textbf{Solution}\quad A script to generate the animation can be written as\\
+
+    \texttt{clc,clf,clear\\
+    \indent g=9.81; theta0=45*pi/180; v0=5;\\
+    \indent t(1)=0;x=0;y=0;\\
+    \indent plot(x,y,'o','MarkerFaceColor','b','MarkerSize',8)\\
+    \indent axis([0 3 0 0.8])\\
+    \indent M(1)=getframe;\\
+    \indent dt=1/128;\\
+    \indent for j = 2:1000\\
+    \indent\hspace{2mm} t(j)=t(j-1)+dt;\\
+    \indent\hspace{2mm} x=v0*cos(theta0)*t(j);\\
+    \indent\hspace{2mm} y=v0*sin(theta0)*t(j)-0.5*g*t(j)\textasciicircum2;\\
+    \indent\hspace{2mm} plot(x,y,'o','MarkerFaceColor','b','MarkerSize',8)\\
+    \indent\hspace{2mm} axis([0 3 0 0.8])\\
+    \indent\hspace{2mm} M(j)=getframe;\\
+    \indent\hspace{2mm} if y<=0, break, end\\
+    \indent end\\
+    \indent pause\\
+    \indent movie(M, 1)}\\
+
+    Several features of this script bear mention. First, notice that we have fixed the ranges for
+the \emph{x} and \emph{y} axes. If this is not done, the axes will rescale and cause the animation to jump
+around. Second, we terminate the \texttt{for} loop when the projectile's height y falls below zero.\\
+\indent When the script is executed, two animations will be displayed (we've placed a \texttt{pause}
+between them). The first corresponds to the sequential generation of the frames within the
+loop, and the second corresponds to the actual movie. Although we cannot show the results
+here, the trajectory for both cases will look like Fig. 3.2. You should enter and run the foregoing
+script in MATLAB to see the actual animation.\\
+
+\begin{figure}[h]
+    \includegraphics[width=0.8\linewidth]{./images/example_3_3_2}
+    \caption{Plot of a projectile's trajectory.}
+\end{figure}
+
+\end{example}
+
+\section{NESTING AND INDENTATION}
+\noindent We need to understand that structures can be "nested" within each other. \emph{Nesting} refers to
+placing structures within other structures. The following example illustrates the concept.\\
+
+\begin{example} Nesting Structures\\
+    \noindent\textbf{Problem Statement.}\quad The roots of a quadratic equation\\
+
+    $f(x) = ax^2 + bx + c$\\
+
+    \noindent can be determined with the quadratic formula\\
+
+    $x = \dfrac{-b +- \sqrt{b^2 - 4ac}}{2a}$\\
+
+    \noindent\textbf{Solution}\quad \emph{Top-down design} provides a nice approach for designing an algorithm to compute
+    the roots. This involves developing the general structure without details and then
+    refining the algorithm. To start, we first recognize that depending on whether the parameter
+    \emph{a} is zero, we will either have "special" cases (e.g., single roots or trivial values) or conventional
+    cases using the quadratic formula. This "big-picture" version can be programmed as\\
+
+    \texttt{function quadroots(a, b, c)\\
+    \indent \% quadroots: roots of quadratic equation\\
+    \indent \% \hspace{2mm} quadroots(a,b,c): real and complex roots\\
+    \indent \% \indent\indent of quadratic equation\\
+    \indent \% input:\\
+    \indent \% \hspace{2mm} a = second-order coefficient\\
+    \indent \% \hspace{2mm} b = first-order coefficient\\
+    \indent \% \hspace{2mm} c = zero-order coefficient\\
+    \indent \% output:\\
+    \indent \% \hspace{2mm} r1 = real part of first root\\
+    \indent \% \hspace{2mm} i1 = imaginary part of first root\\
+    \indent \% \hspace{2mm} r2 = real part of second root\\
+    \indent \% \hspace{2mm} i2 = imaginary part of second root\\
+    \indent if a == 0\\
+    \indent\hspace{2mm} \%special cases\\
+    \indent else\\
+    \indent\hspace{2mm} \%quadratic formula\\
+    \indent end
+    }\\
+
+    \noindent Next, we develop refined code to handle the "special" cases:\\
+
+    \texttt{\%special cases\\
+    \indent if b $\sim$= 0\\
+    \indent\hspace{2mm} \%single root\\
+    \indent\hspace{2mm} r1 = -c / b\\
+    \indent else\\
+    \indent\hspace{2mm} \%trivial solution\\
+    \indent\hspace{2mm} disp('Trivial solution. Try again')\\
+    \indent end}\\
+    
+    \noindent And we can develop refined code to handle the quadratic formula cases:\\
+
+    \texttt{\%quadratic formula\\
+    \indent d = b \textasciicircum2 - 4 * a * c;\\
+    \indent if d >= 0\\
+    \indent\hspace{2mm} \%real roots\\
+    \indent\hspace{2mm} r1 = (-b + sqrt(d)) / (2 * a)\\
+    \indent\hspace{2mm} r2 = (-b - sqrt(d)) / (2 * a)\\
+    \indent else\\
+    \indent\hspace{2mm} \%complex roots\\
+    \indent\hspace{2mm} r1 = -b / (2 * a)\\
+    \indent\hspace{2mm} i1 = sqrt(abs(d)) / (2 * a)\\
+    \indent\hspace{2mm} r2 = r1\\
+    \indent\hspace{2mm} i2 = -i1\\
+    \indent end}\\
+
+    We can then merely substitute these blocks back into the simple "big-picture" framework
+to give the final result:
+
+    \texttt{function quadroots(a, b, c)\\
+    \indent \% quadroots: roots of quadratic equation\\
+    \indent \% \hspace{2mm}quadroots(a,b,c): real and complex roots\\
+    \indent \% \indent\indent of quadratic equation\\
+    \indent \% input:\\
+    \indent \% \hspace{2mm}a = second-order coefficient\\
+    \indent \% \hspace{2mm}b = first-order coefficient\\
+    \indent \% \hspace{2mm}c = zero-order coefficient\\
+    \indent \% output:\\
+    \indent \% \hspace{2mm}r1 = real part of first root\\
+    \indent \% \hspace{2mm}i1 = imaginary part of first root\\
+    \indent \% \hspace{2mm}r2 = real part of second root\\
+    \indent \% \hspace{2mm}i2 = imaginary part of second root\\
+    \indent if a == 0}\\
+
+    \begin{figure}[h]
+        \begin{lstlisting}[numbers=none]
+            %special cases
+            if b ~= 0
+            %single root
+            r1 = -c / b
+            else
+            %trivial solution
+            disp('Trivial solution. Try again')
+            end
+        \end{lstlisting}
+    \end{figure}
+
+    \texttt{else}\\
+
+    \begin{figure}[h]
+        \begin{lstlisting}[numbers=none]
+            %quadratic formula
+            d = b ^ 2 - 4 * a * c; %discriminant
+            if d >= 0
+            %real roots
+            r1 = (-b + sqrt(d)) / (2 * a)
+            r2 = (-b - sqrt(d)) / (2 * a)
+            else
+            %complex roots
+            r1 = -b / (2 * a)
+            i1 = sqrt(abs(d)) / (2 * a)
+            r2 = r1
+            i2 = -i1
+            end
+        \end{lstlisting}
+    \end{figure}
+
+    \texttt{end}\\
+
+    As highlighted by the shading, notice how indentation helps to make the underlying
+logical structure clear. Also notice how "modular" the structures are. Here is a command
+window session illustrating how the function performs:\\
+
+\texttt{>> quadroots(1,1,1)\\
+\indent r1 =\\
+\indent \hspace{2mm}-0.5000\\
+\indent i1 =\\
+\indent \hspace{2mm}0.8660\\
+\indent r2 =\\
+\indent \hspace{2mm}-0.5000\\
+\indent i2 =\\
+\indent \hspace{2mm}-0.8660\\
+\indent >> quadroots(1,5,1)\\
+\indent r1 =\\
+\indent \hspace{2mm}-0.2087\\
+\indent r2 =\\
+\indent \hspace{2mm}-4.7913\\
+\indent >> quadroots(0,5,1)\\
+\indent r1 =\\
+\indent \hspace{2mm}-0.2000\\
+\indent >> quadroots(0, 0, 0)\\
+\indent Trivial solution. Try again}\\
+
+\end{example}
+
+\section{PASSING FUNCTIONS TO M-FILES}
+\noindent
+Much of the remainder of the book involves developing functions to numerically evaluate
+other functions. Although a customized function could be developed for every new equation
+we analyzed, a better alternative is to design a generic function and pass the particular
+equation we wish to analyze as an argument. In the parlance of MATLAB, these functions
+are given a special name: \emph{function functions}. Before describing how they work, we will
+first introduce anonymous functions, which provide a handy means to define simple userdefined
+functions without developing a full-blown M-file.\\
+
+\subsection{Anonymous Functions}
+\noindent
+\emph{Anonymous functions} allow you to create a simple function without creating an M-file.
+They can be defined within the command window with the following syntax:\\
+
+\texttt{fhandle = @(arglist) \emph{expression}}\\
+
+\noindent
+where \texttt{fhandle} = the function handle you can use to invoke the function, \texttt{arglist} = a
+comma separated list of input arguments to be passed to the function, and \texttt{expression} =
+any single valid MATLAB expression. For example,\\
+
+\texttt{>> f1=@(x,y) x\textasciicircum2 + y\textasciicircum2;}\\
+
+\noindent
+Once these functions are defined in the command window, they can be used just as other
+functions:\\
+
+\texttt{>> f1(3,4)\\
+\indent ans =\\
+\indent\hspace{2mm} 25}\\
+
+Aside from the variables in its argument list, an anonymous function can include variables
+that exist in the workspace where it is created. For example, we could create an
+anonymous function $f(x) = 4x^2$ as\\
+
+\texttt{>> a = 4;\\
+\indent >> b = 2;\\
+\indent >> f2=@(x) a*x\textasciicircum b;\\
+\indent >> f2(3)\\
+\indent ans = 36}\\
+
+Note that if subsequently we enter new values for \texttt{a} and \texttt{b}, the anonymous function
+does not change:\\
+
+\texttt{>> a = 3;\\
+\indent >> f2(3)\\
+\indent ans = 36}\\
+
+\noindent
+Thus, the function handle holds a snapshot of the function at the time it was created. If we
+want the variables to take on values, we must recreate the function. For example, having
+changed \texttt{a} to 3,\\
+
+\texttt{>> f2=@(x) a*x\textasciicircum b;}\\
+
+\noindent with the result\\
+
+\texttt{>> f2(3)\\
+\indent ans =\\ 
+\indent\hspace{2mm} 27}\\
+
+It should be noted that prior to MATLAB 7, \texttt{inline} functions performed the same
+role as anonymous functions. For example, the anonymous function developed above, \texttt{f1},
+could be written as\\
+
+\texttt{>> f1=inline('x\textasciicircum 2 + y\textasciicircum 2','x','y');}\\
+
+\noindent
+Although they are being phased out in favor of anonymous function, some readers might be
+using earlier versions, and so we thought it would be helpful to mention them. MATLAB
+help can be consulted to learn more about their use and limitations.
+
+\subsection{Function Functions}
+\noindent
+\emph{Function functions} are functions that operate on other functions which are passed to it as
+input arguments. The function that is passed to the function function is referred to as the
+\emph{passed function}. A simple example is the built-in function \texttt{fplot}, which plots the graphs
+of functions. A simple representation of its syntax is\\
+
+\texttt{fplot(func,lims)}\\
+
+where \texttt{func} is the function being plotted between the \emph{x}-axis limits specified by \texttt{lims = [xmin xmax]}. 
+For this case, \texttt{func} is the passed function. This function is "smart" in that it
+automatically analyzes the function and decides how many values to use so that the plot
+will exhibit all the function's features.\\
+\indent Here is an example of how \texttt{fplot} can be used to plot the velocity of the free-falling
+bungee jumper. The function can be created with an anonymous function:\\
+
+\texttt{>> vel=@(t) ...\\
+\indent sqrt(9.81*68.1/0.25)*tanh(sqrt(9.81*0.25/68.1)*t);}\\
+
+\noindent We can then generate a plot from $t$ = 0 to 12 as\\
+
+\texttt{>> fplot(vel,[0 12])}\\
+
+\noindent The result is displayed in Fig. 3.3.\\
+\indent Note that in the remainder of this book, we will have many occasions to use MATLAB's
+built-in function functions. As in the following example, we will also be developing
+our own.\\
+
+\begin{figure}[h]
+    \includegraphics{./images/fig_3_3}
+    \caption{A plot of velocity versus time generated with the \texttt{fplot} function.}
+\end{figure}
+
+\begin{example} Building and Implementing a Function Function
+    \noindent\textbf{Problem Statement.}\quad Develop an M-file function function to determine the average value
+    of a function over a range. Illustrate its use for the bungee jumper velocity over the range
+    from $t$ = 0 to 12 s:\\
+
+    $v(t) = \sqrt{\dfrac{gm}{c_d}}tanh\Big(\sqrt{\dfrac{gc_d}{m}}t \Big)$\\
+
+    \noindent where $g = 9.81$, $m = 68.1$, and $c_d = 0.25$.\\
+
+    \noindent\textbf{Solution.}\quad The average value of the function can be computed with standard MATLAB
+    commands as\\
+
+    \texttt{>> t=linspace(0,12);\\
+    \indent >> v=sqrt(9.81*68.1/0.25)*tanh(sqrt(9.81*0.25/68.1)*t);\\
+    \indent >> mean(v)\\
+    \indent ans =\\
+    \indent\hspace{2mm} 36.0870}\\
+
+    \noindent
+    Inspection of a plot of the function (Fig. 3.3) shows that this result is a reasonable estimate
+    of the curve's average height.\\
+
+    We can write an M-file to perform the same computation:\\
+
+    \texttt{function favg = funcavg(a,b,n)\\
+    \indent \% funcavg: average function height\\
+    \indent \% \hspace{2mm}favg=funcavg(a,b,n): computes average value\\
+    \indent \% \indent\indent of function over a range\\
+    \indent \% input:\\
+    \indent \% \hspace{2mm}a = lower bound of range\\
+    \indent \% \hspace{2mm}b = upper bound of range\\
+    \indent \% \hspace{2mm}n = number of intervals\\
+    \indent \% output:\\
+    \indent \% \hspace{2mm}favg = average value of function\\
+    \indent x = linspace(a,b,n);\\
+    \indent y = func(x);\\
+    \indent favg = mean(y);\\
+    \indent end\\
+    \indent function f = func(t)\\
+    \indent f=sqrt(9.81*68.1/0.25)*tanh(sqrt(9.81*0.25/68.1)*t);\\
+    \indent end}\\
+
+    The main function first uses \texttt{linspace} to generate equally spaced $x$ values across
+    the range. These values are then passed to a subfunction \texttt{func} in order to generate the corresponding
+    y values. Finally, the average value is computed. The function can be run from
+    the command window as\\
+
+    \texttt{>> funcavg (0,12,60)\\
+    \indent ans =\\
+    \indent\hspace{2mm} 36.0127}\\
+
+    Now let's rewrite the M-file so that rather than being specific to \texttt{func}, it evaluates a
+    nonspecific function name f that is passed in as an argument:\\
+
+    \texttt{function favg = funcavg (f,a,b,n)\\
+    \indent \% funcavg: average function height\\
+    \indent \% \hspace{2mm}favg=funcavg(f,a,b,n): computes average value\\
+    \indent \% \indent\indent of function over a range\\
+    \indent \% input:\\
+    \indent \% \hspace{2mm}f = function to be evaluated\\
+    \indent \% \hspace{2mm}a = lower bound of range\\
+    \indent \% \hspace{2mm}b = upper bound of range\\
+    \indent \% \hspace{2mm}n = number of intervals\\
+    \indent \% output:\\
+    \indent \% \hspace{2mm}favg = average value of function\\
+    \indent x = linspace(a,b,n);\\
+    \indent y = f(x);\\
+    \indent favg = mean(y);}\\
+
+    \noindent Because we have removed the subfunction \texttt{func}, this version is truly generic. It can be run
+    from the command window as\\
+
+    \texttt{>> vel=@(t) ...\\
+    \indent sqrt(9.81*68.1/0.25)*tanh(sqrt(9.81*0.25/68.1)*t);\\
+    \indent >> funcavg(vel,0,12,60)\\
+    \indent ans =\\
+    \indent\hspace{2mm} 36.0127}\\
+
+    To demonstrate its generic nature, \texttt{funcavg} can easily be applied to another case by
+merely passing it a different function. For example, it could be used to determine the average
+value of the built-in \texttt{sin} function between 0 and $2\pi$ as\\
+
+    \texttt{>> funcavg(@sin,0,2*pi,180)\\
+    \indent ans =\\
+    \indent\hspace{2mm} -6.3001e-017}\\
+
+    Does this result make sense?\\
+    \indent We can see that \texttt{funcavg} is now designed to evaluate any valid MATLAB expression.
+    We will do this on numerous occasions throughout the remainder of this text in a
+    number of contexts ranging from nonlinear equation solving to the solution of differential
+    equations.\\
+
+\end{example}
+
+\subsection{Passing Parameters}
+\noindent
+Recall from Chap. 1 that the terms in mathematical models can be divided into dependent
+and independent variables, parameters, and forcing functions. For the bungee jumper
+model, the velocity ($v$) is the dependent variable, time ($t$) is the independent variable, the
+mass ($m$) and drag coefficient ($c_d$) are parameters, and the gravitational constant ($g$) is the
+forcing function. It is commonplace to investigate the behavior of such models by performing
+a \emph{sensitivity analysis}. This involves observing how the dependent variable changes
+as the parameters and forcing functions are varied.\\
+\indent In Example 3.8, we developed a function function, \texttt{funcavg}, and used it to determine
+the average value of the bungee jumper velocity for the case where the parameters were set
+at $m = 68.1$ and $c_d= 0.25$. Suppose that we wanted to analyze the same function, but with
+different parameters. Of course, we could retype the function with new values for each
+case, but it would be preferable to just change the parameters.\\
+\indent As we learned in Sec. 3.5.1, it is possible to incorporate parameters into anonymous
+functions. For example, rather than "wiring" the numeric values, we could have done the
+following:\\
+
+\texttt{>> m=68.1;cd=0.25;\\
+\indent >> vel=@(t) sqrt(9.81*m/cd)*tanh(sqrt(9.81*cd/m)*t);\\
+\indent >> funcavg(vel,0,12,60)\\
+\indent ans =\\
+\indent\hspace{2mm} 36.0127}\\
+
+\noindent However, if we want the parameters to take on new values, we must recreate the anonymous
+function.\\
+\indent MATLAB offers a better alternative by adding the term \texttt{varargin} as the function
+function's last input argument. In addition, every time the passed function is invoked
+within the function function, the term \texttt{varargin\{:\}} should be added to the end of its
+argument list (note the curly brackets). Here is how both modifications can be implemented
+for \texttt{funcavg} (omitting comments for conciseness):\\
+
+\texttt{function favg = funcavg(f,a,b,n,varargin)\\
+\indent x = linspace(a,b,n);\\
+\indent y = f(x,varargin{:});\\
+\indent favg = mean(y);}\\
+
+When the passed function is defined, the actual parameters should be added at the end
+of the argument list. If we used an anonymous function, this can be done as in\\
+
+\texttt{>> vel=@(t,m,cd) sqrt(9.81*m/cd)*tanh(sqrt(9.81*cd/m)*t);}\\
+
+\noindent
+When all these changes have been made, analyzing different parameters becomes easy. To
+implement the case where $m = 68.1$ and $c_d = 0.25$, we could enter\\
+
+\texttt{>> funcavg(vel,0,12,60,68.1,0.25)\\
+\indent ans =\\
+\indent\hspace{2mm} 36.0127}\\
+
+\noindent
+An alternative case, say $m = 100$ and $c_d = 0.28$, could be rapidly generated by merely
+changing the arguments:\\
+
+\texttt{>> funcavg(vel,0,12,60,100,0.28)\\
+\indent ans =\\
+\indent\hspace{2mm} 38.9345}\\
+
+\section{CASE STUDY - BUNGEE JUMPER VELOCITY}
+\noindent\textbf{Background.}\quad In this section, we will use MATLAB to solve the free-falling bungee
+jumper problem we posed at the beginning of this chapter. This involves obtaining a solution
+of\\
+
+$\dfrac{dv}{dt} = g - \dfrac{c_d}{m}v\left\lvert v \right\rvert$\\
+
+Recall that, given an initial condition for time and velocity, the problem involved iteratively
+solving the formula,\\
+
+$v_{i+1} = v_i + \dfrac{dv_i}{dt}\Delta t$\\
+
+\noindent Now also remember that to attain good accuracy, we would employ small steps. Therefore,
+we would probably want to apply the formula repeatedly to step out from our initial time
+to attain the value at the final time. Consequently, an algorithm to solve the problem would
+be based on a loop.\\
+
+\noindent\textbf{Solution.} Suppose that we started the computation at $t = 0$ and wanted to predict
+velocity at $t = 12$ s using a time step of $\Delta t = 0.5$ s. We would therefore need to apply the
+iterative equation 24 times---that is,\\
+
+$n = \dfrac{12}{0.5} = 24$\\
+
+\noindent
+where n = the number of iterations of the loop. Because this result is exact (i.e., the ratio is
+an integer), we can use a \texttt{for} loop as the basis for the algorithm. Here's an M-file to do this
+including a subfunction defining the differential equation:\\
+
+\texttt{function vend = velocity1(dt, ti, tf, vi)\\
+\indent \% velocity1: Euler solution for bungee velocity\\
+\indent \% \hspace{2mm}vend = velocity1(dt, ti, tf, vi)\\
+\indent \% \indent\indent Euler method solution of bungee\\
+\indent \% \indent\indent jumper velocity\\
+\indent \% input:\\
+\indent \% \hspace{2mm}dt = time step (s)\\
+\indent \% \hspace{2mm}ti = initial time (s)\\
+\indent \% \hspace{2mm}tf = final time (s)\\
+\indent \% \hspace{2mm}vi = initial value of dependent variable (m/s)\\
+\indent \% output:\\
+\indent \% \hspace{2mm}vend = velocity at tf (m/s)\\
+\indent t = ti;\\
+\indent v = vi;\\
+\indent n = (tf - ti) / dt;\\
+\indent for i = 1:n\\
+\indent \hspace{2mm}dvdt = deriv(v);\\
+\indent \hspace{2mm}v = v + dvdt * dt;\\
+\indent \hspace{2mm}t = t + dt;\\
+\indent end\\
+\indent vend = v;\\
+\indent end\\
+\indent function dv = deriv(v)\\
+\indent dv = 9.81 - (0.25 / 68.1) * v*abs(v);\\
+\indent end}\\
+
+\noindent This function can be invoked from the command window with the result:\\
+
+\texttt{>> velocity1(0.5,0,12,0)\\
+\indent ans =\\
+\indent\hspace{2mm} 50.9259}\\
+
+Note that the true value obtained from the analytical solution is 50.6175 (Example
+3.1). We can then try a much smaller value of \texttt{dt} to obtain a more accurate numerical
+result:\\
+
+\texttt{>> velocity1(0.001,0,12,0)\\
+\indent ans =\\
+\indent\hspace{2mm} 50.6181}\\
+
+Although this function is certainly simple to program, it is not foolproof. In particular,
+it will not work if the computation interval is not evenly divisible by the time step.
+To cover such cases, a \texttt{while...break} loop can be substituted in place of the
+shaded area (note that we have omitted the comments for conciseness):\\
+
+\texttt{function vend = velocity2(dt, ti, tf, vi)\\
+\indent t = ti;\\
+\indent v = vi;\\
+\indent h = dt;\\
+\indent while(1)
+\indent \hspace{2mm}if t + dt > tf, h = tf - t; end\\
+\indent \hspace{2mm}dvdt = deriv(v);\\
+\indent \hspace{2mm}v = v + dvdt * h;\\
+\indent \hspace{2mm}t = t + h;\\
+\indent \hspace{2mm}if t >= tf, break, end\\
+\indent end\\
+\indent vend = v;\\
+\indent end\\
+\indent function dv = deriv(v)\\
+\indent dv = 9.81 - (0.25 / 68.1) * v*abs(v);\\
+\indent end}\\
+
+As soon as we enter the \texttt{while} loop, we use a single line \texttt{if} structure to test whether
+adding \texttt{t + dt} will take us beyond the end of the interval. If not (which would usually be
+the case at first), we do nothing. If so, we would shorten up the interval---that is, we set the
+variable step h to the interval remaining: \texttt{tf - t}. By doing this, we guarantee that the last
+step falls exactly on \texttt{tf}. After we implement this final step, the loop will terminate because
+the condition \texttt{t >= tf} will test true.\\
+\indent Notice that before entering the loop, we assign the value of the time step dt to another
+variable \texttt{h}. We create this \emph{dummy variable} so that our routine does not change the given
+value of dt if and when we shorten the time step. We do this in anticipation that we might
+need to use the original value of dt somewhere else in the event that this code were integrated
+within a larger program.\\
+\indent If we run this new version, the result will be the same as for the version based on the
+\texttt{for} loop structure:\\
+
+\texttt{>> velocity2(0.5,0,12,0)\\
+\indent ans =\\
+\indent\hspace{2mm} 50.9259}\\
+
+\noindent Further, we can use a dt that is not evenly divisible into \texttt{tf - ti}:\\
+
+\texttt{>> velocity2(0.35,0,12,0)\\
+\indent ans =\\
+\indent\hspace{2mm} 50.8348}\\
+
+We should note that the algorithm is still not foolproof. For example, the user could
+have mistakenly entered a step size greater than the calculation interval (e.g., \texttt{tf - ti = 5}
+and \texttt{dt = 20}). Thus, you might want to include error traps in your code to catch such errors
+and then allow the user to correct the mistake.\\
+
+As a final note, we should recognize that the foregoing code is not generic. That is, we
+have designed it to solve the specific problem of the velocity of the bungee jumper. Amore
+generic version can be developed as\\
+
+\texttt{function yend = odesimp(dydt, dt, ti, tf, yi)\\
+\indent t = ti; y = yi; h = dt;\\
+\indent while (1)\\
+\indent \hspace{2mm}if t + dt > tf, h = tf - t; end\\
+\indent \hspace{2mm}y = y + dydt(y) * h;\\
+\indent \hspace{2mm}t = t + h;\\
+\indent \hspace{2mm}if t >= tf, break, end\\
+\indent end\\
+\indent yend = y;}\\
+
+Notice how we have stripped out the parts of the algorithm that were specific to
+the bungee example (including the subfunction defining the differential equation)
+while keeping the essential features of the solution technique. We can then use this
+routine to solve the bungee jumper example, by specifying the differential equation
+with an anonymous function and passing its function handle to \texttt{odesimp} to generate
+the solution\\
+
+\texttt{>> dvdt=@(v) 9.81-(0.25/68.1)*v*abs(v);\\
+\indent >> odesimp(dvdt,0.5,0,12,0)\\
+\indent ans =\\
+\indent\hspace{2mm}50.9259}\\
+
+We could then analyze a different function without having to go in and modify the
+M-file. For example, if y = 10 at t = 0, the differential equation $dy/dt=-0.1y$ has the analytical
+solution $y = 10e^{-0.1t}$. Therefore, the solution at t = 5 would be $y(5) = 10^{e-0.1(5)} = 6.0653$.
+We can use \texttt{odesimp} to obtain the same result numerically as in\\
+
+\texttt{>> odesimp(@(y) -0.1*y,0.005,0,5,10)\\
+\indent ans =\\
+\indent\hspace{2mm} 6.0645}\\
+\bigskip
+
+\noindent\textbf{PROBLEMS}\\
+
+\begin{multicols}{2}
+    \noindent\textbf{3.1} Figure P3.1 shows a cylindrical tank with a conical
+    base. If the liquid level is quite low, in the conical part, the
+    volume is simply the conical volume of liquid. If the liquid
+    level is midrange in the cylindrical part, the total volume of
+    liquid includes the filled conical part and the partially filled
+    cylindrical part.\\
+    \indent Use decisional structures to write an M-file to compute
+    the tank's volume as a function of given values of R and d.
+    Design the function so that it returns the volume for all cases\\
+
+    \noindent
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=0.4\linewidth]{./images/problem_3_3_1}
+        \captionof*{figure}{Figure P3.1}
+    \end{minipage}
+
+    \noindent
+    where the depth is less than $3R$. Return an error message
+    ("Overtop") if you overtop the tank---that is, $d > 3R$. Test it
+    with the following data:\\
+
+    \noindent
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=0.9\linewidth]{./images/problem_3_3_2}
+    \end{minipage}
+
+    \noindent Note that the tank's radius is \textbf{R}.\\
+
+    \noindent\textbf{3.2} An amount of money \emph{P} is invested in an account where
+    interest is compounded at the end of the period. The future
+    worth \emph{F} yielded at an interest rate \emph{i} after \emph{n} periods may be
+    determined from the following formula:\\
+
+    $F = P(1+i)^n$\\
+
+    \noindent
+    Write an M-file that will calculate the future worth of an investment
+    for each year from 1 through $n$. The input to the
+    function should include the initial investment $P$, the interest
+    rate $i$ (as a decimal), and the number of years $n$ for which the
+    future worth is to be calculated. The output should consist of
+    a table with headings and columns for $n$ and $F$. Run the program
+    for $P = \$100,000$, $i = 0.05$, and $n = 10$ years.\\
+
+    \noindent\textbf{3.3} Economic formulas are available to compute annual
+    payments for loans. Suppose that you borrow an amount of
+    money $P$ and agree to repay it in $n$ annual payments at an
+    interest rate of $i$. The formula to compute the annual payment
+    $A$ is\\
+
+    $A = P\dfrac{i(1+i)^n}{(1+i)^n - 1}$\\
+
+    \noindent
+    Write an M-file to compute A. Test it with $P$ = \$100,000 and
+    an interest rate of $3.3\%$ $(i = 0.033)$. Compute results for $n$ =
+    1, 2, 3, 4, and 5 and display the results as a table with headings
+    and columns for $n$ and $A$.\\
+
+    \noindent\textbf{3.4} The average daily temperature for an area can be approximated
+    by the following function:\\
+
+    $T = T_{mean} + (T_{peak}-T_{mean})cos(\omega(t-t_{peak}))$\\
+
+    \noindent where $T_{mean}$ = the average annual temperature, $T_{peak}$ = the
+    peak temperature, $\omega$ = the frequency of the annual variation ($=2\pi/365$),
+    and $t_{peak}$ = day of the peak temperature ($\cong 205 d$). Parameters for some
+    U.S. towns are listed here:\\
+
+    \noindent
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=0.9\linewidth]{./images/problem_3_3_3}
+    \end{minipage}
+
+    \noindent
+    Develop an M-file that computes the average temperature
+    between two days of the year for a particular city. Test it
+    for (\textbf{a}) January--February in Yuma, AZ ($t$ = 0 to 59) and
+    (\textbf{b}) July--August temperature in Seattle, WA($t$ = 180 to 242).\\
+
+    \noindent\textbf{3.5} The sine function can be evaluated by the following
+    infinite series:\\
+
+    $sinx = x-\dfrac{x^3}{3!} + \dfrac{x^5}{5!} - \hdots$\\
+
+    \noindent
+    Create an M-file to implement this formula so that it computes
+    and displays the values of $sin x$ as each term in the
+    series is added. In other words, compute and display in
+    sequence the values for\\
+
+    $sinx = x$\\
+
+    $sinx = x - \dfrac{x^3}{3!}$\\
+
+    $sinx = x-\dfrac{x^3}{3!} + \dfrac{x^5}{5!}$\\
+
+    \indent\indent$\vdots$\\
+
+    \noindent
+    up to the order term of your choosing. For each of the preceding,
+    compute and display the percent relative error as\\
+
+    $\%error = \dfrac{\text{true - series approximation}}{\text{true}}\times 100\%$\\
+
+    \noindent
+    As a test case, employ the program to compute $sin(0.9)$ for
+    up to and including eight terms---that is, up to the term
+    $x^{15}/15!$.\\
+
+    \noindent\textbf{3.6} Two distances are required to specify the location of a
+    point relative to an origin in two-dimensional space (Fig. P3.6):
+    \begin{itemize}
+        \item The horizontal and vertical distances $(x, y)$ in Cartesian
+        coordinates.
+        \item The radius and angle $(r, \theta)$ in polar coordinates.
+    \end{itemize}
+
+    \noindent
+    It is relatively straightforward to compute Cartesian coordinates
+    $(x, y)$ on the basis of polar coordinates $(r, \theta)$. The
+    reverse process is not so simple. The radius can be computed
+    by the following formula:\\
+
+    $r = \sqrt{x^2 + y^2}$\\
+
+    \noindent If the coordinates lie within the first and fourth coordinates
+    (i.e., $x > 0$), then a simple formula can be used to
+    compute $\theta$:\\
+
+    $\theta = tan^{-1}\Big(\dfrac{y}{x} \Big)$\\
+
+    \noindent
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=0.9\linewidth]{./images/problem_3_3_4}
+        \captionof*{figure}{Figure P3.6}
+    \end{minipage}
+
+
+    \noindent The difficulty arises for the other cases. The following table
+    summarizes the possibilities:\\
+
+    \noindent
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=0.9\linewidth]{./images/problem_3_3_5}
+    \end{minipage}
+
+    \noindent
+    Write a well-structured M-file using \texttt{if...elseif} structures
+    to calculate $r$ and $\theta$ as a function of $x$ and $y$. Express the
+    final results for $\theta$ in degrees. Test your program by evaluating
+    the following cases:\\
+
+    \noindent
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=0.9\linewidth]{./images/problem_3_3_6}
+    \end{minipage}
+
+    \noindent\textbf{3.7} Develop an M-file to determine polar coordinates as
+    described in Prob. 3.6. However, rather than designing the
+    function to evaluate a single case, pass vectors of $x$ and $y$.
+    Have the function display the results as a table with columns
+    for $x$, $y$, $r$, and $\theta$. Test the program for the cases outlined in
+    Prob. 3.6.\\
+
+    \noindent\textbf{3.8} Develop an M-file function that is passed a numeric
+    grade from 0 to 100 and returns a letter grade according to
+    the scheme:\\
+
+    \noindent
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=0.9\linewidth]{./images/problem_3_3_7}
+    \end{minipage}
+
+    \noindent The first line of the function should be\\
+
+    \texttt{function grade = lettergrade(score)}\\
+
+    \noindent
+    Design the function so that it displays an error message and
+    terminates in the event that the user enters a value of \texttt{score}
+    that is less than zero or greater than 100. Test your function
+    with 89.9999, 90, 45 and 120.
+
+    \noindent\textbf{3.9} Manning's equation can be used to compute the velocity
+    of water in a rectangular open channel:\\
+
+    $U = \dfrac{\sqrt{S}}{n}\Big(\dfrac{BH}{B + 2H} \Big)^{2/3}$\\
+
+    \noindent where $U$ = velocity (m/s), $S$ = channel slope, $n$ = roughness
+    coefficient, $B$ = width (m), and $H$ = depth (m). The following
+    data are available for five channels:
+
+    \noindent
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=0.9\linewidth]{./images/problem_3_3_8}
+    \end{minipage}
+
+    \noindent
+    Write an M-file that computes the velocity for each of these
+    channels. Enter these values into a matrix where each column
+    represents a parameter and each row represents a channel.
+    Have the M-file display the input data along with
+    the computed velocity in tabular form where velocity is the
+    fifth column. Include headings on the table to label the
+    columns.\\
+
+    \noindent\textbf{3.10} A simply supported beam is loaded as shown in
+    Fig. P3.10. Using singularity functions, the displacement
+    along the beam can be expressed by the equation:\\
+
+    $u_y(x) = \dfrac{-5}{6}[\left\langle x - 0 \right\rangle^4 - \left\langle x-5 \right\rangle^4]
+    +\dfrac{15}{6} \left\langle x-8 \right\rangle^3 +75\left\langle x-7 \right\rangle^2
+    +\dfrac{57}{6}x^3 - 238.25x$\\
+
+    \noindent By definition, the singularity function can be expressed as
+    follows:\\
+
+    $\langle x-a\rangle^{n}=\left\{\begin{array}{cc}
+        (x-a)^{n} & \text{when } x>a \\
+        0 & \text {when } x\leq a
+        \end{array}\right\}$
+
+    \noindent Develop an M-file that creates a plot of displacement
+    (dashed line) versus distance along the beam, $x$. Note that
+    $x = 0$ at the left end of the beam.\\
+
+    \noindent\textbf{3.11} The volume $V$ of liquid in a hollow horizontal cylinder of
+    radius $r$ and length $L$ is related to the depth of the liquid $h$ by\\
+
+    $V = \Big[r^2cos^{-1}\Big(\dfrac{r-h}{r}-(r-h)\sqrt{2rh-h^2} \Big) \Big]L$\\
+
+    \noindent Develop an M-file to create a plot of volume versus depth.
+    Here are the first few lines:\\
+    
+
+   \texttt{\noindent function cylinder(r, L, plot\_title)\\
+    \indent\% volume of horizontal cylinder\\
+    \indent\% inputs:\\
+    \indent\% r = radius\\
+    \indent\% L = length\\
+    \indent\% plot\_title = string holding\\
+    \indent\hspace{40mm}plot title}\\
+
+    \noindent Test your program with\\
+
+    \texttt{\noindent>> cylinder(3,5,...\\
+    \indent'Volume versus depth for...\\
+    \indent horizontal cylindrical tank')}\\
+    
+    \noindent\textbf{3.12} Develop a vectorized version of the following code:\\
+
+    \texttt{\noindent tstart=0; tend=20; ni=8;\\
+    \indent t(1)=tstart;\\
+    \indent y(1)=12 + 6*cos(2*pi*t(1)/...
+    \indent\hspace{25mm}(tend-tstart));\\
+    \indent for i=2:ni+1\\
+    \indent\hspace{2mm} t(i)=t(i-1)+(tend-tstart)/ni;\\
+    \indent\hspace{2mm} y(i)=10 + 5*cos(2*pi*t(i)/ ...\\
+    \indent\hspace{25mm} (tend-tstart));\\
+    \indent end}\\
+
+    \noindent\textbf{3.13} The "divide and average" method, an old-time method
+    for approximating the square root of any positive number $a$,
+    can be formulated as\\
+
+    $x = \dfrac{x+a/x}{2}$\\
+
+    \noindent
+    Write a well-structured M-file function based on the
+    \texttt{while...break} loop structure to implement this algorithm.
+    Use proper indentation so that the structure is clear. At
+    each step estimate the error in your approximation as\\
+
+    $\epsilon = \left\lvert \dfrac{x_{new} - x_{old}}{x_{new}} \right\rvert $\\
+
+    \noindent
+    Repeat the loop until $\epsilon$ is less than or equal to a specified
+    value. Design your program so that it returns both the result
+    and the error. Make sure that it can evaluate the square root
+    of numbers that are equal to and less than zero. For the latter
+    case, display the result as an imaginary number. For example,
+    the square root of -4 would return $2i$. Test your program
+    by evaluating $a = 0$, 2, 10 and -4 for $\epsilon = 1 \times 10^{-4}$.\\
+
+    \noindent\textbf{3.14} \emph{Piecewise functions} are sometimes useful when the relationship
+    between a dependent and an independent variable
+    cannot be adequately represented by a single equation. For
+    example, the velocity of a rocket might be described by\\
+
+    $v(t)=\left\{\begin{array}{cc}
+        10 t^{2}-5 t & 0 \leq t \leq 8 \\
+        624-5 t & 8 \leq t \leq 16 \\
+        36 t+12(t-16)^{2} & 16 \leq t \leq 26 \\
+        2136 e^{-0.1(t-26)} & t>26 \\
+        0 & \text { otherwise }
+        \end{array}\right.$\\
+
+    \noindent Develop an M-file function to compute $v$ as a function of t.
+    Then, develop a script that uses this function to generate a
+    plot of $v$ versus $t$ for $t=-5$ to 50.\\
+
+    \noindent\textbf{3.15} Develop an M-file function called \texttt{rounder} to round a
+    number x to a specified number of decimal digits, $n$. The first
+    line of the function should be set up as\\
+
+    \texttt{function xr = rounder(x, n)}\\
+
+    \noindent Test the program by rounding each of the following to 2 decimal
+    digits: x = 477.9587, -477.9587, 0.125, 0.135, -0.125,
+    and -0.135.\\
+
+    \noindent\textbf{3.16} Develop an M-file function to determine the elapsed
+    days in a year. The first line of the function should be set
+    up as\\
+
+    \texttt{function nd = days(mo, da, leap)}\\
+
+    \noindent where \texttt{mo} = the month (1-12), \texttt{da} = the day (1-31), and
+    \texttt{leap} = (0 for nonleap year and 1 for leap year). Test it for
+    January 1, 1997, February 29, 2004, March 1, 2001, June 21,
+    2004, and December 31, 2008. Hint: A nice way to do this
+    combines the \texttt{for} and the \texttt{switch} structures.\\
+
+    \noindent\textbf{3.17} Develop an M-file function to determine the elapsed
+    days in a year. The first line of the function should be set up as\\
+
+    \texttt{function nd = days(mo, da, year)}\\
+
+    \noindent where \texttt{mo} = the month (1-12), \texttt{da} = the day (1-31), and
+    \texttt{year} = the year. Test it for January 1, 1997, February 29,
+    2004, March 1, 2001, June 21, 2004, and December 31, 2008.\\
+
+    \noindent\textbf{3.18} Develop a function function M-file that returns the difference
+    between the passed function's maximum and minimum
+    value given a range of the independent variable. In
+    addition, have the function generate a plot of the function for
+    the range. Test it for the following cases:\\
+
+    \noindent
+    \textbf{(a)} $f(t)=8e^{-0.25t}sin(t-2)$ from $t=0$ to $6\pi$\\
+    \textbf{(b)} $f(x)=e^{4x}sin(1/x)$ from $x=0.01$ to $0.2$.\\
+    \textbf{(c)} The built-in \texttt{humps} function from $x=0$ to 2.\\
+
+    \noindent\textbf{3.19} Modify the function function \texttt{odesimp} developed at
+    the end of Sec. 3.6 so that it can be passed the arguments of
+    the passed function. Test it for the following case:\\
+
+    \texttt{>> dvdt=@(v,m,cd) 9.81-(cd/m)*v\textasciicircum2;\\
+    \indent >> odesimp(dvdt,0.5,0,12,\\
+    \indent\hspace{40mm}-10,70,0.23)}\\
+
+    \noindent\textbf{3.20} A Cartesian vector can be thought of as representing
+    magnitudes along the $x$-, $y$-, and $z$-axes multiplied by a unit
+    vector ($i$, $j$, $k$). For such cases, the dot product of two of these
+    vectors \{$a$\} and \{$b$\} corresponds to the product of their magnitudes
+    and the cosine of the angle between their tails as in\\
+
+    $\{a\}\cdot \{b\} = abcos\theta$\\
+
+    \noindent The cross product yields another vector, $\{c\} = \{a\} \times \{b\}$,
+    which is perpendicular to the plane defined by $\{a\}$ and $\{b\}$
+    such that its direction is specified by the right-hand rule.
+    Develop an M-file function that is passed two such vectors
+    and returns $\theta$, $\{c\}$ and the magnitude of $\{c\}$, and generates a
+    three-dimensional plot of the three vectors $\{a\}$, $\{b\}$, and $\{c\}$
+    with their origins at zero. Use dashed lines for $\{a\}$ and $\{b\}$
+    and a solid line for $\{c\}$. Test your function for the following
+    cases:\\
+
+    \noindent
+    \textbf{(a)} \texttt{a = [6 4 2]; b = [2 6 4];}\\
+    \textbf{(b)} \texttt{a = [3 2 -6]; b = [4 -3 1];}\\
+    \textbf{(c)} \texttt{a = [2 -2 1]; b = [4 2 -4];}\\
+    \textbf{(d)} \texttt{a = [-1 0 0]; b = [0 -1 0];}\\
+
+    \noindent\textbf{3.21} Based on Example 3.6, develop a script to produce an
+    animation of a bouncing ball where $v_0$ = 5 m/s and $\theta_0 = 50^{\circ}$.
+    To do this, you must be able to predict exactly when the ball
+    hits the ground. At this point, the direction changes (the new
+    angle will equal the negative of the angle at impact), and the
+    velocity will decrease in magnitude to reflect energy loss
+    due to the collision of the ball with the ground. The change
+    in velocity can be quantified by the \emph{coefficient of restitution}
+    $C_R$ which is equal to the ratio of the velocity after to the velocity
+    before impact. For the present case, use a value of
+    $C_R$ = 0.8.\\
+
+    \noindent\textbf{3.22} Develop a function to produce an animation of a particle
+    moving in a circle in Cartesian coordinates based on radial
+    coordinates. Assume a constant radius, $r$, and allow the
+    angle, $\theta$, to increase from zero to $2\pi$ in equal increments.
+    The function's first lines should be\\
+
+    \texttt{function phasor(r, nt, nm)\\
+    \indent \% function to show the orbit of
+    \indent\hspace{40mm} a phasor\\
+    \indent \% r = radius\\
+    \indent \% nt = number of increments for 
+    \indent\hspace{50mm}theta\\
+    \indent \% nm = number of movies}\\
+
+    \noindent Test your function with\\
+
+    \texttt{phasor(1, 256, 10)}\\
+
+    \noindent\textbf{3.23} Develop a script to produce a movie for the butterfly
+    plot from Prob. 2.22. Use a particle located at the $x$-$y$ coordinates
+    to visualize how the plot evolves in time.
+\end{multicols}
+
+\begin{figure}
+    \centering
+    \includegraphics[width = 0.7\linewidth]{./images/problem_3_3_9}
+    \captionof*{figure}{Figure P3.10}
+\end{figure}
+
+\end{document}
