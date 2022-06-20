@@ -166,6 +166,11 @@
   \usepackage{graphics}
   \usepackage{ragged2e}
   \usepackage{blkarray}
+  \usepackage{wrapfig}
+  \usepackage{makecell}
+  \usepackage{amsmath}
+  \usepackage{listings}
+  \pagestyle{empty}
   \usepackage{boldline,makecell}
   \usepackage{chngcntr}
   \newtheorem{theorem}{Theorem}[chapter]
@@ -195,7 +200,23 @@
      \pushQED{\qed}\begin{smr}}
     {\popQED\end{smr}}
   
-  \UseRawInputEncoding
+
+   
+    \renewcommand*{\cleardoublepage}{\clearpage\if@twoside \ifodd\c@page\else
+    \blankpage
+    \thispagestyle{empty}
+    \newpage
+    \if@twocolumn\hbox{}\newpage\fi\fi\fi}
+    \makeatother
+  \newenvironment{blockquote}{%
+    \par%
+    \medskip
+    \leftskip=3.5em\rightskip=2em%
+    \noindent\ignorespaces}{%
+    \par\medskip}
+
+
+    \UseRawInputEncoding
   
 
 \endinput

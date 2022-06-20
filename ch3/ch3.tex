@@ -2,7 +2,1060 @@
 
 \begin{document}
 
+\chapter{Programming with MATLAB}
+
+\label{cha:cha3}
+
+
+\begin{center}
+\Large{\textbf{CHAPTER OBJECTIVES}}
+\end{center}
+
+\normalsize{The primary objective of this chapter is to learn how to write M-file programs to
+implement numerical methods. Specific objectives and topics covered are}
+'
+\begin{itemize}
+
+    \item Learning how to create well-documented M-files in the edit window and invoke
+    them from the command window.
+    \item Understanding how script and function files differ.
+    \item Understanding how to incorporate help comments in functions.
+    \item Knowing how to set up M-files so that they interactively prompt users for
+    information and display results in the command window.
+    \item Understanding the role of subfunctions and how they are accessed.
+    \item Knowing how to create and retrieve data files.
+    \item Learning how to write clear and well-documented M-files by employing
+    structured programming constructs to implement logic and repetition.
+    \item Recognizing the difference between \texttt{if$\ldots$elseif} and \texttt{switch} constructs.
+    \item Recognizing the difference between \texttt{for$\ldots$end} and \texttt{while} structures.
+    \item Knowing how to animate MATLAB plots.
+    \item Understanding what is meant by vectorization and why it is beneficial.
+    \item Understanding how anonymous functions can be employed to pass functions to
+    function function M-files.
+
+	\item Learning how real and complex numbers are assigned to variables
+	\item  Learning how vectors and matrices are assigned values using simple assignment,
+the colon operator, and the linspace and logspace functions.
+\item  Understanding the priority rules for constructing mathematical expressions.
+\item  Gaining a general understanding of built-in functions and how you can learn more
+about them with MATLAB's Help facilities.
+\item  Learning how to use vectors to create a simple line plot based on an equation.
+\end{itemize}
+\bigskip
+\bigskip
+\Large{YOU'VE GOT A PROBLEM}
+\normalsize
+
+n Chap. 1, we used a force balance to develop a mathematical model to predict the
+fall velocity of a bungee jumper. This model took the form of the following differential
+equation:
+
+$$\dfrac{dv}{dt}=g-\dfrac{c_d}{m}v|v| $$
+
+We also learned that a numerical solution of this equation could be obtained with Euler's
+method:
+$$v_{i+1} = v_i +\dfrac{dv_i}{dt}\Delta t$$
+
+This equation can be implemented repeatedly to compute velocity as a function of
+time. However, to obtain good accuracy, many small steps must be taken. This would be
+extremely laborious and time consuming to implement by hand. However, with the aid of
+MATLAB, such calculations can be performed easily.
+
+So our problem now is to figure out how to do this. This chapter will introduce you to
+how MATLAB M-files can be used to obtain such solutions.
+
+\section{M-FILES}
+
+The most common way to operate MATLAB is by entering commands one at a time in the
+command window. M-files provide an alternative way of performing operations that
+greatly expand MATLAB's problem-solving capabilities. An M-file consists of a series of
+statements that can be run all at once. Note that the nomenclature "M-file" comes from the
+fact that such files are stored with a texttt{.m} extension. M-files come in two flavors: script files
+and function files.
+
+\subsection{ Script Files}
+
+A $script$ file is merely a series of MATLAB commands that are saved on a file. They are
+useful for retaining a series of commands that you want to execute on more than one occasion. The 
+script can be executed by typing the file name in the command window or by
+invoking the menu selections in the edit window: \textbf{Debug, Run}.
+
+\section*{EXAMPLE 3.1 Script File}
+
+roblem Statement. Develop a script file to compute the velocity of the free-falling
+bungee jumper for the case where the initial velocity is zero.
+
+
+Solution. Open the editor with the menu selection: \textbf{File, New, M-file}. Type in the following statements to compute
+ the velocity of the free-falling bungee jumper at a specific time
+[recall Eq. (1.9)]:
+
+\begin{lstlisting}[frame=none, numbers=none]
+    g = 9.81; m = 68.1; t = 12; cd = 0.25;
+    v = sqrt(g * m / cd) * tanh(sqrt(g * cd / m) * t)
+\end{lstlisting}
+
+
+
+Save the file as scriptdemo.m. Return to the command window and type
+\begin{lstlisting}[frame=none, numbers=none]
+    >>scriptdemo
+\end{lstlisting}
+The result will be displayed as
+\begin{lstlisting}[frame=none, numbers=none]
+    v =
+        50.6175
+\end{lstlisting}
+Thus, the script executes just as if you had typed each of its lines in the command window.
+
+
+As a final step, determine the value of g by typing
+\begin{lstlisting}[frame=none, numbers=none]
+    >> g
+    g =
+         9.8100
+\end{lstlisting}
+
+So you can see that even though g was defined within the script, it retains its value back in
+the command workspace. As we will see in the following section, this is an important distinction between scripts and functions.
+
+\subsection{ Function Files}
+
+
+$Function$ files are M-files that start with the word \texttt{function}. In contrast to script files, they
+can accept input arguments and return outputs. Hence they are analogous to user-defined
+functions in programming languages such as Fortran, Visual Basic or C.
+The syntax for the function file can be represented generally as
+\begin{lstlisting}[frame=none, numbers=none]
+    function outvar = funcname(arglist)
+    % helpcomments
+    statements
+    outvar = value;
+\end{lstlisting}
+
+where \texttt{outvar} = the name of the output variable, \texttt{funcname} = the function's name,
+\texttt{arglist} = the function's argument list (i.e., comma-delimited values that are passed into
+the function), \texttt{helpcomments} = text that provides the user with information regarding the
+function (these can be invoked by typing {Help funcname} in the command window), and
+\texttt{statements} = MATLAB statements that compute the\texttt{ value} that is assigned to \texttt{outvar}.
+Beyond its role in describing the function, the first line of the \texttt{helpcomments}, called
+the H1 line, is the line that is searched by the \texttt{lookfor} command (recall Sec. 2.6). Thus,
+you should include key descriptive words related to the file on this line.
+The M-file should be saved as \texttt{funcname.m.} The function can then be run by typing
+\texttt{funcname} in the command window as illustrated in the following example. Note that even
+though MATLAB is case-sensitive, your computer's operating system may not be.
+Whereas MATLAB would treat function names like \texttt{freefall} and \texttt{FreeFall} as two different variables, your operating system might not.
+
+
+\section*{Function File}
+
+
+Problem Statement. As in Example 3.1, compute the velocity of the free-falling bungee
+jumper but now use a function file for the task.
+Solution. Type the following statements in the file editor:
+function v = freefall(t, m, cd)
+\begin{lstlisting}
+    function v = freefall(t, m, cd)
+    % freefall: bungee velocity with second-order drag
+    % v=freefall(t,m,cd) computes the free-fall velocity
+    % of an object with second-order drag
+    % input:
+    % t = time (s)
+    % m = mass (kg)
+    % cd = second-order drag coefficient (kg/m)
+    % output:
+    % v = downward velocity (m/s)
+    g = 9.81; % acceleration of gravity
+    v = sqrt(g * m / cd)*tanh(sqrt(g * cd / m) * t);
+
+\end{lstlisting}
+
+Save the file as freefall.m. To invoke the function, return to the command window and
+type in
+>> freefall(12,68.1,0.25)
+The result will be displayed as
+ans =
+50.6175
+One advantage of a function M-file is that it can be invoked repeatedly for different
+argument values. Suppose that you wanted to compute the velocity of a 100-kg jumper
+after 8 s:
+\begin{lstlisting}[frame=none, numbers=none]
+    >> freefall(8,100,0.25)
+    ans =
+        53.1878
+\end{lstlisting}
+
+To invoke the help comments type
+\begin{lstlisting}[frame=none, numbers=none]
+    >> help freefall
+\end{lstlisting}
+
+which results in the comments being displayed
+\begin{lstlisting}[frame=none, numbers=none]
+    freefall: bungee velocity with second-order drag
+        v=freefall(t,m,cd)  computes the free-fall velocity
+                            of an object with second-order drag 
+
+
+    input:
+        t = time (s)
+        m = mass (kg)
+        cd = second-order drag coefficient (kg/m)
+    output:
+        v = downward velocity (m/s)
+\end{lstlisting}
+
+If at a later date, you forgot the name of this function, but remembered that it involved
+bungee jumping, you could enter
+\begin{lstlisting}[frame=none, numbers=none]
+    >> lookfor bungee
+\end{lstlisting}
+
+and the following information would be displayed
+\begin{lstlisting}[frame=none, numbers=none]
+    freefall.m - bungee velocity with second-order drag
+\end{lstlisting}
+
+Note that, at the end of the previous example, if we had typed
+\begin{lstlisting}[frame=none, numbers=none]
+    >> g
+\end{lstlisting}
+
+
+the following message would have been displayed
+\begin{lstlisting}[frame=none, numbers=none]
+    >> g
+\end{lstlisting}??? Undefined function or variable 'g'.
+So even though texttt{g} had a value of 9.81 within the M-file, it would not have a value in the
+command workspace. As noted previously at the end of Example 3.1, this is an important
+distinction between functions and scripts. The variables within a function are said to be
+texttt{local} and are erased after the function is executed. In contrast, the variables in a script
+retain their existence after the script is executed.
+
+
+Function M-files can return more than one result. In such cases, the variables containing the results are comma-delimited and enclosed in brackets. For example, the following
+function, \texttt{stats.m}, computes the mean and the standard deviation of a vector:
+\begin{lstlisting}[frame=none, numbers=none]
+    function [mean, stdev] = stats(x)
+    n = length(x);
+    mean = sum(x)/n;
+    stdev = sqrt(sum((x-mean).^2/(n-1)));
+\end{lstlisting}
+Here is an example of how it can be applied:
+\begin{lstlisting}[frame=none, numbers=none]
+    >> y = [8 5 10 12 6 7.5 4];
+    >> [m,s] = stats(y)
+    m =
+        7.5000
+    s =
+        2.8137
+\end{lstlisting}
+
+
+Although we will also make use of script M-files, function M-files will be our primary
+programming tool for the remainder of this book. Hence, we will often refer to function
+M-files as simply M-files.
+
+\subsection{Subfunctions}
+Functions can call other functions. Although such functions can exist as separate M-files,
+they may also be contained in a single M-file. For example, the M-file in Example 3.2
+(without comments) could have been split into two functions and saved as a single
+M-file:
+\begin{lstlisting}[frame=none, numbers=none]
+    function v = freefallsubfunc(t, m, cd)
+    v = vel(t, m, cd);
+    end
+
+    function v = vel(t, m, cd)
+    g = 9.81;
+    v = sqrt(g * m / cd)*tanh(sqrt(g * cd / m) * t);
+    end
+\end{lstlisting}
+
+
+This M-file would be saved as {freefallsubfunc.m}. In such cases, the first function is
+called the main or primary function. It is the only function that is accessible to the command window 
+and other functions and scripts. All the other functions (in this case, {vel}) are
+referred to as {subfunctions}.
+A subfunction is only accessible to the main function and other subfunctions within
+the M-file in which it resides. If we run {freefallsubfunc} from the command window,
+the result is identical to Example 3.2:
+\begin{lstlisting}[frame=none, numbers=none]
+    >> freefallsubfunc(12,68.1,0.25)
+    ans =
+        50.6175
+\end{lstlisting}
+
+However, if we attempt to run the subfunction vel, an error message occurs:
+\begin{lstlisting}[frame=none, numbers=none]
+    >> vel(12,68.1,.25)
+    ??? Undefined function or method 'vel' for input arguments
+    of type 'double'.
+\end{lstlisting}
+
+\section{INPUT-OUTPUT}
+
+As in Section 3.1, information is passed into the function via the argument list and is output via the function's name. Two other functions provide ways
+ to enter and display information directly using the command window.
+
+ The input Function. This function allows you to prompt the user for values directly
+from the command window. Its syntax is
+\begin{lstlisting}[frame=none, numbers=none]
+    n = input('promptstring')
+\end{lstlisting}
+The function displays the promptstring, waits for keyboard input, and then returns the
+value from the keyboard. For example,
+\begin{lstlisting}[frame=none, numbers=none]
+    m = input('Mass (kg): ')
+\end{lstlisting}
+When this line is executed, the user is prompted with the message
+\begin{lstlisting}[frame=none, numbers=none]
+    Mass (kg):
+\end{lstlisting}
+If the user enters a value, it would then be assigned to the variable m.
+The input function can also return user input as a string. To do this, an 's' is appended to the function's argument list. For example,
+\begin{lstlisting}[frame=none, numbers=none]
+    name = input('Enter your name: ','s')
+\end{lstlisting}
+The disp Function. This function provides a handy way to display a value. Its syntax is
+\begin{lstlisting}[frame=none, numbers=none]
+    disp(value)
+\end{lstlisting}
+where \texttt{value} = the value you would like to display. It can be a numeric constant or variable, or a string message enclosed in hyphens. Its application is illustrated in the following
+example. 
+
+\section*{EXAMPLE 3.3 An Interactive M-File Function}
+
+Problem Statement. As in Example 3.2, compute the velocity of the free-falling bungee
+jumper, but now use the input and disp functions for input/output.
+
+
+Solution. Type the following statements in the file editor:
+\begin{lstlisting}[frame=none, numbers=none]
+    function freefalli
+    % freefalli: interactive bungee velocity
+    % freefalli interactive computation of the
+    % free-fall velocity of an object
+    % with second-order drag.
+    g = 9.81; % acceleration of gravity
+    m = input('Mass (kg): ');
+    cd = input('Drag coefficient (kg/m): ');
+    t = input('Time (s): ');
+    disp(' ')
+    disp('Velocity (m/s):')
+    disp(sqrt(g * m / cd)*tanh(sqrt(g * cd / m) * t))
+\end{lstlisting}
+Save the file as \texttt{freefalli.m}. To invoke the function, return to the command window and
+type
+\begin{lstlisting}[frame=none, numbers=none]
+    >> freefalli
+    Mass (kg): 68.1
+    Drag coefficient (kg/m): 0.25
+    Time (s): 12
+
+    Velocity (m/s):
+    50.6175
+\end{lstlisting}
+
+The fprintf Function. This function provides additional control over the display of
+information. A simple representation of its syntax is
+
+fprintf('format', x, ...)
+
+
+where \texttt{format} is a string specifying how you want the value of the variable $x$ to be displayed. The 
+operation of this function is best illustrated by examples.
+
+
+A simple example would be to display a value along with a message. For instance, suppose that the variable 
+{velocity} has a value of 50.6175. To display the value using eight
+digits with four digits to the right of the decimal point along with a message, the statement
+along with the resulting output would be
+\begin{lstlisting}[frame=none, numbers=none]
+    >> fprintf('The velocity is %8.4f m/s\n', velocity)
+    The velocity is 50.6175 m/s
+\end{lstlisting}
+This example should make it clear how the format string works. MATLAB starts at
+the left end of the string and displays the labels until it detects one of the symbols: $\%$ or $\backslash$.
+In our example, it first encounters a $\%$ and recognizes that the following text is a format
+code. As in Table 3.1, the format codes allow you to specify whether numeric values are
+
+\begin{table}[H]
+    \centering
+    \caption*{TABLE 3.1 Commonly used format and control codes employed
+    with the \texttt{fprintf} function.}
+    \begin{tabular}{ll }
+            \hline
+            Format Code& Description\\
+            \hline
+            $\%$d& Integer format\\
+            $\%$e &Scientific format with lowercase e\\
+            $\%$E &Scientific format with uppercase E\\
+            $\%$f &Decimal format\\
+            $\%$g &The more compact of $\%$e or $\%$f\\
+            Control Code &Description\\
+            \hline
+            $\backslash n$ &Start new line\\
+            $\backslash t$ &Tab\\
+            \hline
+    \end{tabular}	
+\end{table}
+
+displayed in integer, decimal, or scientific format. After displaying the value of \texttt{velocity},
+MATLAB continues displaying the character information (in our case the units: \texttt{$\backslash m/s$} ) until
+it detects the symbol $\backslash$. This tells MATLAB that the following text is a control code. As in
+Table 3.1, the \texttt{control codes} provide a means to perform actions such as skipping to the
+next line. If we had omitted the code \texttt{$\backslash n$} in the previous example, the command prompt
+would appear at the end of the label  rather than on the next line as would typically be
+desired.
+
+
+The \texttt{fprintf} function can also be used to display several values per line with different formats. For example,
+\begin{lstlisting}[frame=none, numbers=none]
+    >> fprintf('%5d %10.3f %8.5e\n',100,2*pi,pi);
+    100         6.283 3.14159e+000
+\end{lstlisting}
+It can also be used to display vectors and matrices. Here is an M-file that enters two
+sets of values as vectors. These vectors are then combined into a matrix, which is then displayed as a table with headings:
+\begin{lstlisting}[frame=none, numbers=none]
+    function fprintfdemo
+    x = [1 2 3 4 5];
+    y = [20.4 12.6 17.8 88.7 120.4];
+    z = [x;y];
+    fprintf(' x y\n');
+    fprintf('%5d %10.3f\n',z);
+\end{lstlisting}
+The result of running this M-file is
+\begin{lstlisting}[frame=none, numbers=none]
+    >> fprintfdemo
+        x         y
+        1       20.400
+        2       12.600
+        3       17.800
+        4       88.700
+        5       120.400
+\end{lstlisting}
+
+
+\subsection{Creating and Accessing Files}
+
+MATLAB has the capability to both read and write data files. The simplest approach involves a special type of binary file, called a MAT-file, which is expressly designed for
+implementation within MATLAB. Such files are created and \texttt{accessed} with the \texttt{save} and
+\texttt{load} commands.
+
+
+The \texttt{save} command can be used to generate a MAT-file holding either the entire workspace 
+or a few selected variables. A simple representation of its syntax is
+
+
+\begin{lstlisting}[frame=none, numbers=none]
+    save filename var1 var2 ... varn
+\end{lstlisting}
+This command creates a MAT-file named filename.mat that holds the variables var1
+through varn. If the variables are omitted, all the workspace variables are saved. The load
+command can subsequently be used to retrieve the file:
+
+
+\begin{lstlisting}[frame=none, numbers=none]
+    load filename var1 var2 ... varn
+\end{lstlisting}
+which retrieves the variables \texttt{var1} through varn from \texttt{filename.mat}. As was the case
+with \texttt{save}, if the variables are omitted, all the variables are retrieved.
+For example, suppose that you use Eq. (1.9) to generate velocities for a set of drag
+coefficients:
+\begin{lstlisting}[frame=none, numbers=none]
+    >> g=9.81;m=80;t=5;
+    >> cd=[.25 .267 .245 .28 .273]';
+    >> v=sqrt(g*m ./cd).*tanh(sqrt(g*cd/m)*t);
+\end{lstlisting}
+You can then create a file holding the values of the drag coefficients and the velocities with
+\begin{lstlisting}[frame=none, numbers=none]
+    >> save veldrag v cd
+\end{lstlisting}
+To illustrate how the values can be retrieved at a later time, remove all variables from
+the workspace with the clear command,
+\begin{lstlisting}[frame=none, numbers=none]
+    >> clear
+\end{lstlisting}
+At this point, if you tried to display the velocities you would get the result:
+\begin{lstlisting}[frame=none, numbers=none]
+    >> v
+    ??? Undefined function or variable 'v'.
+\end{lstlisting}
+However, you can recover them by entering
+\begin{lstlisting}[frame=none, numbers=none]
+    >> load veldrag
+\end{lstlisting}
+Now, the velocities are available as can be verified by typing
+\begin{lstlisting}[frame=none, numbers=none]
+    >> who
+    Your variables are:
+    cd v
+\end{lstlisting}
+Although MAT-files are quite useful when working exclusively within the MATLAB
+environment, a somewhat different approach is required when interfacing MATLAB with
+other programs. In such cases, a simple approach is to create text files written in ASCII
+format.
+
+ASCII files can be generated in MATLAB by appending \texttt{–ascii} to the \texttt{save} command. In contrast to MAT-files where you might want to save the entire workspace, you
+would typically save a single rectangular matrix of values. For example,
+>> A=[5 7 9 2;3 6 3 9];
+>> save simpmatrix.txt –ascii
+In this case, the save command stores the values in A in 8-digit ASCII form. If you want
+to store the numbers in double precision, just append –ascii –double. In either case, the
+file can be accessed by other programs such as spreadsheets or word processors. For
+example, if you open this file with a text editor, you will see
+\begin{lstlisting}[frame=none, numbers=none]
+    5.0000000e+000 7.0000000e+000 9.0000000e+000 2.0000000e+000
+    3.0000000e+000 6.0000000e+000 3.0000000e+000 9.0000000e+000
+\end{lstlisting}
+
+Alternatively, you can read the values back into MATLAB with the load command,
+\begin{lstlisting}[frame=none, numbers=none]
+    >> load simpmatrix.txt
+\end{lstlisting}
+Because \texttt{simpmatrix.txt} is not a MAT-file, MATLAB creates a double precision array
+named after the \texttt{filename}:
+\begin{lstlisting}[frame=none, numbers=none]
+    >> simpmatrix
+    simpmatrix =
+                5 7 9 2
+                3 6 3 9
+\end{lstlisting}
+
+Alternatively, you could use the load command as a function and assign its values to a
+variable as in
+\begin{lstlisting}[frame=none, numbers=none]
+    >> A = load('simpmatrix.txt')
+\end{lstlisting}
+
+The foregoing material covers but a small portion of MATLAB's file management capabilities. For example, a handy import wizard can be invoked with the menu selections:
+\textbf{File, Import Data.} As an exercise, you can demonstrate the import wizards convenience by
+using it to open \texttt{simpmatrix.txt}. In addition, you can always consult \texttt{help} to learn more
+about this and other features.
+
+
+\section{STRUCTURED PROGRAMMING}
+The simplest of all M-files perform instructions sequentially. That is, the program statements are executed line by line starting at the top of the function and moving down to the
+end. Because a strict sequence is highly limiting, all computer languages include statements allowing programs to take nonsequential paths. These can be classified as
+\begin{itemize}
+    
+
+    \item  Decisions (or Selection). The branching of flow based on a decision.
+    \item  Loops (or Repetition). The looping of flow to allow statements to be repeated.
+    
+\end{itemize}
+
+\subsection{Decisions}
+
+The if Structure. This structure allows you to execute a set of statements if a logical
+condition is true. Its general syntax is
+if condition
+statements
+end
+
+where condition is a logical expression that is either true or false. For example, here is a
+simple M-file to evaluate whether a grade is passing:
+\begin{lstlisting}[frame=none, numbers=none]
+    function grader(grade)
+    % grader(grade):
+    % determines whether grade is passing
+    % input:
+    % grade = numerical value of grade (0-100)
+    % output:
+    % displayed message
+    if grade >= 60
+         disp('passing grade')
+    end
+\end{lstlisting}
+The following illustrates the result
+\begin{lstlisting}[frame=none, numbers=none]
+    >> grader(95.6)
+    passing grade
+\end{lstlisting}
+For cases where only one statement is executed, it is often convenient to implement
+the if structure as a single line,
+\begin{lstlisting}[frame=none, numbers=none]
+    if grade > 60, disp('passing grade'), end
+\end{lstlisting}
+This structure is called a single-line if. For cases where more than one statement is
+implemented, the multiline if structure is usually preferable because it is easier to
+read.
+
+Error Function. A nice example of the utility of a single-line if is to employ it for rudimentary error trapping. This involves using the error function which has the syntax,
+\begin{lstlisting}[frame=none, numbers=none]
+    error(msg)
+\end{lstlisting}
+When this function is encountered, it displays the text message msg, indicates where
+the error occurred, and causes the M-file to terminate and return to the command
+window.
+
+
+An example of its use would be where we might want to terminate an M-file to avoid
+a division by zero. The following M-file illustrates how this could be done:
+\begin{lstlisting}[frame=none, numbers=none]
+    function f = errortest(x)
+    if x == 0, error('zero value encountered'), end
+    f = 1/x;
+\end{lstlisting}
+If a nonzero argument is used, the division would be implemented successfully as in
+\begin{lstlisting}[frame=none, numbers=none]
+    >> errortest(10)
+    ans =
+         0.1000
+\end{lstlisting}
+However, for a zero argument, the function would terminate prior to the division and the
+error message would be displayed in red typeface:
+\begin{lstlisting}[frame=none, numbers=none]
+    >> errortest(0)
+    ??? Error using ==> errortest at 2
+    zero value encountered
+\end{lstlisting}
+
+\begin{table}[H]
+    \caption*{TABLE 3.2 Summary of relational operators in MATLAB}
+    \begin{tabular}{lll }
+            \hline
+            Example& Operator& Relationship\\
+            \hline
+            $x == 0  $  &  $==$& Equal\\
+            $unit \sim= 'm'$ &$\sim =$ &Not equal\\
+            $a < 0$ &$<$ &Less than\\
+            $s > t$ &$>$& Greater than\\
+            $3.9 <= a/3$ &$<=$ &Less than or equal to\\
+            $r >= 0$ &$>=$& Greater than or equal to\\
+            \hline
+    \end{tabular}	
+\end{table}
+
+Logical Conditions. The simplest form of the \texttt{condition} is a single relational expression that compares two values as in
+\begin{lstlisting}[frame=none, numbers=none]
+    >> b = [2;4;6;8;10]
+\end{lstlisting}
+value1 relation value2
+where the values can be constants, variables, or expressions and the relation is one of
+the relational operators listed in Table 3.2.
+MATLAB also allows testing of more than one logical condition by employing logical
+operators. We will emphasize the following:
+\begin{itemize}
+
+ \item (Not). Used to perform logical negation on an expression.
+\begin{lstlisting}[frame=none, numbers=none]
+    ~expression
+\end{lstlisting}
+
+If the expression is true, the result is false. Conversely, if the expression is false,
+the result is true.
+\item $\&$ (And). Used to perform a logical conjunction on two expressions.
+\begin{lstlisting}[frame=none, numbers=none]
+    expression1 & expression2
+\end{lstlisting}
+
+If both expressions evaluate to true, the result is true. If either or both expressions evaluates to false, the result is false.
+\item $ | $ (Or). Used to perform a logical disjunction on two expressions.
+\begin{lstlisting}[frame=none, numbers=none]
+    expression1 | expression2
+\end{lstlisting}
+
+If either or both expressions evaluate to true, the result is true.
+
+
+Table 3.3 summarizes all possible outcomes for each of these operators. Just as for
+arithmetic operations, there is a priority order for evaluating logical operations. These
+
+ 
+\end{itemize}
+
+\begin{table}[H]
+    \caption*{TABLE 3.3 A truth table summarizing the possible outcomes for logical operators
+    employed in MATLAB. The order of priority of the operators is shown at
+    the top of the table.}
+    \begin{tabular}{ccccc }
+        \hline
+          &&      Highest &$\longrightarrow$ &         Lowest\\
+        $x$&$y$ &$~x$ &$x\&y$ &$x | y$\\
+        \hline
+        T&T& F& T& T\\
+        T&F &F &F &T\\
+        F&T &T& F &T\\
+        F&F &T &F& F\\
+        \hline
+    \end{tabular}	
+\end{table}
+
+
+are from highest to lowest: $\sim , \&$ and $|$. In choosing between operators of equal priority,
+MATLAB evaluates them from left to right. Finally, as with arithmetic operators, parentheses can be used to override the priority order.
+Let's investigate how the computer employs the priorities to evaluate a logical expression. If \texttt{a = -1, b=2, x=1}, and \texttt{y = 'b'}, evaluate whether the following is true or false:
+\begin{lstlisting}[frame=none, numbers=none]
+    a * b > 0 & b == 2 & x > 7 | ~(y > 'd')
+\end{lstlisting}
+
+To make it easier to evaluate, substitute the values for the variables:
+\begin{lstlisting}[frame=none, numbers=none]
+    -1 * 2 > 0 & 2 == 2 & 1 > 7 | ~('b' > 'd')
+\end{lstlisting}
+
+The first thing that MATLAB does is to evaluate any mathematical expressions. In this
+example, there is only one: -1 * 2,
+\begin{lstlisting}[frame=none, numbers=none]
+    -2 > 0 & 2 == 2 & 1 > 7 | ~('b' > 'd')
+\end{lstlisting}
+Next, evaluate all the relational expressions
+\begin{lstlisting}[frame=none, numbers=none]
+    -2 > 0 & 2 == 2 & 1 > 7 | ~('b' > 'd')
+    F & T & F | ~ F
+\end{lstlisting}
+
+At this point, the logical operators are evaluated in priority order. Since the $\sim$ has highest
+priority, the last expression ($\sim$F) is evaluated first to give
+\begin{lstlisting}[frame=none, numbers=none]
+    F & T & F | T
+\end{lstlisting}
+
+The $\&$ operator is evaluated next. Since there are two, the left-to-right rule is applied and
+the first expression (F $\&$ T) is evaluated:
+\begin{lstlisting}[frame=none, numbers=none]
+    F & F | T
+\end{lstlisting}
+
+The $\&$ again has highest priority
+\begin{lstlisting}[frame=none, numbers=none]
+    F | T
+\end{lstlisting}
+
+Finally, the | is evaluated as true. The entire process is depicted in Fig. 3.1.
+The if$\ldots$else Structure. This structure allows you to execute a set of statements if
+a logical condition is true and to execute a second set if the condition is false. Its general
+syntax is
+\begin{lstlisting}[frame=none, numbers=none]
+    if condition
+    statements1
+    else
+    statements2
+    end
+\end{lstlisting}
+The if$\ldots$elseif Structure. It often happens that the false option of an if$\ldots$else
+structure is another decision. This type of structure often occurs when we have more than
+two options for a particular problem setting. For such cases, a special form of decision
+structure, the if$\ldots$elseif has been developed. It has the general syntax
+\begin{lstlisting}[frame=none, numbers=none]
+    if condition1
+    statements1
+    elseif condition2
+    statements2
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{fig_3.1}
+    \caption{A step-by-step evaluation of a complex decision}
+\end{figure}
+
+\begin{lstlisting}[frame=none, numbers=none]
+    elseif condition3
+    statements3
+    .
+    .
+    .
+    else
+    statementselse
+    end
+\end{lstlisting}
+
+\section*{EXAMPLE 3.4 if Structures}
+
+Problem Statement. For a scalar, the built-in MATLAB sign function returns the sign
+of its argument (−1, 0, 1). Here’s a MATLAB session that illustrates how it works:
+
+\begin{lstlisting}[frame=none, numbers=none]
+    >> sign(25.6)
+    ans =
+         1
+    >> sign(-0.776)
+    ans =
+        -1
+    >> sign(0)
+    ans =
+        0
+\end{lstlisting}
+Develop an M-file to perform the same function.
+
+Solution. First, an if structure can be used to return 1 if the argument is positive:
+\begin{lstlisting}[frame=none, numbers=none]
+    % mysign(x) returns 1 if x is greater than zero.
+    if x > 0
+    sgn = 1;
+    end
+\end{lstlisting}function sgn = mysign(x)
+
+This function can be run as
+\begin{lstlisting}[frame=none, numbers=none]
+    >> mysign(25.6)
+    ans =
+          1
+\end{lstlisting}
+Although the function handles positive numbers correctly, if it is run with a negative
+or zero argument, nothing is displayed. To partially remedy this shortcoming, an
+if$\ldots$else structure can be used to display –1 if the condition is false:
+function sgn = mysign(x)
+\begin{lstlisting}[frame=none, numbers=none]
+    % mysign(x) returns 1 if x is greater than zero.
+    % -1 if x is less than or equal to zero.
+    if x > 0
+        sgn = 1;
+    else
+        sgn = -1;
+    end
+\end{lstlisting}
+    This function can be run as
+
+\begin{lstlisting}[frame=none, numbers=none]
+    >> mysign(-0.776)
+    ans =
+         -1
+\end{lstlisting}
+Although the positive and negative cases are now handled properly, -1 is erroneously
+returned if a zero argument is used. An if$\ldots$elseif structure can be used to incorporate
+this final case:
+function sgn = mysign(x)
+\begin{lstlisting}[frame=none, numbers=none]
+    % mysign(x) returns 1 if x is greater than zero.
+    % -1 if x is less than zero.
+    % 0 if x is equal to zero.
+    if x > 0
+        sgn = 1;
+    elseif x < 0
+        sgn = -1;
+    else
+        sgn = 0;
+    end
+\end{lstlisting}
+    The function now handles all possible cases. For example,
+
+\begin{lstlisting}[frame=none, numbers=none]
+    >> mysign(0)
+    ans =
+         0
+\end{lstlisting}
+
+The switch Structure. The switch structure is similar in spirit to the \texttt{if$\ldots$elseif}
+structure. However, rather than testing individual conditions, the branching is based on the
+value of a single test expression. Depending on its value, different blocks of code are implemented. In addition, an optional block is implemented if the expression takes on none of
+the prescribed values. It has the general syntax
+
+\begin{lstlisting}[frame=none, numbers=none]
+    switch testexpression
+        case value1
+    statements1
+    case value2
+        statements2
+    .
+    .
+    .
+    otherwise
+        statements_otherwise
+    end
+\end{lstlisting}
+As an example, here is function that displays a message depending on the value of the
+string variable, \texttt{grade}.
+\begin{lstlisting}[frame=none, numbers=none]
+    grade = 'B';
+    switch grade
+        case 'A'
+            disp('Excellent')
+        case 'B'
+            disp('Good')
+        case 'C'
+            disp('Mediocre')
+        case 'D'
+            disp('Whoops')
+        case 'F'
+            disp('Would like fries with your order?')
+        otherwise
+            disp('Huh!')
+    end
+\end{lstlisting}
+When this code was executed, the message “Good” would be displayed.
+
+
+Variable Argument List. MATLAB allows a variable number of arguments to be passed
+to a function. This feature can come in handy for incorporating default values into your
+functions. A default value is a number that is automatically assigned in the event that the
+user does not pass it to a function.
+
+
+As an example, recall that earlier in this chapter, we developed a function \texttt{freefall},
+which had three arguments:
+\begin{lstlisting}[frame=none, numbers=none]
+    v = freefall(t,m,cd)
+\end{lstlisting}
+Although a user would obviously need to specify the time and mass, they might not have a
+good idea of an appropriate drag coefficient. Therefore, it would be nice to have the 
+program supply a value if they omitted it from the argument list.
+
+
+MATLAB has a function called nargin that provides the number of input arguments
+supplied to a function by a user. It can be used in conjunction with decision structures like
+
+the if or switch constructs to incorporate default values as well as error messages into
+your functions. The following code illustrates how this can be done for freefall:
+
+\begin{lstlisting}[frame=none, numbers=none]
+    function v = freefall2(t, m, cd)
+    % freefall2: bungee velocity with second-order drag
+    %   v=freefall2(t,m,cd) computes the free-fall velocity
+    %               of an object with second-order drag.
+    % input:
+    %   t = time (s)
+    %   m = mass (kg)
+    %   cd = drag coefficient (default = 0.27 kg/m)
+    % output:
+    %   v = downward velocity (m/s)
+    switch nargin
+    case 0
+        error('Must enter time and mass')
+    case 1
+        error('Must enter mass')
+    case 2
+        cd = 0.27;
+    end
+    g = 9.81; % acceleration of gravity
+    v = sqrt(g * m / cd)*tanh(sqrt(g * cd / m) * t);
+\end{lstlisting}
+Notice how we have used a switch structure to either display error messages or set the
+default, depending on the number of arguments passed by the user. Here is a command
+window session showing the results:
+\begin{lstlisting}[frame=none, numbers=none]
+    >> freefall2(12,68.1,0.25)
+    ans =
+        50.6175
+    >> freefall2(12,68.1)
+    ans =
+        48.8747
+    >> freefall2(12)
+    ??? Error using ==> freefall2 at 15
+    Must enter mass
+    >> freefall2()
+    ??? Error using ==> freefall2 at 13
+    Must enter time and mass
+\end{lstlisting}
+
+Note that nargin behaves a little differently when it is invoked in the command
+window. In the command window, it must include a string argument specifying the function and it returns the number of arguments in the function. For example,
+\begin{lstlisting}[frame=none, numbers=none]
+    >> nargin('freefall2')
+    ans =
+            3
+\end{lstlisting}
+
+
+\subsection{Loops}
+
+
+As the name implies, loops perform operations repetitively. There are two types of loops,
+depending on how the repetitions are terminated. A for loop ends after a specified number
+of repetitions. A while loop ends on the basis of a logical condition.
+The for$\ldots$ end Structure. A for loop repeats statements a specific number of times. Its
+general syntax is
+
+
+\begin{lstlisting}[frame=none, numbers=none]
+    >> b = [2;4;6;8;10]
+\end{lstlisting}for index = start:step:finish
+statements
+end
+
+
+The for loop operates as follows. The index is a variable that is set at an initial value,
+start. The program then compares the index with a desired final value, finish. If the
+index is less than or equal to the finish, the program executes the statements. When
+it reaches the end line that marks the end of the loop, the index variable is increased by
+the step and the program loops back up to the for statement. The process continues until
+the index becomes greater than the finish value. At this point, the loop terminates as the
+program skips down to the line immediately following the end statement.
+
+
+Note that if an increment of 1 is desired (as is often the case), the step can be dropped.
+For example,
+
+
+\begin{lstlisting}[frame=none, numbers=none]
+    >> b = [2;4;6;8;10]
+\end{lstlisting}for i = 1:5
+disp(i)
+end
+When this executes, MATLAB would display in succession, 1, 2, 3, 4, 5. In other
+words, the default step is 1.
+
+
+The size of the step can be changed from the default of 1 to any other numeric value.
+It does not have to be an integer, nor does it have to be positive. For example, step sizes of
+0.2, –1, or –5, are all acceptable.
+
+
+If a negative step is used, the loop will “countdown” in reverse. For such cases, the
+loop’s logic is reversed. Thus, the finish is less than the start and the loop terminates
+when the index is less than the finish. For example,
+\begin{lstlisting}[frame=none, numbers=none]
+    >> b = [2;4;6;8;10]
+\end{lstlisting}for j = 10:-1:1
+disp(j)
+end
+When this executes, MATLAB would display the classic “countdown” sequence: 
+\begin{lstlisting}[frame=none, numbers=none]
+    >> b = [2;4;6;8;10]
+\end{lstlisting}10, 9,
+8, 7, 6, 5, 4, 3, 2, 1.
+
+
+\section*{EXAMPLE 3.5 Using a for Loop to Compute the Factorial}
+
+Problem Statement. Develop an M-file to compute the factorial.
+\[\begin{array}{ll}
+    0!& = 1\\
+    1!& = 1\\
+    2!& = 1 \times 2 = 2\\
+    3!& = 1 \times 2 \times 3 = 6\\
+    4!& = 1 \times 2 \times 3 \times 4 = 24\\
+    5!& = 1 \times 2 \times 3 \times 4 \times 5 = 120\\ 
+    \vdots \\
+\end{array} \]
+
+
+Solution. A simple function to implement this calculation can be developed as
+function fout = factor(n)
+\begin{lstlisting}[frame=none, numbers=none]
+    % factor(n):
+    % Computes the product of all the integers from 1 to n.
+    x = 1;
+    for i = 1:n
+        x = x * i;
+    end
+    fout = x;
+    end
+\end{lstlisting}
+which can be run as
+\begin{lstlisting}[frame=none, numbers=none]
+    >> factor(5)
+    ans =
+         120
+\end{lstlisting}
+This loop will execute 5 times (from 1 to 5). At the end of the process, x will hold a value
+of 5! (meaning 5 factorial or 1 $\times$ 2 $\times$ 3 $\times$ 4 $\times$ 5 = 120).
+Notice what happens if n = 0. For this case, the for loop would not execute, and we
+would get the desired result, 0! = 1.
+
+\chapter*{asdas}
+
+
+
+
+
 \noindent \textbf{Vectorization}. The \texttt{for} loop is easy to implement and understand. However, for MATLAB, it is not necessarily the most efficient means to repeat statements a specific number of times. Because of MATLAB's ability to operate directly on arrays, \emph{vectorization} provides a much more efficient option. For example, the following \texttt{for} loop structure:\\
+
+
+
 
 \texttt{i=0;\\
 \indent t=0: 0.02: 50\\
@@ -1227,3 +2280,8 @@ We can use \texttt{odesimp} to obtain the same result numerically as in\\
 \end{figure}
 
 \end{document}
+
+
+
+
+

@@ -13,11 +13,10 @@
 \end{center}
 
 \normalsize{The primary objective of this chapter is to provide an introduction and overview of
-how MATLAB’s calculator mode is used to implement interactive computations.
+how MATLAB's calculator mode is used to implement interactive computations.
 Specific objectives and topics covered are}
-
+'
 \begin{itemize}
-
 
 
 	\item Learning how real and complex numbers are assigned to variables
@@ -25,7 +24,7 @@ Specific objectives and topics covered are}
 the colon operator, and the linspace and logspace functions.
 \item  Understanding the priority rules for constructing mathematical expressions.
 \item  Gaining a general understanding of built-in functions and how you can learn more
-about them with MATLAB’s Help facilities.
+about them with MATLAB's Help facilities.
 \item  Learning how to use vectors to create a simple line plot based on an equation.
 \end{itemize}
 \Large{YOU'VE GOT A PROBLEM}
@@ -638,7 +637,7 @@ element. The MATLAB \textsl{manual calls these array operations.} They are also 
 to as \textsl{element-by-element operations.}
 
 
-MATLAB contains a helpful shortcut for performing calculations that you’ve already
+MATLAB contains a helpful shortcut for performing calculations that you've already
 done. Press the up-arrow key. You should get back the last line you typed in.
 \begin{lstlisting}[frame=none, numbers=none]
 	>> A.^2
@@ -680,7 +679,7 @@ For a list of all the elementary functions, type
 \begin{lstlisting}[frame=none, numbers=none]
 	>> help elfun
 \end{lstlisting}
-One of their important properties of MATLAB’s built-in functions is that they will operate directly on vector and matrix quantities. For example, try
+One of their important properties of MATLAB's built-in functions is that they will operate directly on vector and matrix quantities. For example, try
 \begin{lstlisting}[frame=none, numbers=none]
 	>> log(A)
 	ans =
@@ -738,7 +737,7 @@ arrays. For example, the sum function returns the sum of the elements:
 	ans =
 		19
 \end{lstlisting}
-In a similar way, it should be pretty obvious what’s happening with the following commands:
+In a similar way, it should be pretty obvious what's happening with the following commands:
 \begin{lstlisting}[frame=none, numbers=none]
 	>> min(F),max(F),mean(F),prod(F),sort(F)
 
@@ -877,7 +876,7 @@ markers connected by green dashed lines, you could enter
 \begin{lstlisting}[frame=none, numbers=none]
 	>> plot(t, v, 's--g')
 \end{lstlisting}
-You can also control the line width as well as the marker’s size and its edge and face (i.e.,
+You can also control the line width as well as the marker's size and its edge and face (i.e.,
 interior) colors. For example, the following command uses a heavier (2-point), dashed,
 cyan line to connect larger (10-point) diamond-shaped markers with black edges and
 magenta faces:
@@ -924,7 +923,7 @@ This command breaks the graph window into an $m$-by-$n$ matrix of small axes, an
 the p-th axes for the current plot.
 
 
-We can demonstrate $subplot$ by examining MATLAB’s capability to generate threedimensional plots. The simplest
+We can demonstrate $subplot$ by examining MATLAB's capability to generate threedimensional plots. The simplest
  manifestation of this capability is the $plot3$ command
 which has the syntax
 \begin{lstlisting}[frame=none, numbers=none]
@@ -932,7 +931,7 @@ which has the syntax
 \end{lstlisting}
 where $x, y,$ and z are three vectors of the same length. The result is a line in three-dimensional
 space through the points whose coordinates are the elements of $x, y,$ and $z.$
-Plotting a helix provides a nice example to illustrate its utility. First, let’s graph a circle
+Plotting a helix provides a nice example to illustrate its utility. First, let's graph a circle
 with the two-dimensional $plot$ function using the parametric representation: $x = sin(t)$
 and $y = cos(t)$. We employ the $subplot$ command so we can subsequently add the threedimensional plot.
 \begin{lstlisting}[frame=none, numbers=none]
@@ -945,14 +944,14 @@ As in Fig. 2.1a, the result is a circle. Note that the circle would have been di
 had not used the axis square command.
 
 
-Now, let’s add the helix to the graph’s right pane. To do this, we again employ a parametric representation:
+Now, let's add the helix to the graph's right pane. To do this, we again employ a parametric representation:
  $x = sin(t)$, $y = cos(t)$, and $z = t$
  \begin{lstlisting}[frame=none, numbers=none]
 	>> subplot(1,2,2);plot3(sin(t),cos(t),t);
 	>> title('(b)')
 \end{lstlisting}
-The result is shown in Fig. 2.1b. Can you visualize what’s going on? As time evolves,
-the$ x$ and$ y$ coordinates sketch out the circumference of the circle in the $x–y$ plane in the
+The result is shown in Fig. 2.1b. Can you visualize what's going on? As time evolves,
+the$ x$ and$ y$ coordinates sketch out the circumference of the circle in the $x-y$ plane in the
 same fashion as the two-dimensional plot. However, simultaneously, the curve rises vertically as the z coordinate 
 increases linearly with time. The net result is the characteristic
 spring or spiral staircase shape of the helix.
@@ -969,7 +968,7 @@ plots, three-dimensional mesh plots, and contour plots. As described next, a var
 
 The foregoing was designed to focus on those features of MATLAB that we will be using
 in the remainder of this book. As such, it is obviously not a comprehensive overview of all
-of MATLAB’s capabilities. If you are interested in learning more, you should consult one
+of MATLAB's capabilities. If you are interested in learning more, you should consult one
 
 
 \begin{figure}[H]
@@ -983,7 +982,7 @@ of the excellent books devoted to MATLAB (e.g., Attaway, 2009; Palm, 2007; Hanse
 and Littlefield, 2005; and Moore, 2008).
 Further, the package itself includes an extensive Help facility that can be accessed by
 clicking on the Help menu in the command window. This will provide you with a number
-of different options for exploring and searching through MATLAB’s Help material. In addition, it provides access to a number of instructive demos.
+of different options for exploring and searching through MATLAB's Help material. In addition, it provides access to a number of instructive demos.
 As described in this chapter, help is also available in interactive mode by typing the
 help command followed by the name of a command or function.
 If you do not know the name, you can use the lookfor command to search the
@@ -1013,7 +1012,7 @@ our intent is to gain insight into the patterns and mechanisms hidden in the dat
 In this case study, we will illustrate how MATLAB facilitates such exploratory data
 analysis. We will do this by estimating the drag coefficient of a free-falling human based on
 Eq. (2.1) and the data from Table 2.1. However, beyond merely computing the drag
-coefficient, we will use MATLAB’s graphical capabilities to discern patterns in the data.
+coefficient, we will use MATLAB's graphical capabilities to discern patterns in the data.
 Solution. The data from Table 2.1 along with gravitational acceleration can be entered as
 
 \begin{lstlisting}[frame=none, numbers=none]
@@ -1029,7 +1028,7 @@ element-by-element operations on vectors, we must include periods prior to the o
 	cd =
 		0.2876 0.2511 0.2730 0.2881 0.3125 0.2815 0.3039
 \end{lstlisting}
-We can now use some of MATLAB’s built-in functions to generate some statistics for the
+We can now use some of MATLAB's built-in functions to generate some statistics for the
 results:
 \begin{lstlisting}[frame=none, numbers=none]
 	>> cdavg=mean(cd),cdmin=min(cd),cdmax=max(cd)
@@ -1041,7 +1040,7 @@ results:
 		0.3125
 \end{lstlisting}
 Thus, the average value is 0.2854 with a range from 0.2511 to 0.3125 kg/m.
-Now, let’s start to play with these data by using Eq. (2.1) to make a prediction of the
+Now, let's start to play with these data by using Eq. (2.1) to make a prediction of the
 terminal velocity based on the average drag:
 \begin{lstlisting}[frame=none, numbers=none]
 	>> vpred=sqrt(g*m/cdavg)
@@ -1096,7 +1095,7 @@ In addition, the result might also stimulate you to go to the fluid mechanics li
 learn more about the science of drag. As described previously in Sec. 1.4, you would discover that the parameter 
 $c_d$ is actually a 
 lumped drag coefficient that along with the true
-drag includes other factors such as the jumper’s frontal area and air density:
+drag includes other factors such as the jumper's frontal area and air density:
 
 \begin{equation}
 	\tag{2.2}
@@ -1122,14 +1121,14 @@ being constant, the drag coefficient seems to be increasing as the mass of the j
 
 \begin{multicols}{2}
 
-	2.1 Use the linspace function to create vectors identical to
+			\textbf{2.1} Use the linspace function to create vectors identical to
 	the following created with colon notation:
 	\begin{enumerate}[label=(\alph*)]
 		\item \texttt{t = 4:6:35}
 		\item \texttt{x = -4:2}
 	\end{enumerate}
 	
-	2.2 Use colon notation to create vectors identical to the
+	\textbf{2.2} Use colon notation to create vectors identical to the
 	following created with the linspace function:
 	\begin{enumerate}[label=(\alph*)]
 		\item \texttt{v = linspace(-2,1.5,8)}
@@ -1137,12 +1136,14 @@ being constant, the drag coefficient seems to be increasing as the mass of the j
 	\end{enumerate}
 	
 
-	2.3 The command linspace(a, b, n) generates a row
+	\textbf{2.3} The command linspace(a, b, n) generates a row
 	vector of n equally spaced points between a and b. Use
 	colon notation to write an alternative one-line command to
 	generate the same vector. Test your formulation for a = -3,
 	b = 5, n = 6.
-	2.4 The following matrix is entered in MATLAB:
+
+
+	\textbf{2.4} The following matrix is entered in MATLAB:
 	\texttt{>> A=[3 2 1;0:0.5:1;linspace(6, 8, 3)]}
 	\begin{enumerate}[label=(\alph*)]
 		\item Write out the resulting matrix.
@@ -1151,7 +1152,7 @@ being constant, the drag coefficient seems to be increasing as the mass of the j
 	\end{enumerate}
 	
 
-	2.5 The following equation can be used to compute values
+	\textbf{2.5} The following equation can be used to compute values
 	of y as a function of x:
 
 	$$y=be^{-ax}sin(bx)(0.012x^4-0.15x^3+0.075x^2+2.5x) $$
@@ -1170,7 +1171,7 @@ use a 1.5-point, dashdotted red line with 14-point, rededged, white-faced pentag
 standard-sized (i.e., default) solid blue line with standardsized, blue-edged, green-faced square markers.
 
 
-2.6 A simple electric circuit consisting of a resistor, a capacitor, and an inductor is depicted in Fig. P2.6. The charge
+\textbf{2.6} A simple electric circuit consisting of a resistor, a capacitor, and an inductor is depicted in Fig. P2.6. The charge
 on the capacitor $q(t)$ as a function of time can be computed
 as
 
@@ -1184,18 +1185,22 @@ $$q(t)=q_0e^{-Rt/(2L)}cos \left[\sqrt{ \dfrac{1}{LC}-\left(\dfrac{R}{2L} \right)
    \label{fig_P2.6}
 \end{figure}
 
-where t = time, q0 = the initial charge, R = the resistance,
+where t = time, $q_0$ = the initial charge, R = the resistance,
 L = inductance, and C = capacitance. Use MATLAB to
 generate a plot of this function from t = 0 to 0.8, given that
-q0 = 10, R = 60, L = 9, and C = 0.00005.
-2.7 The standard normal probability density function is a
+$q_0$ = 10, R = 60, L = 9, and C = 0.00005.
+
+
+\textbf{2.7} The standard normal probability density function is a
 bell-shaped curve that can be represented as
 
 $$f(z)=\dfrac{1}{\sqrt{2\pi}}e^{-z^2/2} $$
 
 Use MATLAB to generate a plot of this function from
 $z = -5$ to 5. Label the ordinate as frequency and the abscissa as$ z$.
-2.8 If a force $F$ (N) is applied to compress a spring, its displacement x (m) can often be modeled by Hooke’s law:
+
+
+\textbf{2.8} If a force $F$ (N) is applied to compress a spring, its displacement x (m) can often be modeled by Hooke's law:
 
 $$F=kx $$
 
@@ -1221,21 +1226,21 @@ Use the max function to determine the maximum potential
 energy.
 
 
-2.9 The density of freshwater can be computed as a function
+\textbf{2.9} The density of freshwater can be computed as a function
 of temperature with the following cubic equation:
 
 
 $$ \rho =5.5289x10^{-8}T_C^3-8.5016 \times 10^{-6}T_C^2 $$
 $$+6.5622 \times 10^{-5}T_C+0.99987$$
 where $\rho$ = density ($g/cm^3$
-) and $T_C$ = temperature ($\circ C$). Use
+) and $T_C$ = temperature ($^{\circ} C$). Use
 MATLAB to generate a vector of temperatures ranging from
 32 F to 93.2 F using increments of 3.6 F. Convert this vector to degrees Celsius and then compute a vector of densities
 based on the cubic formula. Create a plot of $\rho$ versus $T_C$ .
 Recall that $T_C = 5/9(T_F - 32)$.
-2.10 Manning’s equation can be used to compute the velocity of water in a rectangular open channel:
 
 
+\textbf{2.10} Manning's equation can be used to compute the velocity of water in a rectangular open channel:
 where $U$ = velocity (m/s), $S$ = channel slope, $n$ = roughness
 coefficient, $B$ = width (m), and $H$ = depth (m). The following data are available for five channels:
 
@@ -1260,7 +1265,7 @@ column vector containing the velocities based on the values
 in the parameter matrix.
 
 
-2.11 It is general practice in engineering and science that
+\textbf{2.11} It is general practice in engineering and science that
 equations be plotted as lines and discrete data as symbols.
 Here are some data for concentration $(c)$ versus time $(t)$ for
 the photodegradation of aqueous bromine:
@@ -1286,13 +1291,13 @@ Use MATLAB to create a plot displaying both the data
 70 min.
 
 
-2.12 The \texttt{semilogy} function operates in an identical fashion
+\textbf{2.12} The \texttt{semilogy} function operates in an identical fashion
 to the \texttt{plot} function except that a logarithmic (base-10) scale
 is used for the y axis. Use this function to plot the data and
 function as described in Prob. 2.11. Explain the results.
 
 
-2.13 Here are some wind tunnel data for force (F) versus
+\textbf{2.13} Here are some wind tunnel data for force (F) versus
 velocity $(v)$:
 
 \begin{tabular}{ccccccccc}
@@ -1312,17 +1317,17 @@ $$F=0.2741v^{1.9842} $$
 Use MATLAB to create a plot displaying both the data (using
 circular magenta symbols) and the function (using a black
 dash-dotted line). Plot the function for $v = 0$ to 100 m/s and
-label the plot’s axes.
+label the plot's axes.
 
 
-2.14 The \texttt{loglog} function operates in an identical fashion
+\textbf{2.14} The \texttt{loglog} function operates in an identical fashion
 to the \texttt{plot} function except that logarithmic scales are used
 for both the x and y axes. Use this function to plot the data
 and function as described in Prob. 2.13. Explain the results.
 
 
 
-2.15 The Maclaurin series expansion for the cosine is
+\textbf{2.15} The Maclaurin series expansion for the cosine is
 
 $$cosx = 1 - \dfrac{x^2}{2!}+ \dfrac{x^4}{4!}- \dfrac{x^6}{6!}+ \dfrac{x^8}{8!}- \ldots $$
 
@@ -1334,17 +1339,17 @@ factorial in computing the series expansion. Make the
 range of the abscissa from $x = 0$ to $3\pi /2$.
 
 
-2.16 You contact the jumpers used to generate the data in
+\textbf{2.16} You contact the jumpers used to generate the data in
 Table 2.1 and measure their frontal areas. The resulting
 values, which are ordered in the same sequence as the
 corresponding values in Table 2.1, are
+	\begin{tabular}{cccccccc}
+		\hline
+		\textbf{$A, m^2$} &0.455 &0.402 &0.452& 0.486 &0.531 &0.475 &0.487\\
+		\hline
+		
+	\end{tabular}
 
-\begin{tabular}{cccccccc}
-	\hline
-	\textbf{$A, m^2$} &0.455 &0.402 &0.452& 0.486 &0.531 &0.475 &0.487\\
-	\hline
-	
-\end{tabular}
 
 \begin{enumerate}[label=(\alph*)]
 	\item If the air density is $\rho$ = 1.223 $kg/m^3$
@@ -1358,7 +1363,7 @@ corresponding values in Table 2.1, are
 \end{enumerate}
 
 
-2.17 The following parametric equations generate a conical
+\textbf{2.17} The following parametric equations generate a conical
 helix
 \[ \begin{array}{lll}
 	x &= &t cos(6t)\\
@@ -1372,7 +1377,9 @@ Compute values of $x, y,$ and z for $t = 0$ to $6\pi $with
 $\Delta $= $\pi/64$. Use \texttt{subplot} to generate a two-dimensional
 line plot (red solid line) of ($x, y$) in the top pane and a threedimensional line plot (cyan solid line) of (x, y, z) in the
 bottom pane. Label the axes for both plots.
-2.18 Exactly what will be displayed after the following
+
+
+\textbf{2.18} Exactly what will be displayed after the following
 MATLAB commands are typed?
 \begin{enumerate}[label=(\alph*)]
 		
@@ -1381,15 +1388,113 @@ MATLAB commands are typed?
 	\begin{lstlisting}[frame=none, numbers=none]
 		>> x = 5;
 		>> x ^ 3;
-		>> y = 8 – x
+		>> y = 8 - x
 	\end{lstlisting}
 	\item 
 	\begin{lstlisting}[frame=none, numbers=none]
 		>> q = 4:2:12;
-		>> r = [7 8 4; 3 6 –5];
+		>> r = [7 8 4; 3 6 -5];
 		>> sum(q) * r(2, 3) 
 	\end{lstlisting}
 \end{enumerate}
+
+\textbf{2.19} The trajectory of an object can be modeled as
+
+$$y=(tan\theta_0  )x-\dfrac{g}{2v_0^2cos^2\theta_0 }x^2+y_0$$
+
+
+where $y =$ height (m), $\theta_0 =$ initial angle (radians), $x =$
+horizontal distance (m), $g$ = gravitational acceleration($= 9.81 m/s^2$
+),$ v_0$ = initial velocity (m/s), and $y_0 =$ initial
+height. Use MATLAB to find the trajectories for$ y_0 = 0$ and
+$v_0 = 28 m/s$ for initial angles ranging from 15 to 75$^{\circ}$ in increments of 15$^{\circ}$. Employ a 
+range of horizontal distances
+from $x = 0$ to 80 m in increments of 5 m. The results should
+be assembled in an array where the first dimension (rows)
+corresponds to the distances, and the second dimension
+(columns) corresponds to the different initial angles. Use
+this matrix to generate a single plot of the heights versus
+horizontal distances for each of the initial angles. Employ a
+legend to distinguish among the different cases, and scale
+the plot so that the minimum height is zero using the texttt{axis}
+command.
+
+\textbf{2.20} The temperature dependence of chemical reactions can
+be computed with the Arrhenius equation:
+
+$$k=Ae^{-E/RT_a}$$
+
+where $k =$ reaction rate ($s^{-1}$), $A =$ the preexponential (or frequency) factor, 
+$E =$ activation energy (J/mol), $R = $gas constant [8.314 J/(mole $\cdot$  K)], and $T_a =$ absolute temperature
+(K). A compound has $E = 1 \times  105$ J/mol and $A = 7 \times 1016$.
+Use MATLAB to generate values of reaction rates for
+temperatures ranging from 253 to 325 K. Use texttt{subplot} to
+generate a side-by-side graph of (a) k versus Ta (green line)
+and (b) log10 k (red line) versus 1/Ta. Employ the texttt{semilogy}
+function to create (b). Include axis labels and titles for both
+subplots. Interpret your results.
+
+
+\textbf{2.21} Figure P2.21a shows a uniform beam subject to a linearly increasing distributed load. As depicted in Fig. P2.21b,
+deflection y (m) can be computed with
+
+$$y=\dfrac{\omega_0}{120EIL}(-x^5+2L^2x^3-L^4x)$$
+
+where E = the modulus of elasticity and $I =$ the moment of
+inertia ($m^4$). Employ this equation and calculus to generate
+MATLAB plots of the following quantities versus distance
+along the beam:
+
+\begin{enumerate}[label=(\alph*)]
+	\item displacement ($y$), 
+	\item slope [$\theta(x) = dy/dx$], 
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.40\textwidth]{fig_P2.21}
+   \caption*{\textsf{FIGURE P2.21}}
+   \label{fig_P2.6}
+\end{figure}
+\item moment [$M(x) = EId^2 y/dx^2$],
+\item shear [$V(x) = EId^3 y/dx^3$], and
+
+\item loading [$w(x) = -EId^4 y/dx^4$].
+Use the following parameters for your computation:
+$L = 600 cm, E = 50,000 kN/cm2$ , $I = 30,000 cm^4$,
+
+$\omega_0 = 2.5 kN/cm$, and $\Delta x = 10 cm$. Employ the texttt{subplot}
+function to display all the plots vertically on the same page
+in the order (a) to (e). Include labels and use consistent MKS
+units when developing the plots.
+\end{enumerate}
+
+\textbf{2.22} The butterfly curve is given by the following parametric equations:
+
+$$x = sin(t)\left( e^{\cos t} - 2 \cos 4t - \sin^5 \dfrac{t}{12} \right)$$
+
+$$y = \cos(t)\left( e^{\cos t} - 2 \cos 4t - \sin^5 \dfrac{t}{12} \right)$$
+
+Generate values of $x$ and $y$ for values of$ t$ from 0 to 100 with
+$\Delta t = 1/16$. Construct plots of (a) $x$ and $y $versus $t$ and (b) $y$
+versus $x$. Use subplot to stack these plots vertically and
+make the plot in (b) square. Include titles and axis labels on
+both plots and a legend for (a). For (a), employ a dotted line
+for $y$ in order to distinguish it from $x$.
+
+
+\textbf{2.23} The butterfly curve from Prob. 2.22 can also be represented in polar coordinates as
+
+
+
+$$r= e^{sin \theta}-2\cos(4\theta )- \sin^5 \left(\dfrac{2\theta - \pi }{24} \right) $$
+
+Generate values of $r$ for values of $\theta$ from 0 to $8\pi$ with
+$\Delta\theta = \pi/32$. Use the MATLAB function \texttt{polar} to generate
+the polar plot of the butterfly curve with a dashed red line.
+Employ the MATLAB Help to understand how to generate
+the plot.
+
 
 
 \end{multicols}
@@ -1397,59 +1502,3 @@ MATLAB commands are typed?
 
 \end{document}
 
-
-
-
-
-
-
-
-\texttt{}
-\begin{enumerate}
-	\item 
-\end{enumerate}
-
-
-\begin{enumerate}[label=(\alph*)]
-	\item 
-\end{enumerate}
-
-\begin{table}[H]
-	\caption{Tablica ilorazów różnicowych}
-		\begin{tabular}{|c| c|c| c|c| c|c| }
-			\hline 
-
-			&&&&
-
-
-			
-
-
-			\begin{table*}[H]
-				\caption{TABLE 2.2 Specifiers for colors, symbols, and line types}
-				\begin{tabular}{|c| c|c| c|c| c|c| }
-						\hline
-						&&
-				\end{tabular}	
-			\end{table}
-
-
-		
-			\begin{lstlisting}[frame=none, numbers=none]
-				>> b = [2;4;6;8;10]
-			\end{lstlisting}
-
-			\begin{table}[H]
-				\centering
-				\begin{tabular}{ll}
-					\hline
-						& Exponentiation\\
-					$ - $ &Negation\\
-					$ \ast  \ \setminus $ &Multiplication and division\\
-					$ \setminus$ &Left division\\
-					$ + \ - $ &Addition and subtraction\\
-					\hline
-				\end{tabular}
-			\end{table}
-
-			$^{\circ}$
