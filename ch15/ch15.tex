@@ -177,7 +177,7 @@ $$
 
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=1\linewidth]{fig_15_2}
+		\includegraphics[width=0.5\linewidth]{fig_15_2}
 		\caption{\textsf{Fit of a second-order polynomial.}}
 		\label{fig:fig_15_2}
 	\end{figure}
@@ -222,12 +222,12 @@ As with the previous cases, the "best" values of the coefficients are determined
 	\frac{\partial S_r}{\partial a_2} = -2 \sum x_{2,i}^2 (y_i -a_0 -a_1x_{1,i} - a_2x_{2,i}^2)
 \end{equation}
 
-\begin{wrapfigure}{l}{0.25\textwidth}
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.25\textwidth]{fig_15_3}
+    \includegraphics[width=0.5\textwidth]{fig_15_3}
    \caption{\textsf{Graphical depiction of multiple linear regression where y is a linear function of $x_1$ and $x_2$.}}
    \label{fig:fig_15_3}
-\end{wrapfigure}
+\end{figure}
 
 \noindent The coefficients yielding the minimum sum of the squares of the residuals are obtained by setting the partial derivatives equal to zero and expressing the result in matrix form as 
 
@@ -684,7 +684,7 @@ Note that if \texttt{options} is omitted, MATLAB uses default values that are re
 
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=1\linewidth]{fig_15_4}
+		\includegraphics[width=0.5\linewidth]{fig_15_4}
 		\caption{\textsf{Comparison of transformed and untransformed model fits for force versus velocity data from
 		Table 14.1.}}
 		\label{fig:fig_15_4}
@@ -723,7 +723,7 @@ A simple example relates to gas transfer in natural waters such as rivers, lakes
 	\log K_L = \log a_0 + a_1 \log U + a_2 \log H
 \end{equation}
 
-The following data were collected in a laboratory flume at a constant temperature of $20^\circ$C:
+The following data were collected in a laboratory flume at a constant temperature of 20 \textdegree C:
 
 \begin{tabular}{l c c c c c c c c c}
 	$U$ & 0.5 & 2 & 10 & 0.5 & 2 & 10 & 0.5 & 2 & 10 \\
@@ -814,10 +814,13 @@ the transformed and untransformed versions.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1\linewidth]{fig_15_5}
+	\includegraphics[width=0.5\linewidth]{fig_15_5}
 	\caption{\textsf{Plots of predicted versus measured values of the oxygen mass-transfer coefficient as computed with multiple regression. Results are shown for (a) log transformed and (b) untransformed cases. The 1:1 line, which indicates a perfect correlation, is superimposed on both plots.}}
 	\label{fig:fig_15_5}
 \end{figure}
+
+
+\setlength{\tabcolsep}{3pt}
 
 \noindent\textbf{PROBLEMS}\\
 
@@ -861,14 +864,14 @@ the transformed and untransformed versions.
 	equation for dissolved oxygen concentration as a function of
 	temperature and chloride based on the data from Table P15.5.
 	Use the equation to estimate the concentration of dissolved
-	oxygen for a chloride concentration of 15 g/L at $T = 12 ^\circ C$.
+	oxygen for a chloride concentration of 15 g/L at $T = 12$ \textdegree C.
 	Note that the true value is 9.09 mg/L. Compute the percent
 
-	\noindent\textbf{TABLE P15.5} Dissolved oxygen concentration in water as a function of temperature ($^\circ C$) and chloride concentration (g/L).
+	\noindent\textbf{TABLE P15.5} Dissolved oxygen concentration in water as a function of temperature (\textdegree C) and chloride concentration (g/L).
 
 	\noindent
 	\begin{tabular}{c c c c}
-		T, $^\circ C$ & c = 0 g/L & c = 10 g/L & c = 20 g/L \\
+		T, \textdegree C & c = 0 g/L & c = 10 g/L & c = 20 g/L \\
 		\hline
 		0 & 14.6 & 12.9 & 11.4 \\
 		5 & 12.8 & 11.3 & 10.3 \\
@@ -896,7 +899,7 @@ the transformed and untransformed versions.
 	Use the general linear least-squares approach to fit this
 	model to the data in Table P15.5. Use the resulting equation
 	to estimate the dissolved oxygen concentration for a chloride
-	concentration of 15 g/L at $T = 12^\circ C$. Note that the true
+	concentration of 15 g/L at $T = 12$ \textdegree C. Note that the true
 	value is 9.09 mg/L. Compute the percent relative error for
 	your prediction.
 
@@ -1046,6 +1049,7 @@ regression.
 	\noindent\textbf{15.16} The following data represent the bacterial growth in a
 	liquid culture over of number of days:
 
+	\noindent
 	\begin{tabular}{l c c c c c c c c}
 		Day & 0 & 4 & 8 & 12 & 16 & 20 \\
 		Amount $\times 10^6$ & 67.38 & 74.67 & 82.74 & 91.69 & 101.60 & 112.58
@@ -1056,7 +1060,7 @@ regression.
    the best equation to predict the amount of bacteria after
    30 days.
 
-   \noindent\textbf{15.17}Dynamic viscosity of water $\mu$ ($10^{-3}$ N $\cdot $ s/m$^2$ ) is related to temperature $T$ ($^\circ C$) in the following manner:
+   \noindent\textbf{15.17}Dynamic viscosity of water $\mu$ ($10^{-3}$ N $\cdot $ s/m$^2$ ) is related to temperature $T$ (\textdegree C) in the following manner:
 
 	\noindent
 	\begin{tabular}{l c c c c c c}
@@ -1065,7 +1069,7 @@ regression.
 	\end{tabular}
   
 	\noindent \textbf{(a)} Plot this data.
-	\noindent \textbf{(b)} Use linear interpolation to predict $\mu$ at $T = 7.5 ^\circ C$.
+	\noindent \textbf{(b)} Use linear interpolation to predict $\mu$ at $T = 7.5$ \textdegree C.
 	\noindent \textbf{(c)} Use polynomial regression to fit a parabola to the data in
 order to make the same prediction.
 
@@ -1098,7 +1102,7 @@ order to make the same prediction.
 
 	\noindent
 	\begin{tabular}{c c}
-		T ($^\circ C$) & $K_w$ \\
+		T (\textdegree C) & $K_w$ \\
 		0  & $1.164 \times 10^{-15}$ \\
 		10 & $2.950 \times 10^{-15}$ \\
 		20 & $6.846 \times 10^{-15}$ \\
@@ -1186,7 +1190,7 @@ order to make the same prediction.
 
 	\noindent
 	\begin{tabular}{l c c c c}
-		\textbf{Temperature}, $T$, $^\circ C$ 26.67 & 93.33 & 148.89 & 315.56 \\
+		\textbf{Temperature}, $T$, \textdegree C 26.67 & 93.33 & 148.89 & 315.56 \\
 		\textbf{Viscosity}, $\mu$, N$\cdot$s/m$^2$ 1.35 & 0.085 & 0.012 & 0.00075
 	\end{tabular}
 
