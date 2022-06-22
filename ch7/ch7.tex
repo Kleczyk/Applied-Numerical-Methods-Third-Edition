@@ -46,7 +46,7 @@ is subject to linear drag, its altitude as a function of time can be computed as
 \end{center}
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.75\linewidth]{fig_7_1}
+	\includegraphics[width=0.6\linewidth]{fig_7_1}
 	\caption{\textsf{Elevation as a function of time for an object initially projected upward with an initial velocity.}}
 	\label{fig:fig_7_1}
 \end{figure}
@@ -573,7 +573,7 @@ $x_4 = x_2 - \dfrac{1}{2}\dfrac{(x_2-x_1)^2[f(x_2)-f(x_3)]-(x_2-x_3)^2[f(x_2)-f(
 optimum value of the parabolic fit to the guesses.
 
 \begin{example}
-	Determining the Optimum Analytically by Root Location
+	Parabolic Interpolation
 	\smallskip
 	
 	\noindent Problem Statement:
@@ -904,7 +904,7 @@ located 4.9523 cm to the right and 1.2759 cm above its original position.\bigski
 
 	\noindent(b)Parabolic interpolation ($x_1$ = 1.75, $x_2$ = 2, $x_3$ = 2.5, iterations = 5).
 
-	\noindent\textbf{7.8}Consider the following function:
+	\noindent\textbf{7.8} Consider the following function:
 
 	\noindent $f(x) = x^4 + 2x^3 + 8x^2 + 5x$
 
@@ -913,14 +913,14 @@ located 4.9523 cm to the right and 1.2759 cm above its original position.\bigski
 
 	$-2 \le x \le 1.$
 
-	\noindent\textbf{7.9}Employ the following methods to find the minimum of
+	\noindent\textbf{7.9} Employ the following methods to find the minimum of
 	the function from Prob. 7.8:
 
 	\noindent (a) Golden-section search ($x_l$ = -2, $x_u$= 1, $\epsilon_s$ = 1\%).
 
 	\noindent (b) Parabolic interpolation ($x_1$= -2, $x_2$= -1, $x_3$= 1, iterations = 5).
 
-	\noindent\textbf{7.10}Consider the following function:
+	\noindent\textbf{7.10} Consider the following function:
 
 	\noindent$f(x)=2x+\dfrac{3}{x}$
 
@@ -928,7 +928,7 @@ located 4.9523 cm to the right and 1.2759 cm above its original position.\bigski
 	the minimum. Comment on the convergence of your results
 	($x_1$ = 0.1, $x_2$ = 0.5, $x_3$ = 5)
 
-	\noindent\textbf{7.11}Develop a single script to (a) generate contour and
+	\noindent\textbf{7.11} Develop a single script to (a) generate contour and
 	mesh subplots of the following temperature field in a similar
 	fashion to Example 7.4:
 
@@ -936,7 +936,7 @@ located 4.9523 cm to the right and 1.2759 cm above its original position.\bigski
 
 	\noindent and (b) determine the minimum with \texttt{fminsearch}.
 
-	\noindent\textbf{7.12}The head of a groundwater aquifer is described in
+	\noindent\textbf{7.12} The head of a groundwater aquifer is described in
 	Cartesian coordinates by
 
 	\noindent $h(x,y) = \dfrac{1}{1+x^2 + y^2 + x +xy}$
@@ -945,7 +945,7 @@ located 4.9523 cm to the right and 1.2759 cm above its original position.\bigski
 	subplots of the function in a similar fashion to Example 7.4,
 	and (b) determine the maximum with fminsearch.
 
-	\noindent\textbf{7.13}Recent interest in competitive and recreational cycling
+	\noindent\textbf{7.13} Recent interest in competitive and recreational cycling
 	has meant that engineers have directed their skills toward the
 	design and testing of mountain bikes (Fig. P7.13a). Suppose
 	that you are given the task of predicting the horizontal
@@ -1003,7 +1003,7 @@ located 4.9523 cm to the right and 1.2759 cm above its original position.\bigski
 	
 	\noindent Test your program with the same problem as Example 7.3.
 	
-	\noindent \textbf{7.18}Pressure measurements are taken at certain points behind an airfoil over time. These data best fit the curve $y=6 \cos x-1.5 \sin x$ from $x=0$ to $6 \mathrm{~s}$. Use four iterations of the golden-search method to find the minimum pressure. Set $x_{l}=2$ and $x_{u}=4$
+	\noindent \textbf{7.18} Pressure measurements are taken at certain points behind an airfoil over time. These data best fit the curve $y=6 \cos x-1.5 \sin x$ from $x=0$ to $6 \mathrm{~s}$. Use four iterations of the golden-search method to find the minimum pressure. Set $x_{l}=2$ and $x_{u}=4$
 	
 	\noindent \textbf{7.19} The trajectory of a ball can be computed with
 	$$

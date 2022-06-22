@@ -301,7 +301,7 @@ or\\
 \begin{equation}
 \tag{22.13}
 y_{i+1} = y_{i}(1-ah)
-\end{equation}\\
+\end{equation}
 The parenthetical quantity $1 − ah$ is called an $amplification factor$. If its absolute value is
 greater than unity, the solution will grow in an unbounded fashion. So clearly, the stability
 depends on the step size $h$. That is, if $ h > 2/a, |y_{i}| \rightarrow \infty$ as $ i \rightarrow \infty $. Based on this analysis, Euler's method is said to be $conditionally stable$.
@@ -426,11 +426,11 @@ which is called a corrector equation.\\
 	\includegraphics[width=0.85\textwidth]{F22_4}
 	\label{F22.4}
 \end{figure}\\
-\pagebreak
+
 \begin{figure}[hbt!]
 	\includegraphics[width=0.85\textwidth]{F22_5}
 	\label{F22.5}
-\end{figure}\\
+\end{figure}
 
 The Heun method is a $predictor-corrector$ approach. As just derived, it can be expressed concisely as
 
@@ -1221,16 +1221,16 @@ numerically with the fourth-order RK method.
 \end{tabular}
 
 \subsection{MATLAB M-file Function: \texttt{rk4sys}}
-
+\vspace{0.1 in}
 Figure 22.8 shows an M-file called rk4sys that uses the fourth-order Runge-Kutta method
 to solve a system of ODEs. This code is similar in many ways to the function developed
 earlier (Fig. 22.3) to solve a single ODE with Euler's method. For example, it is passed the
 function name defining the ODEs through its argument.
-\pagebreak
+
 \begin{figure}[hbt!]
 	\includegraphics[width=0.75\textwidth]{F22_8_1}
 	\label{F22.8.1}
-\end{figure}\\
+\end{figure}
 
 \begin{figure}[hbt!]
 	\includegraphics[width=0.75\textwidth]{F22_8_2}

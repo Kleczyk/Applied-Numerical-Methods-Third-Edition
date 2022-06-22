@@ -3,8 +3,6 @@
 \begin{document}
 \chapter*{Numerical Integration of Functions}
 
-\vspace{1,5in}
-
 \begin{center}\begin{Large}\textbf{CHAPTER OBJECTIVES}\end{Large}\end{center}
 
 The primary objective of this chapter is to introduce you to numerical methods for
@@ -170,28 +168,30 @@ $O(h^6)$ results can be combined to compute an integral that is $O(h^8)$ using
 \textbf{Problem Statement.}  In Example 20.1, we used Richardson extrapolation to compute two
 integral estimates of $O(h^4)$. Utilize Eq. (20.6) to combine these estimates to compute an
 integral with $O(h^6)$.\\
-\vspace{0.1in}
+
 \textbf{Solution.} The two integral estimates of $O(h^4)$ obtained in Example 20.1 were 1.367467
 and 1.623467. These values can be substituted into Eq. (20.6) to yield
 
 	$$I=\dfrac{16}{15}(1.623467)-\dfrac{1}{15}(1.367467)=1.640533$$\\
 which is the exact value of the integral.
 
-\subsection{The Romberg Integration Algorithm}
+\subsection{ The Romberg Integration Algorithm}
 Notice that the coefficients in each of the extrapolation equations [Eqs. (20.5), (20.6), and
 (20.7)] add up to 1. Thus, they represent weighting factors that, as accuracy increases,place relatively greater weight on the superior integral estimate. These formulations can be
 expressed in a general form that is well suited for computer implementation:
 \begin{equation}
 	\tag{20.8}
 	I_{j,k}=\dfrac{4^{k-1}I_{j+1,k-1}-I_{j,k-1}}{4^{k-1}-1}
-\end{equation}\\
+\end{equation}
 where $I_{j+1,k−1}$ and $I_{j,k−1}$ = the more and less accurate integrals, respectively, and $I_{j,k}$ =
 the improved integral. The index $k$ signifies the level of the integration, where $k$ = 1 corresponds to the original trapezoidal rule estimates, k = 2 corresponds to the $O(h^4)$ estimates, $k$ = 3 to the $O(h^6)$, and so forth. The index $j$ is used to distinguish between the more
 $(j + 1)$ and the less $(j)$ accurate estimates. For example, for $k$ = 2 and $j$ = 1, Eq. (20.8)
 becomes
-
-	$$I_{1,2}=\dfrac{4I_{2,1}-I_{1,1}}{3}$$\\
+\begin{equation}
+	I_{1,2}=\dfrac{4I_{2,1}-I_{1,1}}{3}
+\end{equation}
 which is equivalent to Eq. (20.5).
+\vspace{0.5 in}
 
 The general form represented by Eq. (20.8) is attributed to Romberg, and its systematic application to evaluate integrals is known as Romberg integration. Figure 20.1 is a
 graphical depiction of the sequence of integral estimates generated using this approach.
@@ -204,7 +204,7 @@ estimates of the integral.
 
 r example, the first iteration (Fig. 20.1a) involves computing the one- and twosegment trapezoidal rule estimates ($I_{1,1}$ and $I_{2,1}$). Equation (20.8) is then used to compute
 the element $I_{1,2 = 1.367467}$, which has an error of $O(h^4)$.
-\pagebreak
+
 
 \begin{figure}[hbt!]
 	\centering
@@ -340,23 +340,22 @@ or, evaluating the integrals,
 	$$c_0 + c_1 = b-a$$\\
 and
 
-	$$-c_0 \dfrac{b-a}{2} + c_1 \dfrac{b-a}{2} = 0$$\\
+	$$-c_0 \dfrac{b-a}{2} + c_1 \dfrac{b-a}{2} = 0$$
 These are two equations with two unknowns that can be solved for
 
-	$$c_0= c_1 = \dfrac{b-a}{2}$$\\
+	$$c_0= c_1 = \dfrac{b-a}{2}$$
 which, when substituted back into Eq. (20.11), gives
 
-	$$I= \dfrac{b-a}{2} f(a) + \dfrac{b-a}{2} f(b)$$\\
+	$I= \dfrac{b-a}{2} f(a) + \dfrac{b-a}{2} f(b)$
 which is equivalent to the trapezoidal rule.
-
 \subsection{Derivation of the Two-Point Gauss-Legendre Formula}
 Just as was the case for the previous derivation of the trapezoidal rule, the object of Gauss
 quadrature is to determine the coefficients of an equation of the form
-\vspace{0.4in}
+\vspace{0.1 in}
 \begin{equation}
 	\tag{20.12}
 	I\cong c_0 f(x_0)+c_1 f(x_1)
-\end{equation}\\
+\end{equation}
 where the $c's$ = the unknown coefficients. However, in contrast to the trapezoidal rule that
 used fixed end points $a$ and $b$, the function arguments $x_0$ and $x_1$ are not fixed at the end
 points, but are unknowns (Fig. 20.5). Thus, we now have a total of four unknowns that
@@ -947,7 +946,7 @@ looking for a maximum, we evaluate the negative of the function:
 \end{verbatim}
 A maximum current of $7.88685$ A occurs at $t = 0.2249$ s. Hence, for this chaptericular wave
 form, the root-mean-square value is about $49.8\%$ of the maximum.
-
+\\
 \section*{PROBLEMS} \hrule
 
 \begin{multicols}{2}

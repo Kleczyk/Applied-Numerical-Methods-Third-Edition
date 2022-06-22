@@ -5,7 +5,7 @@
 
 \chapter{MATLAB Fundamentals}
 
-\label{cha:cha3}
+
 
 
 \begin{center}
@@ -130,7 +130,7 @@ with the result
 MATLAB assigns the result to ans whenever you do not explicitly assign the calculation
 to a variable of your own choosing.
 
-section{ASSIGNMENT}
+\section{ASSIGNMENT}
 
 Assignment refers to assigning values to variable names. This results in the storage of the
 values in the memory location corresponding to the variable name.
@@ -237,7 +237,7 @@ The following is a summary of the format commands you will employ routinely in e
 
 \subsection{Arrays, Vectors and Matrices}
 
-An array is a collection of values that are represented by a single variable name. Onedimensional arrays are called vectors and two-dimensional arrays are called matrices. The
+An array is a collection of values that are represented by a single variable name. One-dimensional arrays are called vectors and two-dimensional arrays are called matrices. The
 scalars used in Section 2.2.1 are actually matrices with one row and one column.
 Brackets are used to enter arrays in the command mode. For example, a row vector can
 be assigned as follows:
@@ -337,7 +337,7 @@ For an array, A(m,n) selects the element in mth row and the nth column. For exam
 There are several built-in functions that can be used to create matrices. For example,
 the ones and zeros functions create vectors or matrices filled with ones and zeros,
 respectively. Both have two arguments, the first for the number of rows and the second for
-the number of columns. For example, to create a 2 × 3 matrix of zeros:
+the number of columns. For example, to create a 2 $\times$  3 matrix of zeros:
 \begin{lstlisting}[frame=none, numbers=none]
 	>> E = zeros(2,3)
 
@@ -821,7 +821,7 @@ The graph appears in the graphics window and can be printed or transferred via t
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.75\textwidth]{fig_2_5_1}
+	\includegraphics[width=0.50\textwidth]{fig_2_5_1}
    
 \end{figure}
 
@@ -835,7 +835,7 @@ You can customize the graph a bit with commands such as the following:
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.75\textwidth]{fig_2_5_2}
+	\includegraphics[width=0.50\textwidth]{fig_2_5_2}
    
 \end{figure}
 
@@ -1002,7 +1002,7 @@ support as well as a variety of other useful resources.
 
 
 Background. Your textbooks are filled with formulas developed in the past by
-renowned scientists and engineers.Although these are of great utility, engineers and scientists
+renowned scientists and engineers. Although these are of great utility, engineers and scientists
 often must supplement these relationships by collecting and analyzing their own data. Sometimes this leads to a new 
 formula. However, prior to arriving at a final predictive equation, we
 usually “play” with the data by performing calculations and developing plots. In most cases,
@@ -1300,13 +1300,20 @@ function as described in Prob. 2.11. Explain the results.
 \textbf{2.13} Here are some wind tunnel data for force (F) versus
 velocity $(v)$:
 
-\begin{tabular}{ccccccccc}
-	\hline
-	\textbf{v, m/s} &10& 20& 30 &40& 50 &60 &70 &80	\\
-	\textbf{F, N} &25 &70 &380 &550 &610 &1220 &830 &1450\\
-	\hline
+	\begin{flushleft}
+	\begin{small}
+		
 	
-\end{tabular}
+	\begin{tabular}{ccccccccc}
+		\hline
+		\textbf{v, m/s} &10& 20& 30 &40& 50 &60 &70 &80	\\
+		\textbf{F, N} &25 &70 &380 &550 &610 &1220 &830 &1450\\
+		\hline
+	
+	\end{tabular}
+\end{small}
+\end{flushleft}
+
 
 
 These data can be described by the following function:
@@ -1343,12 +1350,16 @@ range of the abscissa from $x = 0$ to $3\pi /2$.
 Table 2.1 and measure their frontal areas. The resulting
 values, which are ordered in the same sequence as the
 corresponding values in Table 2.1, are
+\begin{flushleft}
+	\begin{scriptsize}
 	\begin{tabular}{cccccccc}
 		\hline
 		\textbf{$A, m^2$} &0.455 &0.402 &0.452& 0.486 &0.531 &0.475 &0.487\\
 		\hline
 		
 	\end{tabular}
+\end{scriptsize}
+\end{flushleft}
 
 
 \begin{enumerate}[label=(\alph*)]
