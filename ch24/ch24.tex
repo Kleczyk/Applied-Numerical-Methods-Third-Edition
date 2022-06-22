@@ -290,17 +290,19 @@ The approach can be illustrated by an example.
     \end{aligned}
     $$
     Along with the initial value for temperature $T(0)=300 \mathrm{~K}$, we arbitrarily guess a value   of $z_{a 1}=-5 \mathrm{~K} / \mathrm{m}$ for the initial value for $z(0)$. The solution is then   obtained by integrating the pair of ODEs from $x=0$ to 10. We can do this with MATLAB's \texttt{ode45} function by first setting up an M-file to hold the differential equations:
-
-    \noindent\texttt{function dy=Ex2402(x,y)\\
-    dy=[y(2);-0.05*(200-y(l))];}
-
+    \begin{lstlisting}
+    function dy=Ex2402(x,y)
+    dy=[y(2);-0.05*(200-y(l))];
+    \end{lstlisting}
+    
     \noindent We can then generate the solution as:
-
-    \noindent\texttt{>> [t,y]=ode45(@Ex2402,[0 10],[300,-5]);\\
-    >> Tb1=y(length(y))}
-
-    \noindent\texttt{Tb1 =\\
-    \vspace{\smallskipamount} 569.7539}
+    \begin{lstlisting}
+    >> [t,y]=ode45(@Ex2402,[0 10],[300,-5]);
+    >> Tb1=y(length(y))
+    Tb1 =
+     569.7539
+    \end{lstlisting}
+    
 
     \noindent Thus, we obtain a value at the end of the interval of $T_{b 1}=569.7539$ (Fig. $24.4 a$ ), which differs from the desired boundary condition of $T_{b}=400$. Therefore, we make another guess $z_{a 2}=-20$ and perform the computation again. This time, the result of $T_{b 2}=259.5131$ is obtained (Fig. 24.4b).
 
@@ -372,22 +374,24 @@ initial condition required to generate the final, perfect "shot" that hits the e
     z_{a 1}=\frac{d T}{d x}(0)=\frac{1}{200}(300-200)=0.5
     $$
     The solution is obtained by integrating the pair of ODEs from $x=0$ to 10 . We can do this with MATLAB's \texttt{ode45} function by first setting up an M-file to hold the differential equations in the same fashion as in Example 24.2. We can then generate the solution as
-
-    \noindent\texttt{>> [t,y]=ode45(@Ex2402,[0 10],[300,0.5]);\\
-    >> Tb1=y(length(y))}
-
-    \noindent\texttt{Tb1 =\\
-    \vspace{\smallskipamount} 683.5088}
+    \begin{lstlisting}
+    >> [t,y]=ode45(@Ex2402,[0 10],[300,0.5]);
+    >> Tb1=y(length(y))
+    Tb1 =
+     683.5088
+    \end{lstlisting}
+    
 
     As expected, the value at the end of the interval of $T_{b1} = 683.5088 K$ differs from the
     desired boundary condition of $T_b = 400$. Therefore, we make another guess $T_{a2} = 150 K$,
     which corresponds to $z_{a2} = -0.25$, and perform the computation again.
-
-    \noindent\texttt{>> [t,y]=ode45(@Ex2402,[0 10],[150,-0.25]);\\
-    >> Tb2=y(length(y))}
-
-    \noindent\texttt{Tb2 =\\
-    \vspace{\smallskipamount} -41.7544}
+    \begin{lstlisting}
+    >> [t,y]=ode45(@Ex2402,[0 10],[150,-0.25]);
+    >> Tb2=y(length(y))
+    Tb2 =\\
+     -41.7544
+    \end{lstlisting}
+    
 
     \begin{figure}[H]
         \centering
@@ -450,15 +454,19 @@ If we drive this new function to zero, we will obtain the solution. The next exa
     \end{aligned}
     $$
     An M-file can be developed to compute the right-hand sides of these equations:\vspace*{\smallskipamount}
-
-    \noindent\texttt{function dy=dydxn(x,y)\\
-    dy=[y(2);-0.05*(200-y(1))-2.7e-9*(1.6e9-y(1)\^{}4)];}\vspace*{\smallskipamount}
+    \begin{lstlisting}
+    function dy=dydxn(x,y)
+    dy=[y(2);-0.05*(200-y(1))-2.7e-9*(1.6e9-y(1)\^{}4)];
+    \end{lstlisting}
+    
 
     \noindent Next, we can build a function to hold the residual that we will try to drive to zero as\vspace*{\smallskipamount}
-
-    \noindent\texttt{function r=res(za)}\\
-    \texttt{[x,y]=ode45(@dydxn,[0 10],[300 za]);\\
-    r=y(length(x),1)-400;}
+    \begin{lstlisting}
+    function r=res(za)
+    [x,y]=ode45(@dydxn,[0 10],[300 za]);
+    r=y(length(x),1)-400;
+    \end{lstlisting}
+    
 
     \begin{figure}[H]
         \centering
@@ -467,18 +475,21 @@ If we drive this new function to zero, we will obtain the solution. The next exa
     \end{figure}
     \noindent Notice how we use the \texttt{ode45} function to solve the two ODEs to generate the temperature
     at the rod;s end: \texttt{y(length(x),1)}. We can then find the root with the \texttt{fzero} function:
-
-    \noindent\texttt{>> fzero(@res,-50)}\vspace{\medskipamount}\\
-    \texttt{ans =\\
-    \hspace*{\smallskipamount} -41.7434}
+    \begin{lstlisting}
+    >> fzero(@res,-50)
+    ans =
+     -41.7434
+    \end{lstlisting}
+    
 
     \noindent Thus, we see that if we set the initial trajectory $z(0)$ = -41.7434, the residual function will
     be driven to zero and the temperature boundary condition $T(10)$ = 400 at the end of the
     rod should be satisfied. This can be verified by generating the entire solution and plotting
     the temperatures versus x:\vspace*{\smallskipamount}
-
-    \noindent\texttt{>> [x,y]=ode45(@dydxn,[0 10],[300 fzero(@res,-50)]);\\
-    >> plot(x,y(:,1))}\vspace*{\smallskipamount}
+    \begin{lstlisting}
+    >> [x,y]=ode45(@dydxn,[0 10],[300 fzero(@res,-50)]);
+    >> plot(x,y(:,1))
+    \end{lstlisting}
 
     The result is shown in Fig. 24.7 along with the original linear case from Example 24.2.
     As expected, the nonlinear case is depressed lower than the linear model due to the additional heat lost to the surrounding gas by radiation.
@@ -565,19 +576,20 @@ Further, inspection of the coefficients on the left-hand side of Eq. (24.16) ind
     Notice that the matrix is both tridiagonal and diagonally dominant.
 
     MATLAB can be used to generate the solution:\vspace*{\smallskipamount}
-
-    \noindent\texttt{>> A=[2.2 -1 0 0;\\
+    \begin{lstlisting}
+    >> A=[2.2 -1 0 0;
     -1 2.2 -1 0;\\
-    0 -1 2.2 -1;\\
-    0 0 -1 2.2];\\
-    >> b=[340 40 40 440]';\\
-    >> T=A\b}\vspace*{\smallskipamount}
-
-    \noindent\texttt{T =\\
-    \hspace*{\smallskipamount} 283.2660\\
-    \hspace*{\smallskipamount} 283.1853\\
-    \hspace*{\smallskipamount} 299.7416\\
-    \hspace*{\smallskipamount} 336.2462}
+    0 -1 2.2 -1;
+    0 0 -1 2.2];
+    >> b=[340 40 40 440]';
+    >> T=A\b
+    T =
+     283.2660
+     283.1853
+     299.7416
+     336.2462
+    \end{lstlisting}
+    
 \end{exmp}
 
 Table 24.1 provides a comparison between the analytical solution (Eq. 24.7) and the 
@@ -585,13 +597,18 @@ numerical solutions obtained with the shooting method (Example 24.2) and the fin
 numerical approaches agree reasonably well with the analytical solution. Further, the biggest
 discrepancy occurs for the finite-difference method due to the coarse node spacing we used
 in Example 24.5. Better agreement would occur if a finer nodal spacing had been used.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.4]{table_24_1}
-   \caption{\textsf{In order to implement the finite-difference approach, the heated rod is divided into a series of
-   nodes.}}\label{tab:table_24_1} %TODO numerowanie obrazków "Table"
-\end{figure}
+\begin{center}
+    \begin{tabular}{cccc}
+        \hline $\boldsymbol{x}$ & Analytical Solution & Shooting Method & Finite Difference \\
+        \hline 0 & 300 & 300 & 300 \\
+        2 & $282.8634$ & $282.8889$ & $283.2660$ \\
+        4 & $282.5775$ & $282.6158$ & $283.1853$ \\
+        6 & $299.0843$ & $299.1254$ & $299.7416$ \\
+        8 & $335.7404$ & $335.7718$ & $336.2462$ \\
+        10 & 400 & 400 & 400 \\
+        \hline
+    \end{tabular}    
+\end{center}
 
 \subsection{Derivative Boundary Conditions}
 

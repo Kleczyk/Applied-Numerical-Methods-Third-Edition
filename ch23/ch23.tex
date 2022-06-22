@@ -1,8 +1,5 @@
 \documentclass[../main.tex]{subfiles}
 
-\usepackage{caption}
-\captionsetup[table]{name=New asdasdqw}
-
 
 \begin{document} 
 \chapter{Adaptive methods and Stiff Systems}\label{chap:chap23}
@@ -155,15 +152,15 @@ the integration is performed from \texttt{ti} to \texttt{tf}. Second, to obtain 
 \noindent Here is an example of how \texttt{ode45} can be used to solve a single ODE, $y'$ =
 4$e$\textsuperscript{0.8t} - 0.5y from $t$ = 0 to 4 with an initial condition of y (0) = 2. Recall from Example 22.1 that the analytical solution at $t$ = 4 is 75.33896. Representing the ODE as an
 anonymous function, \texttt{ode45} can be used to generate the same result numerically as
+\begin{lstlisting}
+>> dydt=@ (t,y) 4*exp (0.8*t)-0.5*y;
+>> [t,y]=ode45(dydt,[0 4],2);
+>> y (length (t))
+ans = 75.3390
+\end{lstlisting}
 
-\texttt{>> dydt=@ (t,y) 4*exp (0.8*t)-0.5*y;}
-
-\texttt{>> [t,y]=ode45(dydt,[0 4],2);}
-
-\texttt{>> y (length (t))}
 
 
-\texttt{ans = 75.3390}\\
 As described in the following example, the ODE is typically stored in its own M-file when
 dealing with systems of equations.
 
@@ -263,10 +260,11 @@ results displaying circles at the values it has computed. As in Fig. 23.4a, noti
 takes relatively large steps in the smooth regions of the solution whereas it takes smaller
 steps in the region of rapid change around $t$ = 2.
 We can obtain a more accurate solution by using the odeset function to set the relative error tolerance to 10\textsuperscript{-4}:
+\begin{lstlisting}
+>> options=odeset('RelTol',1e-4);
+>> ode23(@dydt, [0, 4], 0.5, options);
+\end{lstlisting}
 
-\texttt{>> options=odeset('RelTol',1e-4);}
-
-\texttt{>> ode23(@dydt, [0, 4], 0.5, options);}
 
 \noindent As in Fig. 23.4$b$, the solver takes more small steps to attain the increased accuracy.
 
@@ -302,30 +300,26 @@ ODEs can be formulated as
 Note that in this formulation, distance andvelocity are both positive in the downward direction, and the ground level is defined aszero distance. For the present example, we will assume that the jumper is initially located 200 m above the ground and the initial velocity is 20 m/s in the upward direction-that is, x(0) = -200 and v(0) = -20.
 
 The first step is to express the system ODEs as an M-File function:
+\begin{lstlisting}
+function dydt=freeall (t, y, cd, m)
+\% y(1) = x and y(2) = v
+grav=9.81;
+dydt=[y(2);grav-cd/m*y(2)*abs(y(2))];
+\end{lstlisting}
 
-\texttt{function dydt=freeall (t, y, cd, m)}
-
-\texttt{\% y(1) = x and y(2) = v}
-
-\texttt{grav=9.81;}
-
-\texttt{dydt=[y(2);grav-cd/m*y(2)*abs(y(2))];}
 
 \noindent In order to implement the event, two other M-files need to be developed. These are (1) a function that defines the event, and (2) a script that generates the solution.
 
 For our bungee jumper problem, the event function (which we have named \texttt{endevent}) can be written as
+\begin{lstlisting}
+    function [detect,stopint,direction]=endevent(t,y,varargin)
+    \% Locate the time when height passes through zero
+    \% and stop integration.
+    detect=y(1); \quad \% Detect height = 0
+    stopint=1; \quad \% Stop the integration
+    direction=0; \quad \% Direction does not matter
+\end{lstlisting}
 
-\texttt{function [detect,stopint,direction]=endevent(t,y,varargin)}
-
-\texttt{\% Locate the time when height passes through zero}
-
-\texttt{\% and stop integration.}
-
-\texttt{detect=y(1); \quad \% Detect height = 0}
-
-\texttt{stopint=1; \quad \% Stop the integration}
-
-\texttt{direction=0; \quad \% Direction does not matter}
 
 \noindent This function is passed the values of the independent (\texttt{t}) and dependent variables (\texttt{y}) along
 with the model parameters (\texttt{varargin}). It then computes and returns three variables.
@@ -337,15 +331,16 @@ is unimportant, we set \texttt{direction} to zero.\footnote[1]{Note that, as men
 detect when the jumper reached x = 5. To do this, we would merely set detect = y(1) - 5.}
 
 Finally, a script can be developed to generate the solution:
-
-\texttt{opts=odeset('events',@endevent);\\
-\indent y0=[-200 -20];\\
-\indent [t,y,te,ye]=ode45(@freefall,[0 inf],y0,opts,0.25,68.1);\\
-\indent te,ye\\
-\indent plot(t,-y(:,1),'-',t,y(:,2),'--','LineWidth',2)\\
-\indent legend('Height (m)','Velocity (m/s)')\\
-\indent xlabel('time (s)');\\
-\indent ylabel('x (m) and v (m/s)')}
+\begin{lstlisting}
+    opts=odeset('events',@endevent);\\
+    y0=[-200 -20];\\
+    [t,y,te,ye]=ode45(@freefall,[0 inf],y0,opts,0.25,68.1);\\
+    te,ye\\
+    plot(t,-y(:,1),'-',t,y(:,2),'--','LineWidth',2)\\
+    legend('Height (m)','Velocity (m/s)')\\
+    xlabel('time (s)');\\
+    ylabel('x (m) and v (m/s)')
+\end{lstlisting}
 
 \noindent In the first line, the \texttt{odeset} function is used to invoke the \texttt{events} option and specify that the event we are seeking is defined in the \texttt{endevent} function. Next, we set the initial conditions (\texttt{y0}) and the integration interval (\texttt{tspan}).
 Observe that because we do not know when the
@@ -783,26 +778,30 @@ For nonlinear ODEs, the solution becomes even more difficult since it involves s
     \end{equation}
 
     \noindent An M-file can now be created to hold this pair of differential equations:
-
-    \texttt{function yp = vanderpol(t,y,mu)}
-
-    \texttt{yp = [y(2);mu*(1-y(1)\^{}2)*y(2)-y(1)];}
+    \begin{lstlisting}
+    function yp = vanderpol(t,y,mu)
+    yp = [y(2);mu*(1-y(1)\^{}2)*y(2)-y(1)];
+    \end{lstlisting}
+    
 
     \noindent Notice how the value of $\mu$ is passed as a parameter. As in Example 23.1, \texttt{ode45} can be invoked and the results plotted:
-
-    \noindent \texttt{>> [t,y] = ode45(@vanderpol,[0 20],[1 1],[],1);}
-
-    \noindent \texttt{>> plot(t,y(:,1),'-',t,y(:,2),'--')}
-
-    \noindent \texttt{>> legend('y1','y2');}
+    \begin{lstlisting}
+    >> [t,y] = ode45(@vanderpol,[0 20],[1 1],[],1);
+    >> plot(t,y(:,1),'-',t,y(:,2),'--')
+    >> legend('y1','y2');
+    \end{lstlisting}
+    
 
     \noindent Observe that because we are not specifying any options, we must use open brackets \texttt{[]} as
     a place holder. The smooth nature of the plot (Fig. 23.10a) suggests that the van der Pol
     equation with $\mu$ = 1 is not a stiff system.\vspace{1mm}
 
     \noindent \textbf{(b)} If a standard solver like ode45 is used for the stiff case ($\mu$ = 1000), it will fail miserably (try it, if you like). However, \texttt{ode23s} does an efficient job:
-    \noindent \texttt{>> [t,y] = ode23s(@vanderpol,[0 6000],[1 1],[],1000);}
-    \noindent \texttt{>> plot(t,y(:,1))}
+    \begin{lstlisting}
+        >> [t,y] = ode23s(@vanderpol,[0 6000],[1 1],[],1000);
+        >> plot(t,y(:,1))
+    \end{lstlisting}
+
 
     \begin{figure}[H]
         \centering
@@ -849,28 +848,24 @@ fallen is less than the cord length, the jumper is only subject to gravitational
     \noindent \textit{Problem statement.} Determine the position and velocity of a bungee jumper with the following parameters: $L=30 \mathrm{~m}, \quad g=9.81 \mathrm{~m} / \mathrm{s}^{2}, m=68.1 \mathrm{~kg}, c_{d}=0.25 \mathrm{~kg} / \mathrm{m}$, $k=40 \mathrm{~N} / \mathrm{m}$, and $\gamma=8 \mathrm{~N} \cdot \mathrm{s} / \mathrm{m}$. Perform the computation from $t=0$ to $50 \mathrm{~s}$ and assume that the initial conditions are $x(0)=v(0)=0$.
 
     \noindent \textbf{Solution.} The following M-file can be set up to compute the right-hand sides of the ODEs: %TODO (KOSMETYCZNE) zapisać w zwięzłej formie, w jednym "texttt{}"
-
-    \noindent \texttt{function dydt = bungee(t,y,L,cd,m,k,gamma)}
-
-    \noindent \texttt{g = 9.81;}
+    \begin{lstlisting}
+    function dydt = bungee(t,y,L,cd,m,k,gamma)
+    g = 9.81;
+    cord = 0;
+    if y(1) > L \%determine if the cord exerts a force
+    cord = k/m*(y(1)-L)+gamma/m*y(2);
+    end
+    dydt = [y(2); g - sign(y(2))*cd/m*y(2)\^{}2 - cord];
+    \end{lstlisting}
     
-    \noindent \texttt{cord = 0;}
-
-    \noindent \texttt{if y(1) > L \%determine if the cord exerts a force}
-
-    \texttt{cord = k/m*(y(1)-L)+gamma/m*y(2);}
-
-    \noindent \texttt{end}
-
-    \noindent \texttt{dydt = [y(2); g - sign(y(2))*cd/m*y(2)\^{}2 - cord];}
 
     Because these equations are not stiff, we can use ode45 to obtain the solutions and display them on a plot:
-
-    \noindent \texttt{>> [t,y] = ode45(@bungee,[0 50],[0 0],[],30,0.25,68.1,40,8);}
-
-    \noindent \texttt{>> plot(t,-y(:,1),'-',t,y(:,2),':')}
-
-    \noindent \texttt{>> legend('x (m)','v (m/s)')}
+    \begin{lstlisting}
+    >> [t,y] = ode45(@bungee,[0 50],[0 0],[],30,0.25,68.1,40,8);
+    >> plot(t,-y(:,1),'-',t,y(:,2),':')
+    >> legend('x (m)','v (m/s)')
+    \end{lstlisting}
+    
 
     \begin{figure}[H]
         \centering
@@ -935,30 +930,35 @@ When the fountain is not running, the second term in the numerator goes to zero.
 
 Next we must relate \textit{siphon} to the dependent variable $y$. First, \textit{siphon} is set to zero whenever the level falls below $y_{\text {low. }}$. Conversely, \textit{siphon} is set to one whenever the level rises above $y_{\text {high }}$. The following M-file function follows this logic in computing the derivative:
 
-\texttt{function dy = Plinyode(t,y)\\
-\indent global siphon\\
-\indent Rt = 0.05; r = 0.007; yhi = 0.1; ylo = 0.025;\\
-\indent C = 0.6; g = 9.81; Qin = 0.00005;\\
-\indent if y(1) <= ylo\\
-\indent \vspace{\smallskipamount} siphon = 0;\\
-\indent elseif y(1) >= yhi\\
-\indent \vspace{\smallskipamount} siphon = 1;\\
-\indent end\\
-\indent Qout = siphon * C * sqrt(2 * g * y(1)) * pi * r \^{} 2;\\
-\indent dy = (Qin - Qout) / (pi * Rt \^{} 2);}
+\begin{lstlisting}
+function dy = Plinyode(t,y)
+global siphon
+Rt = 0.05; r = 0.007; yhi = 0.1; ylo = 0.025;
+C = 0.6; g = 9.81; Qin = 0.00005;
+if y(1) <= ylo
+\vspace{\smallskipamount} siphon = 0;
+elseif y(1) >= yhi
+\vspace{\smallskipamount} siphon = 1;
+end
+Qout = siphon * C * sqrt(2 * g * y(1)) * pi * r \^{} 2;
+dy = (Qin - Qout) / (pi * Rt \^{} 2);
+\end{lstlisting}
+
 
 \noindent Notice that because its value must be maintained between function calls, \texttt{siphon} is declared as a global variable. Although the use of global variables is not encouraged (particularly in larger programs), it is useful in the present context.
 
 The following script employs the built-in \texttt{ode45} function to integrate \texttt{Plinyode} and
 generate a plot of the solution:
+\begin{lstlisting}
+global siphon
+siphon = 0;
+tspan = [0 100]; y0 = 0;
+[tp,yp]=ode45(@Plinyode,tspan,y0);
+plot(tp,yp)
+xlabel('time, (s)')
+ylabel('water level in tank, (m)')
+\end{lstlisting}
 
-\texttt{global siphon\\
-\indent siphon = 0;\\
-\indent tspan = [0 100]; y0 = 0;\\
-\indent [tp,yp]=ode45(@Plinyode,tspan,y0);\\
-\indent plot(tp,yp)\\
-\indent xlabel('time, (s)')\\
-\indent ylabel('water level in tank, (m)')}
 
 As shown in Fig. 23.13, the result is clearly incorrect. Except for the original filling period, the level seems to start emptying prior to reaching $y_{\text {high }}$. Similarly, when it is draining, the siphon shuts off well before the level drops to $y_{\text {low }}$.
 
