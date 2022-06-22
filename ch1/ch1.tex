@@ -3,9 +3,9 @@
 
 \begin{document}
 
-\chapter{Modeling, Numerical Methods, and Problem Solving}
+\chapter{Mathematical Modeling, Numerical Methods, and Problem Solving}
 
-\label{cha:cha3}
+
 
 
 \begin{center}
@@ -49,7 +49,7 @@ of change of velocity with respect to time, }
     \centering
     \includegraphics[width=0.25\textwidth]{fig_1_1}
    \caption{\textsf{Forces acting on a free-falling bungee jumper}}
-   \label{fig:fig_1_1}
+
 \end{wrapfigure}
 
 
@@ -62,7 +62,7 @@ mass (kg). The drag coefficient is called "lumped" because its magnitude depends
 
 Because this is a differential equation, you know that calculus might be used to obtain
 an analytical or exact solution for $v$ as a function of $t$. However, in the following pages, we
-will illustrate an alternative solution approach. This will involve developing a computeroriented numerical or approximate solution.
+will illustrate an alternative solution approach. This will involve developing a computer-oriented numerical or approximate solution.
 
 
 Aside from showing you how the computer can be used to solve this particular problem, our more general objective will be to illustrate (a) what numerical methods are and
@@ -99,7 +99,6 @@ rate of change of momentum of a body is equal to the resultant force acting on i
 \tag{1.2}
 F=ma
 \end{equation}
-
 where $F$ is the net force acting on the body $(N, or kg m/s^2
 ), m$ is the mass of the object (kg),
 and a is its acceleration $(m/s^2
@@ -111,7 +110,6 @@ by $m$ to give
 \tag{1.3}
 a=\dfrac{F}{m}
 \end{equation}
-
 where $a$ is the dependent variable reflecting the system's behavior, $F$ is the forcing function, and $m$ is a parameter. Note that for this simple case there is no independent variable
 because we are not yet predicting how acceleration varies in time or space.
 
@@ -194,7 +192,7 @@ can be used to solve Eq. (1.8) for
 
 \begin{equation}
 \tag{1.9}
-v(t)=\sqrt{\dfrac{gm}{c_d}}tanh \left(\sqrt{\dfrac{gc_d}{m}t}\right)
+v(t)=\sqrt{\dfrac{gm}{c_d}}\tan h \left(\sqrt{\dfrac{gc_d}{m}t}\right)
 \end{equation}
 where tanh is the hyperbolic tangent that can be either computed directly\footnote{{}MATLAB allows direct calculation of the hyperbolic tangent via the built-in function $tanh(x)$.} or via the more
 elementary exponential function as in
@@ -237,7 +235,7 @@ According to the model, the jumper accelerates rapidly (Fig. 1.2). A velocity of
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.75\textwidth]{fig_1_2}
+	\includegraphics[width=0.50\textwidth]{fig_1_2}
    \caption{\textsf{The analytical solution for the bungee jumper problem as computed in Example 1.1. Velocity
 increases with time and asymptotically approaches a terminal velocity.}}
    \label{fig:fig_1_2}
@@ -262,17 +260,16 @@ the time rate of change of velocity can be approximated by (Fig. 1.3):
 where $\Delta v$ and $\Delta t$ are differences in velocity and time computed over finite intervals, $v(t_i)$
 is velocity at an initial time $t_i$, and $v(t_{i+1})$ is velocity at some later time $(t_{i+1})$. Note that
 $dv/dt \cong \Delta v / \Delta t$ is approximate because $ \Delta t$ is finite. Remember from calculus that
-$$
-\dfrac{dv}{dt} = \lim_{\Delta t\to 0} \dfrac{\Delta v}{ \Delta t}
-$$
+
+$$\dfrac{dv}{dt} = \lim_{\Delta t\to 0} \dfrac{\Delta v}{ \Delta t}$$
 
 Equation (1.11) represents the reverse process.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.75\textwidth]{fig_1_3}
+	\includegraphics[width=0.50\textwidth]{fig_1_3}
    \caption{\textsf{The use of a finite difference to approximate the first derivative of v with respect to t.}}
-   \label{fig:fig_1_3}
+	\label{fig:fig_1_3}
 \end{figure}
 
 Equation (1.11) is called a finite-difference approximation of the derivative at time ti .
@@ -296,7 +293,7 @@ the equation can be rewritten more concisely as
 	v_{i+1}=v_i + \dfrac{dv_i}{dt}\Delta t
 \end{equation}
 
-where the nomenclature $v_i$ designates velocity at time $t_i$ and $\Delta t = t_{i+1} − t_i$ .
+where the nomenclature $v_i$ designates velocity at time $t_i$ and $\Delta t = t_{i+1} - t_i$ .
 We can now see that the differential equation has been transformed into an equation that
 can be used to determine the velocity algebraically at $t_{i+1}$ using the slope and previous values
  of $v $and $t$. If you are given an initial value for velocity at some time ti, you can easily compute
@@ -305,13 +302,13 @@ extend the computation to velocity at $t_{i+2} $and so on. Thus at any time alon
 
 $$ New \ value = old \ value + slope \ \times  \ step \ size $$
 
-This approach is formally called \textsl{uler's method}. We'll discuss it in more detail when we
+This approach is formally called \textsl{Euler's method}. We'll discuss it in more detail when we
 turn to differential equations later in this book.
 
 
 \section*{EXAMPLE 1.2. Numerical Solution to the Bungee Jumper Problem}
 
-roblem Statement. Perform the same computation as in Example 1.1 but use Eq. (1.12)
+Problem Statement. Perform the same computation as in Example 1.1 but use Eq. (1.12)
 to compute velocity with Euler's method. Employ a step size of 2 s for the calculation.
 
 Solution. At the start of the computation $(t0 = 0)$, the velocity of the jumper is zero.
@@ -326,9 +323,9 @@ $$ v= 19.62 \left[ 9.81 - \dfrac{0.25}{68.1}(19.62)^2 \right] \times 2 = 36.4137
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.75\textwidth]{fig_1_4}
+	\includegraphics[width=0.65\textwidth]{fig_1_4}
    \caption{\textsf{Comparison of the numerical and analytical solutions for the bungee jumper problem.}}
-   \label{fig_1_4}
+  
 \end{figure}
 
 
@@ -426,7 +423,7 @@ between numerical methods and engineering and science.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.75\textwidth]{fig_1_5}
+	\includegraphics[width=0.60\textwidth]{fig_1_5}
    \caption{\textsf{A flow balance for steady incompressible fluid flow at the junction of pipes.}}
    \label{fig_1_5}
 \end{figure}
@@ -646,11 +643,11 @@ much higher trajectory.
 
 This case study demonstrates how important it is to have the correct physical model.
 In some cases, the solution will yield results that are clearly unrealistic. The current example is more insidious as there is no visual evidence that the incorrect solution is wrong. That
-is, the incorrect solution “looks” reasonable.
+is, the incorrect solution "looks" reasonable."
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.80\textwidth]{fig_1_7}
+	\includegraphics[width=0.75\textwidth]{fig_1_7}
    \caption{\textsf{Plots of (a) velocity and (b) height for the free-falling bungee jumper with an upward (negative)
    initial velocity generated with Euler's method. Results for both the correct (Eq. 1 20) and incorrect
    (Eq. 1.7) drag formulations are displayed.}}
@@ -787,7 +784,7 @@ at a constant flow rate Q to meet demands. The contents are
 	
 	\includegraphics[width=0.45\textwidth]{fig_P1_9}
 	\caption*{Figure P1.9}
-   \label{fig_P1_9}
+   
 \end{figure}
 
 resupplied at a sinusoidal rate $3Q$ $sin^2(t)$. Equation (1.14)
@@ -811,7 +808,7 @@ Use Euler's method to solve for the depth y from $t = 0$ to
 	
 	\includegraphics[width=0.45\textwidth]{fig_P1_11}
 	\caption*{Figure P1.11}
-   \label{fig_P1_9}
+  
 \end{figure}
 
 The liquid flows in at a sinusoidal rate of $Q_{in} = 3 sin^2
@@ -819,8 +816,8 @@ The liquid flows in at a sinusoidal rate of $Q_{in} = 3 sin^2
 flows out according to
 
 \[\begin{array}{r c l  r c l}
-	Q_{out}& =& 3(y − yout)^{1.5} & y &>& yout\\
-	Q_{out}& =& 0& y& \leq  &yout\\
+	Q_{out}& =& 3(y − y_{out})^{1.5} & y &>& y_{out}\\
+	Q_{out}& =& 0& y& \leq  &y_{out}\\
 
 	
 \end{array} \]
@@ -839,7 +836,7 @@ takes up about $0.075 m^3$ and gives out about 80 W of heat
 (1 W = 1 J/s). Calculate the air temperature rise during the first
 20 minutes of the class if the room is completely sealed and insulated. 
 Assume the heat capacity $C_v$ for air is 0.718 kJ/(kg K).
-Assume air is an ideal gas at 20°C and 101.325 kPa. Note
+Assume air is an ideal gas at 20$^{\circ}$C and 101.325 kPa. Note
 that the heat absorbed by the air Q is related to the mass of
 the air m the heat capacity, and the change in temperature by
 the following relationship:
@@ -873,8 +870,7 @@ state, how much water must be drunk per day?
 
 \textbf{1.14} In our example of the free-falling bungee jumper, we
 assumed that the acceleration due to gravity was a constant
-value of 9.81 $m/s^2$
-. Although this is a decent approximation
+value of 9.81 $m/s^2$. Although this is a decent approximation
 when we are examining falling objects near the surface of
 the earth, the gravitational force decreases as we move
 above sea level. A more general representation based on
@@ -886,7 +882,7 @@ $$ g(x)= g(0)\dfrac{R^2}{(R+x)^2}$$
 where g(x) = gravitational acceleration at altitude $x$ (in m)
 measured upward from the earth's surface $(m/s^2), g(0) =$
 gravitational acceleration at the earth's surface ($\cong  9.81 m/s^2)$,
-and $R =$ the earth's radius ($\cong  6.37 × 10^6 m$). 
+and $R =$ the earth's radius ($\cong  6.37 \times  10^6 m$). 
 \begin{enumerate}[label=(\alph*)]
 	\item  In a fashion similar to the derivation of Eq. (1.8), use a
 	force balance to derive a differential equation for velocity as a function of time that utilizes this more complete
@@ -937,31 +933,31 @@ its temperature and that of the surrounding medium (the ambient temperature),
 
 $$\dfrac{dT}{dt}= -k(T -T_aa)$$
 
-where $T =$ the temperature of the body (°C), $t =$ time (min),
+where $T =$ the temperature of the body ($^{\circ}$C), $t =$ time (min),
 $k =$ the proportionality constant (per minute), and $T_a =$ the
-ambient temperature (°C). Suppose that a cup of coffee originally has a temperature of 70 °C. Use Euler's method to
+ambient temperature ($^{\circ}$C). Suppose that a cup of coffee originally has a temperature of 70 $^{\circ}$C. Use Euler's method to
 compute the temperature from $t =$ 0 to 20 min using a step
-size of 2 min if $T_a =$ 20 °C and $k =$ 0.019/min.
+size of 2 min if $T_a =$ 20 $^{\circ}$C and $k =$ 0.019/min.
 
 \textbf{1.18} You are working as a crime scene investigator and
 must predict the temperature of a homicide victim over a
 5-hour period. You know that the room where the victim was
-found was at 10 °C when the body was discovered.
+found was at 10 $^{\circ}$C when the body was discovered.
 \begin{enumerate}[label=(\alph*)]
 	\item Use Newton's law of cooling (Prob. 1.17) and Euler's
 	method to compute the victim's body temperature for
 	the 5-hr period using values of $k=$  0.12/hr and $\Delta t$
 	0.5 hr. Assume that the victim's body temperature at
-	the time of death was 37 °C, and that the room temperature was at a constant value of 10 °C over the 5-hr
+	the time of death was 37 $^{\circ}$C, and that the room temperature was at a constant value of 10 $^{\circ}$C over the 5-hr
 	period.
 	\item Further investigation reveals that the room temperature
-	had actually dropped linearly from 20 to 10 °C over the
+	had actually dropped linearly from 20 to 10 $^{\circ}$C over the
 	5-hr period. Repeat the same calculation as in (a) but incorporate this new information
 	\item Compare the results from (a) and (b) by plotting them
 	on the same graph. 
 \end{enumerate}
 
-\textbf1.19 The velocity is equal to the rate of change of distance,
+\textbf{1.19} The velocity is equal to the rate of change of distance,
 x(m):
 $$\dfrac{dx}{dt} = v(t)$$
 
